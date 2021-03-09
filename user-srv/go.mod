@@ -4,9 +4,8 @@ go 1.16
 
 require (
 	github.com/golang/protobuf v1.4.3
-	github.com/micro/go-micro v1.18.0 // indirect
 	github.com/micro/micro/v3 v3.0.0
-	github.com/wen-qu/xuesou-backend-service/basic v0.0.0-00010101000000-000000000000
+	github.com/wen-qu/xuesou-backend-service/basic v1.2.3
 	google.golang.org/protobuf v1.25.0
 )
 
