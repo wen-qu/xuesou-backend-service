@@ -5,7 +5,7 @@ import (
 	"github.com/micro/go-micro/util/log"
 	"github.com/micro/go-micro/web"
 
-	"github.com/wen-qu/xuesou-backend-service/user-web/handler"
+	"user-web/handler"
 )
 
 func main() {
@@ -13,7 +13,7 @@ func main() {
 	router := handler.InitRouter()
 
 	service := web.NewService(
-		web.Name("go.micro.login.web"),
+		web.Name("go.micro.user.web"),
 		web.Version("latest"),
 		web.Address(":18088"),
 		web.Handler(router),

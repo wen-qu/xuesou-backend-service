@@ -5,35 +5,47 @@ package usersrv;
 option go_package = "proto;usersrv";
 
 service UserSrv {
-	rpc Call(Request) returns (Response) {}
-	rpc Stream(StreamingRequest) returns (stream StreamingResponse) {}
-	rpc PingPong(stream Ping) returns (stream Pong) {}
+	rpc Login(UserRequest) returns (UserResponse) {}
+	rpc Register(UserRequest) returns (UserResponse) {}
+	rpc Validation(UserRequest) returns (UserResponse) {}
+	rpc UpdateProfile(UserProfileRequest) returns (UserProfileResponse) {}
+	rpc ReadProfile(UserProfileRequest) returns (UserProfileResponse) {}
 }
 
-message Message {
-	string say = 1;
+message UserRequest { // use tel number to do, return a uid
+	string tel = 1;
 }
 
-message Request {
-	string name = 1;
+message UserProfileRequest {
+	string uid = 1;
+	string tel = 2;
+	int64 information_type = 3;
 }
 
-message Response {
-	string msg = 1;
+message UserResponse {
+	int64 code = 1;
+	string uid = 2;
+	string msg = 3;
 }
 
-message StreamingRequest {
-	int64 count = 1;
+message UserProfileResponse {
+	string uid = 1;
+	string type = 2;
+	Profile profile = 3;
+	string msg = 4;
 }
 
-message StreamingResponse {
-	int64 count = 1;
+message Profile {
+	string username = 1;
+	string tel = 2;
+	string sex = 3;
+	string age = 4;
+	string address = 5;
+	string class_num = 6;
+	string img = 7;
 }
 
-message Ping {
-	int64 stroke = 1;
-}
-
-message Pong {
-	int64 stroke = 1;
+message ErrorResponse {
+	string code = 1;
+	string msg = 2;
 }

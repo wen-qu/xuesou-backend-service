@@ -8,41 +8,40 @@ import (
 	usersrv "user-srv/proto"
 )
 
+// UserSrv the UserSrv struct
 type UserSrv struct{}
 
-// Call is a single request handler called via client.Call or the generated client code
-func (e *UserSrv) Call(ctx context.Context, req *usersrv.Request, rsp *usersrv.Response) error {
-	log.Info("Received UserSrv.Call request")
-	rsp.Msg = "Hello " + req.Name
+// Login login service
+func (e *UserSrv) Login(ctx context.Context, req *usersrv.UserRequest, rsp *usersrv.UserResponse) error {
+	log.Info("Received UserSrv.Login request")
+	rsp.Msg = "Hello Login, " + req.Tel
 	return nil
 }
 
-// Stream is a server side stream handler called via client.Stream or the generated client code
-func (e *UserSrv) Stream(ctx context.Context, req *usersrv.StreamingRequest, stream usersrv.UserSrv_StreamStream) error {
-	log.Infof("Received UserSrv.Stream request with count: %d", req.Count)
-
-	for i := 0; i < int(req.Count); i++ {
-		log.Infof("Responding: %d", i)
-		if err := stream.Send(&usersrv.StreamingResponse{
-			Count: int64(i),
-		}); err != nil {
-			return err
-		}
-	}
-
+// Register register service
+func (e *UserSrv) Register(ctx context.Context, req *usersrv.UserRequest, rsp *usersrv.UserResponse) error {
+	log.Info("Received UserSrv.Register request")
+	rsp.Msg = "Hello Register, " + req.Tel
 	return nil
 }
 
-// PingPong is a bidirectional stream handler called via client.Stream or the generated client code
-func (e *UserSrv) PingPong(ctx context.Context, stream usersrv.UserSrv_PingPongStream) error {
-	for {
-		req, err := stream.Recv()
-		if err != nil {
-			return err
-		}
-		log.Infof("Got ping %v", req.Stroke)
-		if err := stream.Send(&usersrv.Pong{Stroke: req.Stroke}); err != nil {
-			return err
-		}
-	}
+// Validation validation service (e.g. get a validation code, etc.)
+func (e *UserSrv) Validation(ctx context.Context, req *usersrv.UserRequest, rsp *usersrv.UserResponse) error {
+	log.Info("Received UserSrv.Validation request")
+	rsp.Msg = "Hello Validation, " + req.Tel
+	return nil
+}
+
+// UpdateProfile update user's profile
+func (e *UserSrv) UpdateProfile(ctx context.Context, req *usersrv.UserProfileRequest, rsp *usersrv.UserProfileResponse) error {
+	log.Info("Received UserSrv.Register request")
+	rsp.Msg = "Hello Register, " + req.Tel
+	return nil
+}
+
+// ReadProfile get user's profile
+func (e *UserSrv) ReadProfile(ctx context.Context, req *usersrv.UserProfileRequest, rsp *usersrv.UserProfileResponse) error {
+	log.Info("Received UserSrv.Register request")
+	rsp.Msg = "Hello Register, " + req.Tel
+	return nil
 }

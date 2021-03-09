@@ -42,9 +42,11 @@ func NewUserSrvEndpoints() []*api.Endpoint {
 // Client API for UserSrv service
 
 type UserSrvService interface {
-	Call(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error)
-	Stream(ctx context.Context, in *StreamingRequest, opts ...client.CallOption) (UserSrv_StreamService, error)
-	PingPong(ctx context.Context, opts ...client.CallOption) (UserSrv_PingPongService, error)
+	Login(ctx context.Context, in *UserRequest, opts ...client.CallOption) (*UserResponse, error)
+	Register(ctx context.Context, in *UserRequest, opts ...client.CallOption) (*UserResponse, error)
+	Validation(ctx context.Context, in *UserRequest, opts ...client.CallOption) (*UserResponse, error)
+	UpdateProfile(ctx context.Context, in *UserProfileRequest, opts ...client.CallOption) (*UserProfileResponse, error)
+	ReadProfile(ctx context.Context, in *UserProfileRequest, opts ...client.CallOption) (*UserProfileResponse, error)
 }
 
 type userSrvService struct {
@@ -59,9 +61,9 @@ func NewUserSrvService(name string, c client.Client) UserSrvService {
 	}
 }
 
-func (c *userSrvService) Call(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error) {
-	req := c.c.NewRequest(c.name, "UserSrv.Call", in)
-	out := new(Response)
+func (c *userSrvService) Login(ctx context.Context, in *UserRequest, opts ...client.CallOption) (*UserResponse, error) {
+	req := c.c.NewRequest(c.name, "UserSrv.Login", in)
+	out := new(UserResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -69,119 +71,63 @@ func (c *userSrvService) Call(ctx context.Context, in *Request, opts ...client.C
 	return out, nil
 }
 
-func (c *userSrvService) Stream(ctx context.Context, in *StreamingRequest, opts ...client.CallOption) (UserSrv_StreamService, error) {
-	req := c.c.NewRequest(c.name, "UserSrv.Stream", &StreamingRequest{})
-	stream, err := c.c.Stream(ctx, req, opts...)
+func (c *userSrvService) Register(ctx context.Context, in *UserRequest, opts ...client.CallOption) (*UserResponse, error) {
+	req := c.c.NewRequest(c.name, "UserSrv.Register", in)
+	out := new(UserResponse)
+	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
 	}
-	if err := stream.Send(in); err != nil {
-		return nil, err
-	}
-	return &userSrvServiceStream{stream}, nil
+	return out, nil
 }
 
-type UserSrv_StreamService interface {
-	Context() context.Context
-	SendMsg(interface{}) error
-	RecvMsg(interface{}) error
-	Close() error
-	Recv() (*StreamingResponse, error)
-}
-
-type userSrvServiceStream struct {
-	stream client.Stream
-}
-
-func (x *userSrvServiceStream) Close() error {
-	return x.stream.Close()
-}
-
-func (x *userSrvServiceStream) Context() context.Context {
-	return x.stream.Context()
-}
-
-func (x *userSrvServiceStream) SendMsg(m interface{}) error {
-	return x.stream.Send(m)
-}
-
-func (x *userSrvServiceStream) RecvMsg(m interface{}) error {
-	return x.stream.Recv(m)
-}
-
-func (x *userSrvServiceStream) Recv() (*StreamingResponse, error) {
-	m := new(StreamingResponse)
-	err := x.stream.Recv(m)
+func (c *userSrvService) Validation(ctx context.Context, in *UserRequest, opts ...client.CallOption) (*UserResponse, error) {
+	req := c.c.NewRequest(c.name, "UserSrv.Validation", in)
+	out := new(UserResponse)
+	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return m, nil
+	return out, nil
 }
 
-func (c *userSrvService) PingPong(ctx context.Context, opts ...client.CallOption) (UserSrv_PingPongService, error) {
-	req := c.c.NewRequest(c.name, "UserSrv.PingPong", &Ping{})
-	stream, err := c.c.Stream(ctx, req, opts...)
+func (c *userSrvService) UpdateProfile(ctx context.Context, in *UserProfileRequest, opts ...client.CallOption) (*UserProfileResponse, error) {
+	req := c.c.NewRequest(c.name, "UserSrv.UpdateProfile", in)
+	out := new(UserProfileResponse)
+	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return &userSrvServicePingPong{stream}, nil
+	return out, nil
 }
 
-type UserSrv_PingPongService interface {
-	Context() context.Context
-	SendMsg(interface{}) error
-	RecvMsg(interface{}) error
-	Close() error
-	Send(*Ping) error
-	Recv() (*Pong, error)
-}
-
-type userSrvServicePingPong struct {
-	stream client.Stream
-}
-
-func (x *userSrvServicePingPong) Close() error {
-	return x.stream.Close()
-}
-
-func (x *userSrvServicePingPong) Context() context.Context {
-	return x.stream.Context()
-}
-
-func (x *userSrvServicePingPong) SendMsg(m interface{}) error {
-	return x.stream.Send(m)
-}
-
-func (x *userSrvServicePingPong) RecvMsg(m interface{}) error {
-	return x.stream.Recv(m)
-}
-
-func (x *userSrvServicePingPong) Send(m *Ping) error {
-	return x.stream.Send(m)
-}
-
-func (x *userSrvServicePingPong) Recv() (*Pong, error) {
-	m := new(Pong)
-	err := x.stream.Recv(m)
+func (c *userSrvService) ReadProfile(ctx context.Context, in *UserProfileRequest, opts ...client.CallOption) (*UserProfileResponse, error) {
+	req := c.c.NewRequest(c.name, "UserSrv.ReadProfile", in)
+	out := new(UserProfileResponse)
+	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return m, nil
+	return out, nil
 }
 
 // Server API for UserSrv service
 
 type UserSrvHandler interface {
-	Call(context.Context, *Request, *Response) error
-	Stream(context.Context, *StreamingRequest, UserSrv_StreamStream) error
-	PingPong(context.Context, UserSrv_PingPongStream) error
+	Login(context.Context, *UserRequest, *UserResponse) error
+	Register(context.Context, *UserRequest, *UserResponse) error
+	Validation(context.Context, *UserRequest, *UserResponse) error
+	UpdateProfile(context.Context, *UserProfileRequest, *UserProfileResponse) error
+	ReadProfile(context.Context, *UserProfileRequest, *UserProfileResponse) error
 }
 
 func RegisterUserSrvHandler(s server.Server, hdlr UserSrvHandler, opts ...server.HandlerOption) error {
 	type userSrv interface {
-		Call(ctx context.Context, in *Request, out *Response) error
-		Stream(ctx context.Context, stream server.Stream) error
-		PingPong(ctx context.Context, stream server.Stream) error
+		Login(ctx context.Context, in *UserRequest, out *UserResponse) error
+		Register(ctx context.Context, in *UserRequest, out *UserResponse) error
+		Validation(ctx context.Context, in *UserRequest, out *UserResponse) error
+		UpdateProfile(ctx context.Context, in *UserProfileRequest, out *UserProfileResponse) error
+		ReadProfile(ctx context.Context, in *UserProfileRequest, out *UserProfileResponse) error
 	}
 	type UserSrv struct {
 		userSrv
@@ -194,91 +140,22 @@ type userSrvHandler struct {
 	UserSrvHandler
 }
 
-func (h *userSrvHandler) Call(ctx context.Context, in *Request, out *Response) error {
-	return h.UserSrvHandler.Call(ctx, in, out)
+func (h *userSrvHandler) Login(ctx context.Context, in *UserRequest, out *UserResponse) error {
+	return h.UserSrvHandler.Login(ctx, in, out)
 }
 
-func (h *userSrvHandler) Stream(ctx context.Context, stream server.Stream) error {
-	m := new(StreamingRequest)
-	if err := stream.Recv(m); err != nil {
-		return err
-	}
-	return h.UserSrvHandler.Stream(ctx, m, &userSrvStreamStream{stream})
+func (h *userSrvHandler) Register(ctx context.Context, in *UserRequest, out *UserResponse) error {
+	return h.UserSrvHandler.Register(ctx, in, out)
 }
 
-type UserSrv_StreamStream interface {
-	Context() context.Context
-	SendMsg(interface{}) error
-	RecvMsg(interface{}) error
-	Close() error
-	Send(*StreamingResponse) error
+func (h *userSrvHandler) Validation(ctx context.Context, in *UserRequest, out *UserResponse) error {
+	return h.UserSrvHandler.Validation(ctx, in, out)
 }
 
-type userSrvStreamStream struct {
-	stream server.Stream
+func (h *userSrvHandler) UpdateProfile(ctx context.Context, in *UserProfileRequest, out *UserProfileResponse) error {
+	return h.UserSrvHandler.UpdateProfile(ctx, in, out)
 }
 
-func (x *userSrvStreamStream) Close() error {
-	return x.stream.Close()
-}
-
-func (x *userSrvStreamStream) Context() context.Context {
-	return x.stream.Context()
-}
-
-func (x *userSrvStreamStream) SendMsg(m interface{}) error {
-	return x.stream.Send(m)
-}
-
-func (x *userSrvStreamStream) RecvMsg(m interface{}) error {
-	return x.stream.Recv(m)
-}
-
-func (x *userSrvStreamStream) Send(m *StreamingResponse) error {
-	return x.stream.Send(m)
-}
-
-func (h *userSrvHandler) PingPong(ctx context.Context, stream server.Stream) error {
-	return h.UserSrvHandler.PingPong(ctx, &userSrvPingPongStream{stream})
-}
-
-type UserSrv_PingPongStream interface {
-	Context() context.Context
-	SendMsg(interface{}) error
-	RecvMsg(interface{}) error
-	Close() error
-	Send(*Pong) error
-	Recv() (*Ping, error)
-}
-
-type userSrvPingPongStream struct {
-	stream server.Stream
-}
-
-func (x *userSrvPingPongStream) Close() error {
-	return x.stream.Close()
-}
-
-func (x *userSrvPingPongStream) Context() context.Context {
-	return x.stream.Context()
-}
-
-func (x *userSrvPingPongStream) SendMsg(m interface{}) error {
-	return x.stream.Send(m)
-}
-
-func (x *userSrvPingPongStream) RecvMsg(m interface{}) error {
-	return x.stream.Recv(m)
-}
-
-func (x *userSrvPingPongStream) Send(m *Pong) error {
-	return x.stream.Send(m)
-}
-
-func (x *userSrvPingPongStream) Recv() (*Ping, error) {
-	m := new(Ping)
-	if err := x.stream.Recv(m); err != nil {
-		return nil, err
-	}
-	return m, nil
+func (h *userSrvHandler) ReadProfile(ctx context.Context, in *UserProfileRequest, out *UserProfileResponse) error {
+	return h.UserSrvHandler.ReadProfile(ctx, in, out)
 }
