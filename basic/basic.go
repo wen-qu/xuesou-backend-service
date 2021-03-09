@@ -1,7 +1,7 @@
 package basic
 
 import (
-	db "basic/db"
+	db "github.com/wen-qu/xuesou-backend-service/basic/db"
 )
 
 func Init() {

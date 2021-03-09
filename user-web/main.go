@@ -5,7 +5,7 @@ import (
 	"github.com/micro/go-micro/util/log"
 	"github.com/micro/go-micro/web"
 
-	"user-web/handler"
+	"github.com/wen-qu/xuesou-backend-service/user-web/handler"
 )
 
 func main() {
@@ -18,6 +18,7 @@ func main() {
 		web.Address(":18088"),
 		web.Handler(router),
 	)
+
 	if err := service.Init(
 		web.Action(
 			func(c *cli.Context) {

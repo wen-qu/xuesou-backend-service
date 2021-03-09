@@ -1,8 +1,8 @@
 package main
 
 import (
-	"user-srv/handler"
-	pb "user-srv/proto"
+	"github.com/wen-qu/xuesou-backend-service/user-srv/handler"
+	pb "github.com/wen-qu/xuesou-backend-service/user-srv/proto"
 
 	"github.com/micro/micro/v3/service"
 	"github.com/micro/micro/v3/service/logger"

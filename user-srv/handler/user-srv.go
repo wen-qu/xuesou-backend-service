@@ -5,7 +5,7 @@ import (
 
 	log "github.com/micro/micro/v3/service/logger"
 
-	usersrv "user-srv/proto"
+	usersrv "github.com/wen-qu/xuesou-backend-service/user-srv/proto"
 
 )
 
