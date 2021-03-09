@@ -62,7 +62,7 @@ create table if not exists `agency_profile_table` ( -- agencies' basic profile
   `photos` varchar(700) -- maximum 20 photos, save each photo's filename(a hash)
 );
 
-create table if not exists `test_agency_class_table` ( -- only test table, standart format: [agency_id]_agency_class_table
+create table if not exists `test_agency_class_table` ( -- only test table, standard format: [agency_id]_agency_class_table
   `agency_id` varchar(20) not null,
   `class_id` varchar(19) not null,
   `create_time` varchar(20) not null

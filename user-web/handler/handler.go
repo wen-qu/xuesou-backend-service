@@ -90,3 +90,15 @@ func registerHandler(c *gin.Context) {
 		}
 	}
 }
+
+func updateProfileHandler(c *gin.Context) {
+
+}
+
+func getProfileHandler(c *gin.Context) {
+
+}
+
+func getMessageHandler (c *gin.Context) {
+
+}

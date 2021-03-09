@@ -6,6 +6,7 @@ import (
 	log "github.com/micro/micro/v3/service/logger"
 
 	usersrv "user-srv/proto"
+
 )
 
 // UserSrv the UserSrv struct
