@@ -15,24 +15,28 @@ var (
 	userClient proto.UserSrvService
 )
 
-type Error struct {
-	Code   int32  `json:"code"`
-	Detail string `json:"detail"`
-}
-
+// Init init service
 func Init() {
 	srv := service.New()
 	userClient = proto.NewUserSrvService("go.micro.user.srv", srv.Client()) // create a new object of UserSrvService, not open up the service.
-
 }
 
+
+// InitRouter init all routers and handlers
 func InitRouter() *gin.Engine {
 	r := gin.Default()
 
-	r.POST("/login", loginHandler)
+	v1User := r.Group("/v1/user/")
 
-	r.POST("/register", registerHandler)
+	v1User.POST("/login", loginHandler)
 
+	v1User.POST("/register", registerHandler)
+
+	v1User.POST("/profile/update", updateProfileHandler)
+
+	v1User.GET("/profile/{type}", getProfileHandler)
+
+	v1User.GET("/message", getMessageHandler)
 	return r
 }
 
@@ -58,44 +62,31 @@ func loginHandler(c *gin.Context) {
 }
 
 func registerHandler(c *gin.Context) {
-	// var user struct {
-	// 	Username string `json:"username"`
-	// 	Password string `json:"password"`
-	// }
-	// c.ShouldBind(&user)
-	// rsp, err := userClient.Register(context.Background(), &proto.RegisterRequest{
-	// 	Username: user.Username,
-	// 	Password: user.Password,
-	// })
-
-	// if err != nil {
-	// 	c.JSON(http.StatusOK, gin.H{
-	// 		"code": 500,
-	// 		"msg":  "internal server error",
-	// 	})
-	// }
-
-	// switch rsp.Status {
-	// case 200:
-	// 	c.JSON(http.StatusOK, gin.H{
-	// 		"code": 200,
-	// 		"msg":  rsp.Msg,
-	// 	})
-	// case 400:
-	// 	c.JSON(http.StatusOK, gin.H{
-	// 		"code": 400,
-	// 		"msg":  "invalid parameters",
-	// 	})
-	// case 401:
-	// 	c.JSON(http.StatusOK, gin.H{
-	// 		"code": 401,
-	// 		"msg":  "username has registered",
-	// 	})
-	// default:
-	// 	c.JSON(http.StatusOK, gin.H{
-	// 		"code": 500,
-	// 		"msg":  "internal server error",
-	// 	})
-	// }
-
+	var user struct {
+		Tel string `json:"tel"`
+	}
+	c.ShouldBind(&user)
+	_, err := userClient.Register(context.Background(), &proto.UserRequest{
+		Tel: user.Tel,
+	})
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"error": err,
+		})
+	} else {
+		rsp, err := userClient.Login(context.Background(), &proto.UserRequest{
+			Tel: user.Tel,
+		})
+		if err != nil {
+			c.JSON(http.StatusOK, gin.H{
+				"error": err,
+			})
+		} else {
+			c.JSON(http.StatusOK, gin.H{
+				"uid": rsp.Uid,
+				"code": rsp.Code,
+				"message": rsp.Msg,
+			})
+		}
+	}
 }
