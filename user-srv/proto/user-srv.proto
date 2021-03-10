@@ -4,6 +4,7 @@ package usersrv;
 
 option go_package = "proto;usersrv";
 
+// TODO: update user-srv
 service UserSrv {
 	rpc Login(UserRequest) returns (UserResponse) {}
 	rpc Register(UserRequest) returns (UserResponse) {}
