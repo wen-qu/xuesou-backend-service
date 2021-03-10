@@ -1,35 +1,25 @@
 package main
 
 import (
-	"github.com/micro/cli"
-	"github.com/micro/go-micro/util/log"
-	"github.com/micro/go-micro/web"
-
 	"github.com/wen-qu/xuesou-backend-service/user-web/handler"
+	pb "github.com/wen-qu/xuesou-backend-service/user-web/proto"
+
+	"github.com/micro/micro/v3/service"
+	"github.com/micro/micro/v3/service/logger"
 )
 
 func main() {
-
-	router := handler.InitRouter()
-
-	service := web.NewService(
-		web.Name("go.micro.user.web"),
-		web.Version("latest"),
-		web.Address(":18088"),
-		web.Handler(router),
+	// Create service
+	srv := service.New(
+		service.Name("user-web"),
+		service.Version("latest"),
 	)
 
-	if err := service.Init(
-		web.Action(
-			func(c *cli.Context) {
-				// init handler
-				handler.Init()
-			}),
-	); err != nil {
-		log.Fatal(err)
-	}
+	// Register handler
+	_ = pb.RegisterUserWebHandler(srv.Server(), new(handler.UserWeb))
 
-	if err := service.Run(); err != nil {
-		log.Fatal(err)
+	// Run service
+	if err := srv.Run(); err != nil {
+		logger.Fatal(err)
 	}
 }

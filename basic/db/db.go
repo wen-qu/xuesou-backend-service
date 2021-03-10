@@ -6,7 +6,7 @@ import (
 	"sync"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/micro/go-micro/util/log"
+	"github.com/micro/micro/v3/service/logger"
 )
 
 var (
@@ -23,7 +23,7 @@ func Init() {
 
 	if inited {
 		err = fmt.Errorf("[Init] db has inited")
-		log.Logf(err.Error())
+		logger.Log(1, err.Error())
 		return
 	}
 

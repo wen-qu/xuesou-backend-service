@@ -14,6 +14,7 @@ type UserSrv struct{}
 
 // Login login service
 func (e *UserSrv) Login(ctx context.Context, req *usersrv.UserRequest, rsp *usersrv.UserResponse) error {
+
 	log.Info("Received UserSrv.Login request")
 	rsp.Msg = "Hello Login, " + req.Tel
 	return nil

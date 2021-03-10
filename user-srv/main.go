@@ -17,12 +17,12 @@ func main() {
 
 	// Create service
 	srv := service.New(
-		service.Name("go.micro.user.srv"),
+		service.Name("user-srv"),
 		service.Version("latest"),
 	)
 
 	// Register handler
-	pb.RegisterUserSrvHandler(srv.Server(), new(handler.UserSrv))
+	_ = pb.RegisterUserSrvHandler(srv.Server(), new(handler.UserSrv))
 
 	// Run service
 	if err := srv.Run(); err != nil {

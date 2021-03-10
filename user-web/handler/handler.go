@@ -2,103 +2,48 @@ package handler
 
 import (
 	"context"
-	"net/http"
 
-	"github.com/micro/micro/v3/service"
+	log "github.com/micro/micro/v3/service/logger"
 
-	"github.com/gin-gonic/gin"
+	userweb "github.com/wen-qu/xuesou-backend-service/user-web/proto"
 
-	proto "github.com/wen-qu/xuesou-backend-service/user-srv/proto"
 )
 
-var (
-	userClient proto.UserSrvService
-)
+// UserWeb the UserWeb struct
+type UserWeb struct{}
 
-// Init init service
-func Init() {
-	srv := service.New()
-	userClient = proto.NewUserSrvService("go.micro.user.srv", srv.Client()) // create a new object of UserSrvService, not open up the service.
+// Login login service
+func (e *UserWeb) Login(ctx context.Context, req *userweb.UserRequest, rsp *userweb.UserResponse) error {
+
+	log.Info("Received UserWeb.Login request")
+	rsp.Msg = "Hello Login, " + req.Tel
+	return nil
 }
 
-
-// InitRouter init all routers and handlers
-func InitRouter() *gin.Engine {
-	r := gin.Default()
-
-	v1User := r.Group("/v1/user/")
-
-	v1User.POST("/login", loginHandler)
-
-	v1User.POST("/register", registerHandler)
-
-	v1User.POST("/profile/update", updateProfileHandler)
-
-	v1User.GET("/profile/{type}", getProfileHandler)
-
-	v1User.GET("/message", getMessageHandler)
-	return r
+// Register register service
+func (e *UserWeb) Register(ctx context.Context, req *userweb.UserRequest, rsp *userweb.UserResponse) error {
+	log.Info("Received UserWeb.Register request")
+	rsp.Msg = "Hello Register, " + req.Tel
+	return nil
 }
 
-func loginHandler(c *gin.Context) {
-	var user struct {
-		Tel string `json:"tel"`
-	}
-	c.ShouldBind(&user)
-	rsp, err := userClient.Login(context.Background(), &proto.UserRequest{
-		Tel: user.Tel,
-	})
-	if err != nil {
-		c.JSON(http.StatusOK, gin.H{
-			"error": err,
-		})
-	} else {
-		c.JSON(http.StatusOK, gin.H{
-			"uid": rsp.Uid,
-			"code": rsp.Code,
-			"message": rsp.Msg,
-		})
-	}
+// Validation validation service (e.g. get a validation code, etc.)
+func (e *UserWeb) Validation(ctx context.Context, req *userweb.UserRequest, rsp *userweb.UserResponse) error {
+	log.Info("Received UserWeb.Validation request")
+	rsp.Msg = "Hello Validation, " + req.Tel
+	return nil
 }
 
-func registerHandler(c *gin.Context) {
-	var user struct {
-		Tel string `json:"tel"`
-	}
-	c.ShouldBind(&user)
-	_, err := userClient.Register(context.Background(), &proto.UserRequest{
-		Tel: user.Tel,
-	})
-	if err != nil {
-		c.JSON(http.StatusOK, gin.H{
-			"error": err,
-		})
-	} else {
-		rsp, err := userClient.Login(context.Background(), &proto.UserRequest{
-			Tel: user.Tel,
-		})
-		if err != nil {
-			c.JSON(http.StatusOK, gin.H{
-				"error": err,
-			})
-		} else {
-			c.JSON(http.StatusOK, gin.H{
-				"uid": rsp.Uid,
-				"code": rsp.Code,
-				"message": rsp.Msg,
-			})
-		}
-	}
+// UpdateProfile update user's profile
+func (e *UserWeb) UpdateProfile(ctx context.Context, req *userweb.UserProfileRequest, rsp *userweb.UserProfileResponse) error {
+	log.Info("Received UserWeb.Register request")
+	rsp.Msg = "Hello Register, " + req.Tel
+	return nil
 }
 
-func updateProfileHandler(c *gin.Context) {
-
-}
-
-func getProfileHandler(c *gin.Context) {
-
-}
-
-func getMessageHandler (c *gin.Context) {
-
+// ReadProfile get user's profile
+func (e *UserWeb) ReadProfile(ctx context.Context, req *userweb.UserProfileRequest, rsp *userweb.UserProfileResponse) error {
+	log.Info("Received UserWeb.Register request")
+	rsp.Msg = "Hello Register, " + req.Tel
+	return nil
 }
