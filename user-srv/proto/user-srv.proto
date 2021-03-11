@@ -16,11 +16,12 @@ message User {
 	string username = 2;
 	string password = 3;
 	string tel = 4;
-	int32 sex = 5;
-	int32 age = 6;
-	string address = 7;
-	int32 class_num = 8;
-	string img = 9;
+	string email = 5;
+	int32 sex = 6;
+	int32 age = 7;
+	string address = 8;
+	int32 class_num = 9;
+	string img = 10;
 }
 
 message InspectRequest {
@@ -38,7 +39,7 @@ message UpdateRequest {
 }
 
 message UpdateResponse {
-	bool status = 1;
+	int32 status = 1;
 	string msg = 2;
 }
 
@@ -48,7 +49,7 @@ message DeleteRequest {
 }
 
 message DeleteResponse {
-	bool status = 1;
+	int32 status = 1;
 	string msg = 2;
 }
 
@@ -57,6 +58,6 @@ message AddRequest {
 }
 
 message AddResponse {
-	bool status = 1;
+	int32 status = 1;
 	string msg = 2;
 }
