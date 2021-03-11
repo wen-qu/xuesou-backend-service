@@ -8,6 +8,7 @@ import (
 	"github.com/micro/micro/v3/service/logger"
 
 	"github.com/wen-qu/xuesou-backend-service/basic"
+
 )
 
 func main() {

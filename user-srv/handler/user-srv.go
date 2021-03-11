@@ -5,6 +5,8 @@ import (
 
 	log "github.com/micro/micro/v3/service/logger"
 
+	"github.com/wen-qu/xuesou-backend-service/basic/db"
+
 	usersrv "github.com/wen-qu/xuesou-backend-service/user-srv/proto"
 
 )
@@ -14,6 +16,7 @@ type UserSrv struct{}
 
 // Login login service
 func (e *UserSrv) AddUser(ctx context.Context, req *usersrv.AddRequest, rsp *usersrv.AddResponse) error {
+	db.GetDB()
 	log.Info("Received UserSrv.Login request")
 	rsp.Msg = "Hello AddUser, " + req.User.Tel
 	return nil
