@@ -38,12 +38,13 @@ message UserProfileResponse {
 
 message Profile {
 	string username = 1;
-	string tel = 2;
-	string sex = 3;
-	string age = 4;
-	string address = 5;
-	string class_num = 6;
-	string img = 7;
+	string email = 2;
+	string tel = 3;
+	string sex = 4;
+	string age = 5;
+	string address = 6;
+	string class_num = 7;
+	string img = 8;
 }
 
 message ErrorResponse {

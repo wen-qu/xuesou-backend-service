@@ -5,12 +5,12 @@ import (
 	"github.com/micro/micro/v3/service"
 	"github.com/micro/micro/v3/service/errors"
 	log "github.com/micro/micro/v3/service/logger"
+
 	"regexp"
 
 	userweb "github.com/wen-qu/xuesou-backend-service/user-web/proto"
 
 	usersrv "github.com/wen-qu/xuesou-backend-service/user-srv/proto"
-
 )
 
 var (
@@ -35,6 +35,7 @@ func (e *UserWeb) Login(ctx context.Context, req *userweb.UserRequest, rsp *user
 	}
 	log.Info("Received UserWeb.Login request")
 
+	// TODO: check the validation code [service: security]
 	loginRsp, err := userClient.InspectUser(ctx, &usersrv.InspectRequest{
 		Tel: req.Tel,
 	})
@@ -44,19 +45,30 @@ func (e *UserWeb) Login(ctx context.Context, req *userweb.UserRequest, rsp *user
 	}
 
 	if len(loginRsp.User.Uid) > 0 { // login success
-		// TODO: check login device, generate token, update user_login_inf table and then return 200.
+		// TODO: check login device, generate token, update user_login_inf table and then return 200. [service: security]
+
+		// if err := security.CheckLoginDevice(loginRsp.User.Uid); err != nil {
+		//     return errors.Forbidden("auth:003", "unknown device")
+		// }
+
+
+
+		// if err := security.UpdateLoginInformation(loginRsp.User.Uid); err != nil {
+		//     return errors.InternalServerError("fatal:001", "cannot update login information")
+		// }
 		rsp = &userweb.UserResponse{
 			Code: 200,
 			Uid: loginRsp.User.Uid,
 			Msg: "login success",
 		}
-	} else {
-		if err := e.Register(ctx, req, rsp); err != nil {
-			return e.Login(ctx, req, rsp)
-		}
+		return nil
 	}
 
-	return nil
+	if err := e.Register(ctx, req, rsp); err != nil {
+		return errors.InternalServerError("fatal:001", err.Error())
+	}
+
+	return e.Login(ctx, req, rsp)
 }
 
 // Register register service
@@ -72,7 +84,6 @@ func (e *UserWeb) Register(ctx context.Context, req *userweb.UserRequest, rsp *u
 	regRsp, err := userClient.AddUser(ctx, &usersrv.AddRequest{
 		User: &usersrv.User{
 			Tel: req.Tel,
-
 		},
 	})
 
@@ -80,10 +91,15 @@ func (e *UserWeb) Register(ctx context.Context, req *userweb.UserRequest, rsp *u
 		return errors.InternalServerError("fatal:001", err.Error())
 	}
 
-
+	if regRsp.Status == 400 {
+		return errors.Forbidden("user:001", "registered")
+	}
 
 	// TODO: create user's chat table, class table, then insert login_inf into user_login_inf table
-	rsp.Msg = "Hello Register, " + req.Tel
+	rsp = &userweb.UserResponse{
+		Code: 200,
+		Msg: "register success",
+	}
 	return nil
 }
 
