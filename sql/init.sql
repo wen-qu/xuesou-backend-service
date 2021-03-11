@@ -8,6 +8,7 @@ create table if not exists `user_profile_table` ( -- users' basic profile
   `username` varchar(50) not null, -- initialized as uid=username
   `password` varchar(32),
   `tel` varchar(11) not null,
+  `email` varchar(50),
   `sex` tinyint,
   `age` tinyint,
   `address` varchar(256),
