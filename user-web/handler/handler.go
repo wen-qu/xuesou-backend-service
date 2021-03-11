@@ -2,8 +2,9 @@ package handler
 
 import (
 	"context"
-
+	"github.com/micro/micro/v3/service/errors"
 	log "github.com/micro/micro/v3/service/logger"
+	"regexp"
 
 	userweb "github.com/wen-qu/xuesou-backend-service/user-web/proto"
 
@@ -14,8 +15,15 @@ type UserWeb struct{}
 
 // Login login service
 func (e *UserWeb) Login(ctx context.Context, req *userweb.UserRequest, rsp *userweb.UserResponse) error {
-
+	if len(req.Tel) == 0 || len(req.ValidationCode) == 0 {
+		return errors.BadRequest("para:001", "missing parameter")
+	}
+	if ok, _ := regexp.Match("s/1[3-9]\\d{9}/g", []byte(req.Tel)); !ok {
+		return errors.BadRequest("para:002", "invalid parameter: tel")
+	}
 	log.Info("Received UserWeb.Login request")
+
+	//rsp, err :=
 	rsp.Msg = "Hello Login, " + req.Tel
 	return nil
 }

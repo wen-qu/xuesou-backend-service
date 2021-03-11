@@ -42,11 +42,10 @@ func NewUserSrvEndpoints() []*api.Endpoint {
 // Client API for UserSrv service
 
 type UserSrvService interface {
-	Login(ctx context.Context, in *UserRequest, opts ...client.CallOption) (*UserResponse, error)
-	Register(ctx context.Context, in *UserRequest, opts ...client.CallOption) (*UserResponse, error)
-	Validation(ctx context.Context, in *UserRequest, opts ...client.CallOption) (*UserResponse, error)
-	UpdateProfile(ctx context.Context, in *UserProfileRequest, opts ...client.CallOption) (*UserProfileResponse, error)
-	ReadProfile(ctx context.Context, in *UserProfileRequest, opts ...client.CallOption) (*UserProfileResponse, error)
+	InspectUser(ctx context.Context, in *InspectRequest, opts ...client.CallOption) (*InspectResponse, error)
+	UpdateUser(ctx context.Context, in *UpdateRequest, opts ...client.CallOption) (*UpdateResponse, error)
+	AddUser(ctx context.Context, in *AddRequest, opts ...client.CallOption) (*AddResponse, error)
+	DeleteUser(ctx context.Context, in *DeleteRequest, opts ...client.CallOption) (*DeleteResponse, error)
 }
 
 type userSrvService struct {
@@ -61,9 +60,9 @@ func NewUserSrvService(name string, c client.Client) UserSrvService {
 	}
 }
 
-func (c *userSrvService) Login(ctx context.Context, in *UserRequest, opts ...client.CallOption) (*UserResponse, error) {
-	req := c.c.NewRequest(c.name, "UserSrv.Login", in)
-	out := new(UserResponse)
+func (c *userSrvService) InspectUser(ctx context.Context, in *InspectRequest, opts ...client.CallOption) (*InspectResponse, error) {
+	req := c.c.NewRequest(c.name, "UserSrv.InspectUser", in)
+	out := new(InspectResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -71,9 +70,9 @@ func (c *userSrvService) Login(ctx context.Context, in *UserRequest, opts ...cli
 	return out, nil
 }
 
-func (c *userSrvService) Register(ctx context.Context, in *UserRequest, opts ...client.CallOption) (*UserResponse, error) {
-	req := c.c.NewRequest(c.name, "UserSrv.Register", in)
-	out := new(UserResponse)
+func (c *userSrvService) UpdateUser(ctx context.Context, in *UpdateRequest, opts ...client.CallOption) (*UpdateResponse, error) {
+	req := c.c.NewRequest(c.name, "UserSrv.UpdateUser", in)
+	out := new(UpdateResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -81,9 +80,9 @@ func (c *userSrvService) Register(ctx context.Context, in *UserRequest, opts ...
 	return out, nil
 }
 
-func (c *userSrvService) Validation(ctx context.Context, in *UserRequest, opts ...client.CallOption) (*UserResponse, error) {
-	req := c.c.NewRequest(c.name, "UserSrv.Validation", in)
-	out := new(UserResponse)
+func (c *userSrvService) AddUser(ctx context.Context, in *AddRequest, opts ...client.CallOption) (*AddResponse, error) {
+	req := c.c.NewRequest(c.name, "UserSrv.AddUser", in)
+	out := new(AddResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -91,19 +90,9 @@ func (c *userSrvService) Validation(ctx context.Context, in *UserRequest, opts .
 	return out, nil
 }
 
-func (c *userSrvService) UpdateProfile(ctx context.Context, in *UserProfileRequest, opts ...client.CallOption) (*UserProfileResponse, error) {
-	req := c.c.NewRequest(c.name, "UserSrv.UpdateProfile", in)
-	out := new(UserProfileResponse)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *userSrvService) ReadProfile(ctx context.Context, in *UserProfileRequest, opts ...client.CallOption) (*UserProfileResponse, error) {
-	req := c.c.NewRequest(c.name, "UserSrv.ReadProfile", in)
-	out := new(UserProfileResponse)
+func (c *userSrvService) DeleteUser(ctx context.Context, in *DeleteRequest, opts ...client.CallOption) (*DeleteResponse, error) {
+	req := c.c.NewRequest(c.name, "UserSrv.DeleteUser", in)
+	out := new(DeleteResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -114,20 +103,18 @@ func (c *userSrvService) ReadProfile(ctx context.Context, in *UserProfileRequest
 // Server API for UserSrv service
 
 type UserSrvHandler interface {
-	Login(context.Context, *UserRequest, *UserResponse) error
-	Register(context.Context, *UserRequest, *UserResponse) error
-	Validation(context.Context, *UserRequest, *UserResponse) error
-	UpdateProfile(context.Context, *UserProfileRequest, *UserProfileResponse) error
-	ReadProfile(context.Context, *UserProfileRequest, *UserProfileResponse) error
+	InspectUser(context.Context, *InspectRequest, *InspectResponse) error
+	UpdateUser(context.Context, *UpdateRequest, *UpdateResponse) error
+	AddUser(context.Context, *AddRequest, *AddResponse) error
+	DeleteUser(context.Context, *DeleteRequest, *DeleteResponse) error
 }
 
 func RegisterUserSrvHandler(s server.Server, hdlr UserSrvHandler, opts ...server.HandlerOption) error {
 	type userSrv interface {
-		Login(ctx context.Context, in *UserRequest, out *UserResponse) error
-		Register(ctx context.Context, in *UserRequest, out *UserResponse) error
-		Validation(ctx context.Context, in *UserRequest, out *UserResponse) error
-		UpdateProfile(ctx context.Context, in *UserProfileRequest, out *UserProfileResponse) error
-		ReadProfile(ctx context.Context, in *UserProfileRequest, out *UserProfileResponse) error
+		InspectUser(ctx context.Context, in *InspectRequest, out *InspectResponse) error
+		UpdateUser(ctx context.Context, in *UpdateRequest, out *UpdateResponse) error
+		AddUser(ctx context.Context, in *AddRequest, out *AddResponse) error
+		DeleteUser(ctx context.Context, in *DeleteRequest, out *DeleteResponse) error
 	}
 	type UserSrv struct {
 		userSrv
@@ -140,22 +127,18 @@ type userSrvHandler struct {
 	UserSrvHandler
 }
 
-func (h *userSrvHandler) Login(ctx context.Context, in *UserRequest, out *UserResponse) error {
-	return h.UserSrvHandler.Login(ctx, in, out)
+func (h *userSrvHandler) InspectUser(ctx context.Context, in *InspectRequest, out *InspectResponse) error {
+	return h.UserSrvHandler.InspectUser(ctx, in, out)
 }
 
-func (h *userSrvHandler) Register(ctx context.Context, in *UserRequest, out *UserResponse) error {
-	return h.UserSrvHandler.Register(ctx, in, out)
+func (h *userSrvHandler) UpdateUser(ctx context.Context, in *UpdateRequest, out *UpdateResponse) error {
+	return h.UserSrvHandler.UpdateUser(ctx, in, out)
 }
 
-func (h *userSrvHandler) Validation(ctx context.Context, in *UserRequest, out *UserResponse) error {
-	return h.UserSrvHandler.Validation(ctx, in, out)
+func (h *userSrvHandler) AddUser(ctx context.Context, in *AddRequest, out *AddResponse) error {
+	return h.UserSrvHandler.AddUser(ctx, in, out)
 }
 
-func (h *userSrvHandler) UpdateProfile(ctx context.Context, in *UserProfileRequest, out *UserProfileResponse) error {
-	return h.UserSrvHandler.UpdateProfile(ctx, in, out)
-}
-
-func (h *userSrvHandler) ReadProfile(ctx context.Context, in *UserProfileRequest, out *UserProfileResponse) error {
-	return h.UserSrvHandler.ReadProfile(ctx, in, out)
+func (h *userSrvHandler) DeleteUser(ctx context.Context, in *DeleteRequest, out *DeleteResponse) error {
+	return h.UserSrvHandler.DeleteUser(ctx, in, out)
 }

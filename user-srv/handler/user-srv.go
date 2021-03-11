@@ -13,37 +13,29 @@ import (
 type UserSrv struct{}
 
 // Login login service
-func (e *UserSrv) Login(ctx context.Context, req *usersrv.UserRequest, rsp *usersrv.UserResponse) error {
-
+func (e *UserSrv) AddUser(ctx context.Context, req *usersrv.AddRequest, rsp *usersrv.AddResponse) error {
 	log.Info("Received UserSrv.Login request")
-	rsp.Msg = "Hello Login, " + req.Tel
+	rsp.Msg = "Hello AddUser, " + req.User.Tel
 	return nil
 }
 
 // Register register service
-func (e *UserSrv) Register(ctx context.Context, req *usersrv.UserRequest, rsp *usersrv.UserResponse) error {
+func (e *UserSrv) InspectUser(ctx context.Context, req *usersrv.InspectRequest, rsp *usersrv.InspectResponse) error {
 	log.Info("Received UserSrv.Register request")
-	rsp.Msg = "Hello Register, " + req.Tel
+	rsp.Msg = "Hello InspectUser, " + req.Tel
 	return nil
 }
 
 // Validation validation service (e.g. get a validation code, etc.)
-func (e *UserSrv) Validation(ctx context.Context, req *usersrv.UserRequest, rsp *usersrv.UserResponse) error {
+func (e *UserSrv) UpdateUser(ctx context.Context, req *usersrv.UpdateRequest, rsp *usersrv.UpdateResponse) error {
 	log.Info("Received UserSrv.Validation request")
-	rsp.Msg = "Hello Validation, " + req.Tel
+	rsp.Msg = "Hello UpdateUser, " + req.User.Tel
 	return nil
 }
 
 // UpdateProfile update user's profile
-func (e *UserSrv) UpdateProfile(ctx context.Context, req *usersrv.UserProfileRequest, rsp *usersrv.UserProfileResponse) error {
+func (e *UserSrv) DeleteUser(ctx context.Context, req *usersrv.DeleteRequest, rsp *usersrv.DeleteResponse) error {
 	log.Info("Received UserSrv.Register request")
-	rsp.Msg = "Hello Register, " + req.Tel
-	return nil
-}
-
-// ReadProfile get user's profile
-func (e *UserSrv) ReadProfile(ctx context.Context, req *usersrv.UserProfileRequest, rsp *usersrv.UserProfileResponse) error {
-	log.Info("Received UserSrv.Register request")
-	rsp.Msg = "Hello Register, " + req.Tel
+	rsp.Msg = "Hello DeleteUser, " + req.Tel
 	return nil
 }

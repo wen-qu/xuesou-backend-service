@@ -6,6 +6,7 @@ use user;
 create table if not exists `user_profile_table` ( -- users' basic profile
   `uid` varchar(18) primary key not null, -- e.g. 'user_1615280517432'
   `username` varchar(50) not null, -- initialized as uid=username
+  `password` varchar(32),
   `tel` varchar(11) not null,
   `sex` tinyint,
   `age` tinyint,

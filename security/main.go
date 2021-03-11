@@ -1,8 +1,8 @@
 package main
 
 import (
-	"security/handler"
-	pb "security/proto"
+	"github.com/wen-qu/xuesou-backend-service/security/handler"
+	pb "github.com/wen-qu/xuesou-backend-service/security/proto"
 
 	"github.com/micro/micro/v3/service"
 	"github.com/micro/micro/v3/service/logger"
@@ -16,7 +16,7 @@ func main() {
 	)
 
 	// Register handler
-	pb.RegisterSecurityHandler(srv.Server(), new(handler.Security))
+	_ = pb.RegisterSecurityHandler(srv.Server(), new(handler.Security))
 
 	// Run service
 	if err := srv.Run(); err != nil {

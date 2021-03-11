@@ -4,49 +4,59 @@ package usersrv;
 
 option go_package = "proto;usersrv";
 
-// TODO: update user-srv
 service UserSrv {
-	rpc Login(UserRequest) returns (UserResponse) {}
-	rpc Register(UserRequest) returns (UserResponse) {}
-	rpc Validation(UserRequest) returns (UserResponse) {}
-	rpc UpdateProfile(UserProfileRequest) returns (UserProfileResponse) {}
-	rpc ReadProfile(UserProfileRequest) returns (UserProfileResponse) {}
+	rpc InspectUser(InspectRequest) returns (InspectResponse);
+	rpc UpdateUser(UpdateRequest) returns (UpdateResponse);
+	rpc AddUser(AddRequest) returns (AddResponse);
+	rpc DeleteUser(DeleteRequest) returns (DeleteResponse);
 }
 
-message UserRequest { // use tel number to do, return a uid
-	string tel = 1;
+message User {
+	string uid = 1;
+	string username = 2;
+	string password = 3;
+	string tel = 4;
+	int32 sex = 5;
+	int32 age = 6;
+	string address = 7;
+	int32 class_num = 8;
+	string img = 9;
 }
 
-message UserProfileRequest {
+message InspectRequest {
 	string uid = 1;
 	string tel = 2;
-	int64 information_type = 3;
 }
 
-message UserResponse {
-	int64 code = 1;
-	string uid = 2;
-	string msg = 3;
+message InspectResponse {
+	User user = 1;
+	string msg = 2;
 }
 
-message UserProfileResponse {
+message UpdateRequest {
+	User user = 1;
+}
+
+message UpdateResponse {
+	bool status = 1;
+	string msg = 2;
+}
+
+message DeleteRequest {
 	string uid = 1;
-	string type = 2;
-	Profile profile = 3;
-	string msg = 4;
-}
-
-message Profile {
-	string username = 1;
 	string tel = 2;
-	string sex = 3;
-	string age = 4;
-	string address = 5;
-	string class_num = 6;
-	string img = 7;
 }
 
-message ErrorResponse {
-	string code = 1;
+message DeleteResponse {
+	bool status = 1;
+	string msg = 2;
+}
+
+message AddRequest {
+	User user = 1;
+}
+
+message AddResponse {
+	bool status = 1;
 	string msg = 2;
 }

@@ -1,6 +1,6 @@
-module security
+module github.com/wen-qu/xuesou-backend-service/security
 
-go 1.15
+go 1.16
 
 require (
 	github.com/micro/micro/v3 v3.0.0
