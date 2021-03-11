@@ -8,6 +8,8 @@ import (
 
 	userweb "github.com/wen-qu/xuesou-backend-service/user-web/proto"
 
+	"github.com/wen-qu/xuesou-backend-service/user-srv"
+
 )
 
 // UserWeb the UserWeb struct
