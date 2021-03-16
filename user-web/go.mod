@@ -4,7 +4,7 @@ go 1.16
 
 require (
 	github.com/golang/protobuf v1.4.3
-	github.com/google/uuid v1.2.0 // indirect
+	github.com/google/uuid v1.2.0
 	github.com/improbable-eng/grpc-web v0.14.0 // indirect
 	github.com/klauspost/compress v1.11.12 // indirect
 	github.com/micro/micro/v3 v3.1.1

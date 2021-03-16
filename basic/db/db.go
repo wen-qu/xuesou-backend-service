@@ -27,7 +27,7 @@ func Init() {
 		return
 	}
 
-	dsn := "micro:tF#262420228@tcp(127.0.0.1:3306)/test?charset=utf8"
+	dsn := "micro:tF#262420228@tcp(127.0.0.1:3306)/user?charset=utf8"
 	db, err = sql.Open("mysql", dsn)
 	if err != nil {
 		fmt.Println(err)

@@ -2,7 +2,14 @@ package handler
 
 import (
 	"context"
+	"github.com/google/uuid"
+
+	"io/ioutil"
+	"os"
+
 	"github.com/micro/micro/v3/service"
+	"github.com/micro/micro/v3/service/auth"
+	"github.com/micro/micro/v3/service/auth/jwt"
 	"github.com/micro/micro/v3/service/errors"
 	log "github.com/micro/micro/v3/service/logger"
 
@@ -15,11 +22,35 @@ import (
 
 var (
 	userClient usersrv.UserSrvService
+	jwtClient auth.Auth
 )
 
 func Init(){
 	srv := service.New()
 	userClient = usersrv.NewUserSrvService("user-srv", srv.Client())
+	jwtClient = jwt.NewAuth()
+
+	jwtClient.Init(func(o *auth.Options) {
+		privateFile, err := os.Open("/home/micro/.ssh/id_rsa_micro")
+		if err != nil {
+			log.Error(err)
+			return
+		}
+		publicFile, err := os.Open("/home/micro/.ssh/id_rsa_micro.pub")
+		if err != nil {
+			log.Error(err)
+			return
+		}
+		defer privateFile.Close()
+		defer publicFile.Close()
+
+		privateKeyContent, _ := ioutil.ReadAll(privateFile)
+		publicKeyContent, _ := ioutil.ReadAll(publicFile)
+
+		o.PrivateKey = string(privateKeyContent)
+		o.PublicKey = string(publicKeyContent)
+		o.LoginURL = "/login"
+	})
 }
 
 // UserWeb the UserWeb struct
@@ -30,7 +61,7 @@ func (e *UserWeb) Login(ctx context.Context, req *userweb.UserRequest, rsp *user
 	if len(req.Tel) == 0 || len(req.ValidationCode) == 0 {
 		return errors.BadRequest("para:001", "missing parameter")
 	}
-	if ok, _ := regexp.Match("s/1[3-9]\\d{9}/g", []byte(req.Tel)); !ok {
+	if ok, _ := regexp.Match("^1[3-9]\\d{9}$", []byte(req.Tel)); !ok {
 		return errors.BadRequest("para:002", "invalid parameter: tel")
 	}
 	log.Info("Received UserWeb.Login request")
@@ -41,7 +72,7 @@ func (e *UserWeb) Login(ctx context.Context, req *userweb.UserRequest, rsp *user
 	})
 
 	if err != nil {
-		return errors.InternalServerError("fatal:001", err.Error())
+		return errors.InternalServerError("user-web.UserWeb.Login:fatal:001", err.Error())
 	}
 
 	if len(loginRsp.User.Uid) > 0 { // login success
@@ -51,21 +82,30 @@ func (e *UserWeb) Login(ctx context.Context, req *userweb.UserRequest, rsp *user
 		//     return errors.Forbidden("auth:003", "unknown device")
 		// }
 
+		acc, err := jwtClient.Generate(loginRsp.User.Uid, func(o *auth.GenerateOptions) {
+			o.Type = "user"
+			o.Name = loginRsp.User.Uid
+			o.Secret = uuid.New().String()
+		})
 
+		if err != nil {
+			return errors.InternalServerError("user-web.UserWeb.Login:fatal:002", err.Error())
+		}
 
 		// if err := security.UpdateLoginInformation(loginRsp.User.Uid); err != nil {
 		//     return errors.InternalServerError("fatal:001", "cannot update login information")
 		// }
-		rsp = &userweb.UserResponse{
-			Code: 200,
-			Uid: loginRsp.User.Uid,
-			Msg: "login success",
-		}
+
+		rsp.Code = 200
+		rsp.Uid = loginRsp.User.Uid
+		rsp.Msg = "login success"
+		rsp.Token = acc.Secret
+
 		return nil
 	}
 
 	if err := e.Register(ctx, req, rsp); err != nil {
-		return errors.InternalServerError("fatal:001", err.Error())
+		return errors.InternalServerError("user-web.UserWeb.Register:fatal:001", err.Error())
 	}
 
 	return e.Login(ctx, req, rsp)
@@ -73,7 +113,7 @@ func (e *UserWeb) Login(ctx context.Context, req *userweb.UserRequest, rsp *user
 
 // Register register service
 func (e *UserWeb) Register(ctx context.Context, req *userweb.UserRequest, rsp *userweb.UserResponse) error {
-	if len(req.Tel) == 0 {
+	if len(req.Tel) == 0 || len(req.ValidationCode) == 0 {
 		return errors.BadRequest("para:001", "missing parameter")
 	}
 	if ok, _ := regexp.Match("s/1[3-9]\\d{9}/g", []byte(req.Tel)); !ok {
@@ -81,8 +121,16 @@ func (e *UserWeb) Register(ctx context.Context, req *userweb.UserRequest, rsp *u
 	}
 	log.Info("Received UserWeb.Register request")
 
+	// TODO: check the validation code.
+
+	// Generate the uid, and set username to uid
+	uid := uuid.New().String()
+	username := uid
+
 	regRsp, err := userClient.AddUser(ctx, &usersrv.AddRequest{
 		User: &usersrv.User{
+			Uid: uid,
+			Username: username,
 			Tel: req.Tel,
 		},
 	})
@@ -96,6 +144,7 @@ func (e *UserWeb) Register(ctx context.Context, req *userweb.UserRequest, rsp *u
 	}
 
 	// TODO: create user's chat table, class table, then insert login_inf into user_login_inf table
+
 	rsp = &userweb.UserResponse{
 		Code: 200,
 		Msg: "register success",

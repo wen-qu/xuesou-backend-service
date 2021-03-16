@@ -27,6 +27,7 @@ message UserResponse {
 	int64 code = 1;
 	string uid = 2;
 	string msg = 3;
+	string token = 4;
 }
 
 message UserProfileResponse {
