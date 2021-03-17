@@ -41,10 +41,10 @@ message Profile {
 	string username = 1;
 	string email = 2;
 	string tel = 3;
-	string sex = 4;
-	string age = 5;
+	int32  sex = 4;
+	int32  age = 5;
 	string address = 6;
-	string class_num = 7;
+	int32  class_num = 7;
 	string img = 8;
 }
 

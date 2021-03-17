@@ -16,21 +16,22 @@ import (
 	"regexp"
 
 	userweb "github.com/wen-qu/xuesou-backend-service/user-web/proto"
+	"github.com/wen-qu/xuesou-backend-service/user-web/utils"
 
 	usersrv "github.com/wen-qu/xuesou-backend-service/user-srv/proto"
 )
 
 var (
-	userClient usersrv.UserSrvService
-	jwtClient auth.Auth
+	UserClient usersrv.UserSrvService
+	JWTClient auth.Auth
 )
 
 func Init(){
 	srv := service.New()
-	userClient = usersrv.NewUserSrvService("user-srv", srv.Client())
-	jwtClient = jwt.NewAuth()
+	UserClient = usersrv.NewUserSrvService("user-srv", srv.Client())
+	JWTClient = jwt.NewAuth()
 
-	jwtClient.Init(func(o *auth.Options) {
+	JWTClient.Init(func(o *auth.Options) {
 		privateFile, err := os.Open("/home/micro/.ssh/id_rsa_micro")
 		if err != nil {
 			log.Error(err)
@@ -67,7 +68,7 @@ func (e *UserWeb) Login(ctx context.Context, req *userweb.UserRequest, rsp *user
 	log.Info("Received UserWeb.Login request")
 
 	// TODO: check the validation code [service: security]
-	loginRsp, err := userClient.InspectUser(ctx, &usersrv.InspectRequest{
+	loginRsp, err := UserClient.InspectUser(ctx, &usersrv.InspectRequest{
 		Tel: req.Tel,
 	})
 
@@ -82,7 +83,7 @@ func (e *UserWeb) Login(ctx context.Context, req *userweb.UserRequest, rsp *user
 		//     return errors.Forbidden("auth:003", "unknown device")
 		// }
 
-		acc, err := jwtClient.Generate(loginRsp.User.Uid, func(o *auth.GenerateOptions) {
+		acc, err := JWTClient.Generate(loginRsp.User.Uid, func(o *auth.GenerateOptions) {
 			o.Type = "user"
 			o.Name = loginRsp.User.Uid
 			o.Secret = uuid.New().String()
@@ -127,7 +128,7 @@ func (e *UserWeb) Register(ctx context.Context, req *userweb.UserRequest, rsp *u
 	uid := uuid.New().String()
 	username := uid
 
-	regRsp, err := userClient.AddUser(ctx, &usersrv.AddRequest{
+	regRsp, err := UserClient.AddUser(ctx, &usersrv.AddRequest{
 		User: &usersrv.User{
 			Uid: uid,
 			Username: username,
@@ -169,6 +170,24 @@ func (e *UserWeb) UpdateProfile(ctx context.Context, req *userweb.UserProfileReq
 // ReadProfile get user's profile
 func (e *UserWeb) ReadProfile(ctx context.Context, req *userweb.UserProfileRequest, rsp *userweb.UserProfileResponse) error {
 	log.Info("Received UserWeb.Register request")
-	rsp.Msg = "Hello Register, " + req.Tel
+
+	if len(req.Uid) == 0 && len(req.Tel) == 0 {
+		return errors.BadRequest("para:001", "missing parameters")
+	}
+
+	switch req.InformationType {
+	case 1: // general
+		rsp.Profile, _ = utils.ReadGeneralProfile(ctx, req.Uid, req.Tel)
+		rsp.Uid = req.Uid
+		rsp.Type = "general"
+	case 2: // order
+	case 3: // discount
+	case 4: // likes
+	case 5: // order_review
+	case 6: // classes
+	case 7: // collections
+	}
+	
+
 	return nil
 }
