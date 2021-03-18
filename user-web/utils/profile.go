@@ -4,15 +4,14 @@ import (
 	"context"
 	"github.com/micro/micro/v3/service/errors"
 	usersrv "github.com/wen-qu/xuesou-backend-service/user-srv/proto"
-	"github.com/wen-qu/xuesou-backend-service/user-web/handler"
 	userweb "github.com/wen-qu/xuesou-backend-service/user-web/proto"
 )
 
-func ReadGeneralProfile(ctx context.Context, uid string, tel string) (*userweb.Profile, error) {
+func ReadGeneralProfile(ctx context.Context, userClient *usersrv.UserSrvService, uid string, tel string) (*userweb.Profile, error) {
 	var profile *usersrv.InspectResponse
 	var res = new(userweb.Profile)
 
-	profile, err := handler.UserClient.InspectUser(ctx, &usersrv.InspectRequest{
+	profile, err := (*userClient).InspectUser(ctx, &usersrv.InspectRequest{
 		Uid: uid,
 		Tel: tel,
 	})
@@ -37,23 +36,23 @@ func ReadGeneralProfile(ctx context.Context, uid string, tel string) (*userweb.P
 	return res, nil
 }
 
-func ReadOrder(ctx context.Context, uid string, tel string) *userweb.Profile {
+func ReadOrder(ctx context.Context, userClient *usersrv.UserSrvService, uid string, tel string) *userweb.Profile {
 	return nil
 }
 
-func ReadDisCount(ctx context.Context, uid string, tel string) *userweb.Profile {
+func ReadDisCount(ctx context.Context, userClient *usersrv.UserSrvService, uid string, tel string) *userweb.Profile {
 	return nil
 }
 
-func ReadLikes(ctx context.Context, uid string, tel string) *userweb.Profile {
+func ReadLikes(ctx context.Context, userClient *usersrv.UserSrvService, uid string, tel string) *userweb.Profile {
 	return nil
 }
 
-func ReadOrderReview(ctx context.Context, uid string, tel string) *userweb.Profile {
+func ReadOrderReview(ctx context.Context, userClient *usersrv.UserSrvService, uid string, tel string) *userweb.Profile {
 	return nil
 }
 
-func ReadClasses(ctx context.Context, uid string, tel string) *userweb.Profile {
+func ReadClasses(ctx context.Context, userClient *usersrv.UserSrvService, uid string, tel string) *userweb.Profile {
 	return nil
 }
 

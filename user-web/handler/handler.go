@@ -177,7 +177,7 @@ func (e *UserWeb) ReadProfile(ctx context.Context, req *userweb.UserProfileReque
 
 	switch req.InformationType {
 	case 1: // general
-		rsp.Profile, _ = utils.ReadGeneralProfile(ctx, req.Uid, req.Tel)
+		rsp.Profile, _ = utils.ReadGeneralProfile(ctx, &UserClient, req.Uid, req.Tel)
 		rsp.Uid = req.Uid
 		rsp.Type = "general"
 	case 2: // order
@@ -187,7 +187,6 @@ func (e *UserWeb) ReadProfile(ctx context.Context, req *userweb.UserProfileReque
 	case 6: // classes
 	case 7: // collections
 	}
-	
 
 	return nil
 }

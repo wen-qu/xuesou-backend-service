@@ -5,35 +5,76 @@ package agencysrv;
 option go_package = "proto;agencysrv";
 
 service AgencySrv {
-	rpc Call(Request) returns (Response) {}
-	rpc Stream(StreamingRequest) returns (stream StreamingResponse) {}
-	rpc PingPong(stream Ping) returns (stream Pong) {}
+	rpc ReadAgencyDetails(ReadAgencyRequest) returns (ReadAgencyResponse);
+	rpc AddAgency(AddAgencyRequest) returns (AddAgencyResponse);
+	rpc UpdateAgency(UpdateAgencyRequest) returns (UpdateAgencyResponse);
+	rpc DeleteAgency(DeleteAgencyRequest) returns (DeleteAgencyResponse);
 }
 
-message Message {
-	string say = 1;
+message Class {
+	string classID = 1;
+	float price = 2;
+	string name = 3;
+	int32 sales = 4;
 }
 
-message Request {
-	string name = 1;
+message Agency {
+	string agencyID = 1;
+	string name = 2;
+	float rating = 3;
+	int32 comments = 4;
+	string order = 5;
+	repeated string tags = 6;
+	string address = 7;
+	string addressDetail = 8;
+	float distance = 9;
+	string icon = 10;
+	repeated string photos = 11;
+	repeated Class classes = 12;
 }
 
-message Response {
-	string msg = 1;
+message ReadAgencyRequest {
+	string agencyID = 1;
+	string name = 2;
+	repeated string tags = 3;
+	string filter = 4;
+	repeated string filter_items = 5;
+	string s = 6; // search
 }
 
-message StreamingRequest {
-	int64 count = 1;
+message ReadAgencyResponse {
+	int32 status = 1;
+	repeated Agency agencies = 2;
+	string msg = 3;
 }
 
-message StreamingResponse {
-	int64 count = 1;
+message AddAgencyRequest {
+	Agency agency = 1;
 }
 
-message Ping {
-	int64 stroke = 1;
+message AddAgencyResponse {
+	int32 status = 1;
+	string agencyID = 2;
+	string msg = 3;
 }
 
-message Pong {
-	int64 stroke = 1;
+message UpdateAgencyRequest {
+	string AgencyID = 1;
+	Agency agency = 2;
 }
+
+message UpdateAgencyResponse {
+	int32 status = 1;
+	string msg = 2;
+}
+
+message DeleteAgencyRequest {
+	string AgencyID = 1;
+}
+
+message DeleteAgencyResponse {
+	int32 status = 1;
+	string msg = 2;
+}
+
+

@@ -42,9 +42,10 @@ func NewAgencySrvEndpoints() []*api.Endpoint {
 // Client API for AgencySrv service
 
 type AgencySrvService interface {
-	Call(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error)
-	Stream(ctx context.Context, in *StreamingRequest, opts ...client.CallOption) (AgencySrv_StreamService, error)
-	PingPong(ctx context.Context, opts ...client.CallOption) (AgencySrv_PingPongService, error)
+	ReadAgencyDetails(ctx context.Context, in *ReadAgencyRequest, opts ...client.CallOption) (*ReadAgencyResponse, error)
+	AddAgency(ctx context.Context, in *AddAgencyRequest, opts ...client.CallOption) (*AddAgencyResponse, error)
+	UpdateAgency(ctx context.Context, in *UpdateAgencyRequest, opts ...client.CallOption) (*UpdateAgencyResponse, error)
+	DeleteAgency(ctx context.Context, in *DeleteAgencyRequest, opts ...client.CallOption) (*DeleteAgencyResponse, error)
 }
 
 type agencySrvService struct {
@@ -59,9 +60,9 @@ func NewAgencySrvService(name string, c client.Client) AgencySrvService {
 	}
 }
 
-func (c *agencySrvService) Call(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error) {
-	req := c.c.NewRequest(c.name, "AgencySrv.Call", in)
-	out := new(Response)
+func (c *agencySrvService) ReadAgencyDetails(ctx context.Context, in *ReadAgencyRequest, opts ...client.CallOption) (*ReadAgencyResponse, error) {
+	req := c.c.NewRequest(c.name, "AgencySrv.ReadAgencyDetails", in)
+	out := new(ReadAgencyResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -69,119 +70,51 @@ func (c *agencySrvService) Call(ctx context.Context, in *Request, opts ...client
 	return out, nil
 }
 
-func (c *agencySrvService) Stream(ctx context.Context, in *StreamingRequest, opts ...client.CallOption) (AgencySrv_StreamService, error) {
-	req := c.c.NewRequest(c.name, "AgencySrv.Stream", &StreamingRequest{})
-	stream, err := c.c.Stream(ctx, req, opts...)
+func (c *agencySrvService) AddAgency(ctx context.Context, in *AddAgencyRequest, opts ...client.CallOption) (*AddAgencyResponse, error) {
+	req := c.c.NewRequest(c.name, "AgencySrv.AddAgency", in)
+	out := new(AddAgencyResponse)
+	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
 	}
-	if err := stream.Send(in); err != nil {
-		return nil, err
-	}
-	return &agencySrvServiceStream{stream}, nil
+	return out, nil
 }
 
-type AgencySrv_StreamService interface {
-	Context() context.Context
-	SendMsg(interface{}) error
-	RecvMsg(interface{}) error
-	Close() error
-	Recv() (*StreamingResponse, error)
-}
-
-type agencySrvServiceStream struct {
-	stream client.Stream
-}
-
-func (x *agencySrvServiceStream) Close() error {
-	return x.stream.Close()
-}
-
-func (x *agencySrvServiceStream) Context() context.Context {
-	return x.stream.Context()
-}
-
-func (x *agencySrvServiceStream) SendMsg(m interface{}) error {
-	return x.stream.Send(m)
-}
-
-func (x *agencySrvServiceStream) RecvMsg(m interface{}) error {
-	return x.stream.Recv(m)
-}
-
-func (x *agencySrvServiceStream) Recv() (*StreamingResponse, error) {
-	m := new(StreamingResponse)
-	err := x.stream.Recv(m)
+func (c *agencySrvService) UpdateAgency(ctx context.Context, in *UpdateAgencyRequest, opts ...client.CallOption) (*UpdateAgencyResponse, error) {
+	req := c.c.NewRequest(c.name, "AgencySrv.UpdateAgency", in)
+	out := new(UpdateAgencyResponse)
+	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return m, nil
+	return out, nil
 }
 
-func (c *agencySrvService) PingPong(ctx context.Context, opts ...client.CallOption) (AgencySrv_PingPongService, error) {
-	req := c.c.NewRequest(c.name, "AgencySrv.PingPong", &Ping{})
-	stream, err := c.c.Stream(ctx, req, opts...)
+func (c *agencySrvService) DeleteAgency(ctx context.Context, in *DeleteAgencyRequest, opts ...client.CallOption) (*DeleteAgencyResponse, error) {
+	req := c.c.NewRequest(c.name, "AgencySrv.DeleteAgency", in)
+	out := new(DeleteAgencyResponse)
+	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return &agencySrvServicePingPong{stream}, nil
-}
-
-type AgencySrv_PingPongService interface {
-	Context() context.Context
-	SendMsg(interface{}) error
-	RecvMsg(interface{}) error
-	Close() error
-	Send(*Ping) error
-	Recv() (*Pong, error)
-}
-
-type agencySrvServicePingPong struct {
-	stream client.Stream
-}
-
-func (x *agencySrvServicePingPong) Close() error {
-	return x.stream.Close()
-}
-
-func (x *agencySrvServicePingPong) Context() context.Context {
-	return x.stream.Context()
-}
-
-func (x *agencySrvServicePingPong) SendMsg(m interface{}) error {
-	return x.stream.Send(m)
-}
-
-func (x *agencySrvServicePingPong) RecvMsg(m interface{}) error {
-	return x.stream.Recv(m)
-}
-
-func (x *agencySrvServicePingPong) Send(m *Ping) error {
-	return x.stream.Send(m)
-}
-
-func (x *agencySrvServicePingPong) Recv() (*Pong, error) {
-	m := new(Pong)
-	err := x.stream.Recv(m)
-	if err != nil {
-		return nil, err
-	}
-	return m, nil
+	return out, nil
 }
 
 // Server API for AgencySrv service
 
 type AgencySrvHandler interface {
-	Call(context.Context, *Request, *Response) error
-	Stream(context.Context, *StreamingRequest, AgencySrv_StreamStream) error
-	PingPong(context.Context, AgencySrv_PingPongStream) error
+	ReadAgencyDetails(context.Context, *ReadAgencyRequest, *ReadAgencyResponse) error
+	AddAgency(context.Context, *AddAgencyRequest, *AddAgencyResponse) error
+	UpdateAgency(context.Context, *UpdateAgencyRequest, *UpdateAgencyResponse) error
+	DeleteAgency(context.Context, *DeleteAgencyRequest, *DeleteAgencyResponse) error
 }
 
 func RegisterAgencySrvHandler(s server.Server, hdlr AgencySrvHandler, opts ...server.HandlerOption) error {
 	type agencySrv interface {
-		Call(ctx context.Context, in *Request, out *Response) error
-		Stream(ctx context.Context, stream server.Stream) error
-		PingPong(ctx context.Context, stream server.Stream) error
+		ReadAgencyDetails(ctx context.Context, in *ReadAgencyRequest, out *ReadAgencyResponse) error
+		AddAgency(ctx context.Context, in *AddAgencyRequest, out *AddAgencyResponse) error
+		UpdateAgency(ctx context.Context, in *UpdateAgencyRequest, out *UpdateAgencyResponse) error
+		DeleteAgency(ctx context.Context, in *DeleteAgencyRequest, out *DeleteAgencyResponse) error
 	}
 	type AgencySrv struct {
 		agencySrv
@@ -194,91 +127,18 @@ type agencySrvHandler struct {
 	AgencySrvHandler
 }
 
-func (h *agencySrvHandler) Call(ctx context.Context, in *Request, out *Response) error {
-	return h.AgencySrvHandler.Call(ctx, in, out)
+func (h *agencySrvHandler) ReadAgencyDetails(ctx context.Context, in *ReadAgencyRequest, out *ReadAgencyResponse) error {
+	return h.AgencySrvHandler.ReadAgencyDetails(ctx, in, out)
 }
 
-func (h *agencySrvHandler) Stream(ctx context.Context, stream server.Stream) error {
-	m := new(StreamingRequest)
-	if err := stream.Recv(m); err != nil {
-		return err
-	}
-	return h.AgencySrvHandler.Stream(ctx, m, &agencySrvStreamStream{stream})
+func (h *agencySrvHandler) AddAgency(ctx context.Context, in *AddAgencyRequest, out *AddAgencyResponse) error {
+	return h.AgencySrvHandler.AddAgency(ctx, in, out)
 }
 
-type AgencySrv_StreamStream interface {
-	Context() context.Context
-	SendMsg(interface{}) error
-	RecvMsg(interface{}) error
-	Close() error
-	Send(*StreamingResponse) error
+func (h *agencySrvHandler) UpdateAgency(ctx context.Context, in *UpdateAgencyRequest, out *UpdateAgencyResponse) error {
+	return h.AgencySrvHandler.UpdateAgency(ctx, in, out)
 }
 
-type agencySrvStreamStream struct {
-	stream server.Stream
-}
-
-func (x *agencySrvStreamStream) Close() error {
-	return x.stream.Close()
-}
-
-func (x *agencySrvStreamStream) Context() context.Context {
-	return x.stream.Context()
-}
-
-func (x *agencySrvStreamStream) SendMsg(m interface{}) error {
-	return x.stream.Send(m)
-}
-
-func (x *agencySrvStreamStream) RecvMsg(m interface{}) error {
-	return x.stream.Recv(m)
-}
-
-func (x *agencySrvStreamStream) Send(m *StreamingResponse) error {
-	return x.stream.Send(m)
-}
-
-func (h *agencySrvHandler) PingPong(ctx context.Context, stream server.Stream) error {
-	return h.AgencySrvHandler.PingPong(ctx, &agencySrvPingPongStream{stream})
-}
-
-type AgencySrv_PingPongStream interface {
-	Context() context.Context
-	SendMsg(interface{}) error
-	RecvMsg(interface{}) error
-	Close() error
-	Send(*Pong) error
-	Recv() (*Ping, error)
-}
-
-type agencySrvPingPongStream struct {
-	stream server.Stream
-}
-
-func (x *agencySrvPingPongStream) Close() error {
-	return x.stream.Close()
-}
-
-func (x *agencySrvPingPongStream) Context() context.Context {
-	return x.stream.Context()
-}
-
-func (x *agencySrvPingPongStream) SendMsg(m interface{}) error {
-	return x.stream.Send(m)
-}
-
-func (x *agencySrvPingPongStream) RecvMsg(m interface{}) error {
-	return x.stream.Recv(m)
-}
-
-func (x *agencySrvPingPongStream) Send(m *Pong) error {
-	return x.stream.Send(m)
-}
-
-func (x *agencySrvPingPongStream) Recv() (*Ping, error) {
-	m := new(Ping)
-	if err := x.stream.Recv(m); err != nil {
-		return nil, err
-	}
-	return m, nil
+func (h *agencySrvHandler) DeleteAgency(ctx context.Context, in *DeleteAgencyRequest, out *DeleteAgencyResponse) error {
+	return h.AgencySrvHandler.DeleteAgency(ctx, in, out)
 }

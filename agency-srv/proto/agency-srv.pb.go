@@ -25,16 +25,19 @@ const (
 // of the legacy proto package is being used.
 const _ = proto.ProtoPackageIsVersion4
 
-type Message struct {
+type Class struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Say string `protobuf:"bytes,1,opt,name=say,proto3" json:"say,omitempty"`
+	ClassID string  `protobuf:"bytes,1,opt,name=classID,proto3" json:"classID,omitempty"`
+	Price   float32 `protobuf:"fixed32,2,opt,name=price,proto3" json:"price,omitempty"`
+	Name    string  `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
+	Sales   int32   `protobuf:"varint,4,opt,name=sales,proto3" json:"sales,omitempty"`
 }
 
-func (x *Message) Reset() {
-	*x = Message{}
+func (x *Class) Reset() {
+	*x = Class{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_proto_agency_srv_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -42,13 +45,13 @@ func (x *Message) Reset() {
 	}
 }
 
-func (x *Message) String() string {
+func (x *Class) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Message) ProtoMessage() {}
+func (*Class) ProtoMessage() {}
 
-func (x *Message) ProtoReflect() protoreflect.Message {
+func (x *Class) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_agency_srv_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -60,28 +63,60 @@ func (x *Message) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message.ProtoReflect.Descriptor instead.
-func (*Message) Descriptor() ([]byte, []int) {
+// Deprecated: Use Class.ProtoReflect.Descriptor instead.
+func (*Class) Descriptor() ([]byte, []int) {
 	return file_proto_agency_srv_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *Message) GetSay() string {
+func (x *Class) GetClassID() string {
 	if x != nil {
-		return x.Say
+		return x.ClassID
 	}
 	return ""
 }
 
-type Request struct {
+func (x *Class) GetPrice() float32 {
+	if x != nil {
+		return x.Price
+	}
+	return 0
+}
+
+func (x *Class) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *Class) GetSales() int32 {
+	if x != nil {
+		return x.Sales
+	}
+	return 0
+}
+
+type Agency struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	AgencyID      string   `protobuf:"bytes,1,opt,name=agencyID,proto3" json:"agencyID,omitempty"`
+	Name          string   `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Rating        float32  `protobuf:"fixed32,3,opt,name=rating,proto3" json:"rating,omitempty"`
+	Comments      int32    `protobuf:"varint,4,opt,name=comments,proto3" json:"comments,omitempty"`
+	Order         string   `protobuf:"bytes,5,opt,name=order,proto3" json:"order,omitempty"`
+	Tags          []string `protobuf:"bytes,6,rep,name=tags,proto3" json:"tags,omitempty"`
+	Address       string   `protobuf:"bytes,7,opt,name=address,proto3" json:"address,omitempty"`
+	AddressDetail string   `protobuf:"bytes,8,opt,name=addressDetail,proto3" json:"addressDetail,omitempty"`
+	Distance      float32  `protobuf:"fixed32,9,opt,name=distance,proto3" json:"distance,omitempty"`
+	Icon          string   `protobuf:"bytes,10,opt,name=icon,proto3" json:"icon,omitempty"`
+	Photos        []string `protobuf:"bytes,11,rep,name=photos,proto3" json:"photos,omitempty"`
+	Classes       []*Class `protobuf:"bytes,12,rep,name=classes,proto3" json:"classes,omitempty"`
 }
 
-func (x *Request) Reset() {
-	*x = Request{}
+func (x *Agency) Reset() {
+	*x = Agency{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_proto_agency_srv_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -89,13 +124,13 @@ func (x *Request) Reset() {
 	}
 }
 
-func (x *Request) String() string {
+func (x *Agency) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Request) ProtoMessage() {}
+func (*Agency) ProtoMessage() {}
 
-func (x *Request) ProtoReflect() protoreflect.Message {
+func (x *Agency) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_agency_srv_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -107,28 +142,110 @@ func (x *Request) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Request.ProtoReflect.Descriptor instead.
-func (*Request) Descriptor() ([]byte, []int) {
+// Deprecated: Use Agency.ProtoReflect.Descriptor instead.
+func (*Agency) Descriptor() ([]byte, []int) {
 	return file_proto_agency_srv_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *Request) GetName() string {
+func (x *Agency) GetAgencyID() string {
+	if x != nil {
+		return x.AgencyID
+	}
+	return ""
+}
+
+func (x *Agency) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-type Response struct {
+func (x *Agency) GetRating() float32 {
+	if x != nil {
+		return x.Rating
+	}
+	return 0
+}
+
+func (x *Agency) GetComments() int32 {
+	if x != nil {
+		return x.Comments
+	}
+	return 0
+}
+
+func (x *Agency) GetOrder() string {
+	if x != nil {
+		return x.Order
+	}
+	return ""
+}
+
+func (x *Agency) GetTags() []string {
+	if x != nil {
+		return x.Tags
+	}
+	return nil
+}
+
+func (x *Agency) GetAddress() string {
+	if x != nil {
+		return x.Address
+	}
+	return ""
+}
+
+func (x *Agency) GetAddressDetail() string {
+	if x != nil {
+		return x.AddressDetail
+	}
+	return ""
+}
+
+func (x *Agency) GetDistance() float32 {
+	if x != nil {
+		return x.Distance
+	}
+	return 0
+}
+
+func (x *Agency) GetIcon() string {
+	if x != nil {
+		return x.Icon
+	}
+	return ""
+}
+
+func (x *Agency) GetPhotos() []string {
+	if x != nil {
+		return x.Photos
+	}
+	return nil
+}
+
+func (x *Agency) GetClasses() []*Class {
+	if x != nil {
+		return x.Classes
+	}
+	return nil
+}
+
+type ReadAgencyRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Msg string `protobuf:"bytes,1,opt,name=msg,proto3" json:"msg,omitempty"`
+	AgencyID    string   `protobuf:"bytes,1,opt,name=agencyID,proto3" json:"agencyID,omitempty"`
+	Name        string   `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Tags        []string `protobuf:"bytes,3,rep,name=tags,proto3" json:"tags,omitempty"`
+	Filter      string   `protobuf:"bytes,4,opt,name=filter,proto3" json:"filter,omitempty"`
+	FilterItems []string `protobuf:"bytes,5,rep,name=filter_items,json=filterItems,proto3" json:"filter_items,omitempty"`
+	S           string   `protobuf:"bytes,6,opt,name=s,proto3" json:"s,omitempty"` // search
 }
 
-func (x *Response) Reset() {
-	*x = Response{}
+func (x *ReadAgencyRequest) Reset() {
+	*x = ReadAgencyRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_proto_agency_srv_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -136,13 +253,13 @@ func (x *Response) Reset() {
 	}
 }
 
-func (x *Response) String() string {
+func (x *ReadAgencyRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Response) ProtoMessage() {}
+func (*ReadAgencyRequest) ProtoMessage() {}
 
-func (x *Response) ProtoReflect() protoreflect.Message {
+func (x *ReadAgencyRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_agency_srv_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -154,28 +271,65 @@ func (x *Response) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Response.ProtoReflect.Descriptor instead.
-func (*Response) Descriptor() ([]byte, []int) {
+// Deprecated: Use ReadAgencyRequest.ProtoReflect.Descriptor instead.
+func (*ReadAgencyRequest) Descriptor() ([]byte, []int) {
 	return file_proto_agency_srv_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *Response) GetMsg() string {
+func (x *ReadAgencyRequest) GetAgencyID() string {
 	if x != nil {
-		return x.Msg
+		return x.AgencyID
 	}
 	return ""
 }
 
-type StreamingRequest struct {
+func (x *ReadAgencyRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *ReadAgencyRequest) GetTags() []string {
+	if x != nil {
+		return x.Tags
+	}
+	return nil
+}
+
+func (x *ReadAgencyRequest) GetFilter() string {
+	if x != nil {
+		return x.Filter
+	}
+	return ""
+}
+
+func (x *ReadAgencyRequest) GetFilterItems() []string {
+	if x != nil {
+		return x.FilterItems
+	}
+	return nil
+}
+
+func (x *ReadAgencyRequest) GetS() string {
+	if x != nil {
+		return x.S
+	}
+	return ""
+}
+
+type ReadAgencyResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Count int64 `protobuf:"varint,1,opt,name=count,proto3" json:"count,omitempty"`
+	Status   int32     `protobuf:"varint,1,opt,name=status,proto3" json:"status,omitempty"`
+	Agencies []*Agency `protobuf:"bytes,2,rep,name=agencies,proto3" json:"agencies,omitempty"`
+	Msg      string    `protobuf:"bytes,3,opt,name=msg,proto3" json:"msg,omitempty"`
 }
 
-func (x *StreamingRequest) Reset() {
-	*x = StreamingRequest{}
+func (x *ReadAgencyResponse) Reset() {
+	*x = ReadAgencyResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_proto_agency_srv_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -183,13 +337,13 @@ func (x *StreamingRequest) Reset() {
 	}
 }
 
-func (x *StreamingRequest) String() string {
+func (x *ReadAgencyResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*StreamingRequest) ProtoMessage() {}
+func (*ReadAgencyResponse) ProtoMessage() {}
 
-func (x *StreamingRequest) ProtoReflect() protoreflect.Message {
+func (x *ReadAgencyResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_agency_srv_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -201,28 +355,42 @@ func (x *StreamingRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use StreamingRequest.ProtoReflect.Descriptor instead.
-func (*StreamingRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use ReadAgencyResponse.ProtoReflect.Descriptor instead.
+func (*ReadAgencyResponse) Descriptor() ([]byte, []int) {
 	return file_proto_agency_srv_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *StreamingRequest) GetCount() int64 {
+func (x *ReadAgencyResponse) GetStatus() int32 {
 	if x != nil {
-		return x.Count
+		return x.Status
 	}
 	return 0
 }
 
-type StreamingResponse struct {
+func (x *ReadAgencyResponse) GetAgencies() []*Agency {
+	if x != nil {
+		return x.Agencies
+	}
+	return nil
+}
+
+func (x *ReadAgencyResponse) GetMsg() string {
+	if x != nil {
+		return x.Msg
+	}
+	return ""
+}
+
+type AddAgencyRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Count int64 `protobuf:"varint,1,opt,name=count,proto3" json:"count,omitempty"`
+	Agency *Agency `protobuf:"bytes,1,opt,name=agency,proto3" json:"agency,omitempty"`
 }
 
-func (x *StreamingResponse) Reset() {
-	*x = StreamingResponse{}
+func (x *AddAgencyRequest) Reset() {
+	*x = AddAgencyRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_proto_agency_srv_proto_msgTypes[4]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -230,13 +398,13 @@ func (x *StreamingResponse) Reset() {
 	}
 }
 
-func (x *StreamingResponse) String() string {
+func (x *AddAgencyRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*StreamingResponse) ProtoMessage() {}
+func (*AddAgencyRequest) ProtoMessage() {}
 
-func (x *StreamingResponse) ProtoReflect() protoreflect.Message {
+func (x *AddAgencyRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_agency_srv_proto_msgTypes[4]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -248,28 +416,30 @@ func (x *StreamingResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use StreamingResponse.ProtoReflect.Descriptor instead.
-func (*StreamingResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use AddAgencyRequest.ProtoReflect.Descriptor instead.
+func (*AddAgencyRequest) Descriptor() ([]byte, []int) {
 	return file_proto_agency_srv_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *StreamingResponse) GetCount() int64 {
+func (x *AddAgencyRequest) GetAgency() *Agency {
 	if x != nil {
-		return x.Count
+		return x.Agency
 	}
-	return 0
+	return nil
 }
 
-type Ping struct {
+type AddAgencyResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Stroke int64 `protobuf:"varint,1,opt,name=stroke,proto3" json:"stroke,omitempty"`
+	Status   int32  `protobuf:"varint,1,opt,name=status,proto3" json:"status,omitempty"`
+	AgencyID string `protobuf:"bytes,2,opt,name=agencyID,proto3" json:"agencyID,omitempty"`
+	Msg      string `protobuf:"bytes,3,opt,name=msg,proto3" json:"msg,omitempty"`
 }
 
-func (x *Ping) Reset() {
-	*x = Ping{}
+func (x *AddAgencyResponse) Reset() {
+	*x = AddAgencyResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_proto_agency_srv_proto_msgTypes[5]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -277,13 +447,13 @@ func (x *Ping) Reset() {
 	}
 }
 
-func (x *Ping) String() string {
+func (x *AddAgencyResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Ping) ProtoMessage() {}
+func (*AddAgencyResponse) ProtoMessage() {}
 
-func (x *Ping) ProtoReflect() protoreflect.Message {
+func (x *AddAgencyResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_agency_srv_proto_msgTypes[5]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -295,28 +465,43 @@ func (x *Ping) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Ping.ProtoReflect.Descriptor instead.
-func (*Ping) Descriptor() ([]byte, []int) {
+// Deprecated: Use AddAgencyResponse.ProtoReflect.Descriptor instead.
+func (*AddAgencyResponse) Descriptor() ([]byte, []int) {
 	return file_proto_agency_srv_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *Ping) GetStroke() int64 {
+func (x *AddAgencyResponse) GetStatus() int32 {
 	if x != nil {
-		return x.Stroke
+		return x.Status
 	}
 	return 0
 }
 
-type Pong struct {
+func (x *AddAgencyResponse) GetAgencyID() string {
+	if x != nil {
+		return x.AgencyID
+	}
+	return ""
+}
+
+func (x *AddAgencyResponse) GetMsg() string {
+	if x != nil {
+		return x.Msg
+	}
+	return ""
+}
+
+type UpdateAgencyRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Stroke int64 `protobuf:"varint,1,opt,name=stroke,proto3" json:"stroke,omitempty"`
+	AgencyID string  `protobuf:"bytes,1,opt,name=AgencyID,proto3" json:"AgencyID,omitempty"`
+	Agency   *Agency `protobuf:"bytes,2,opt,name=agency,proto3" json:"agency,omitempty"`
 }
 
-func (x *Pong) Reset() {
-	*x = Pong{}
+func (x *UpdateAgencyRequest) Reset() {
+	*x = UpdateAgencyRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_proto_agency_srv_proto_msgTypes[6]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -324,13 +509,13 @@ func (x *Pong) Reset() {
 	}
 }
 
-func (x *Pong) String() string {
+func (x *UpdateAgencyRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Pong) ProtoMessage() {}
+func (*UpdateAgencyRequest) ProtoMessage() {}
 
-func (x *Pong) ProtoReflect() protoreflect.Message {
+func (x *UpdateAgencyRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_agency_srv_proto_msgTypes[6]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -342,16 +527,180 @@ func (x *Pong) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Pong.ProtoReflect.Descriptor instead.
-func (*Pong) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateAgencyRequest.ProtoReflect.Descriptor instead.
+func (*UpdateAgencyRequest) Descriptor() ([]byte, []int) {
 	return file_proto_agency_srv_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *Pong) GetStroke() int64 {
+func (x *UpdateAgencyRequest) GetAgencyID() string {
 	if x != nil {
-		return x.Stroke
+		return x.AgencyID
+	}
+	return ""
+}
+
+func (x *UpdateAgencyRequest) GetAgency() *Agency {
+	if x != nil {
+		return x.Agency
+	}
+	return nil
+}
+
+type UpdateAgencyResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Status int32  `protobuf:"varint,1,opt,name=status,proto3" json:"status,omitempty"`
+	Msg    string `protobuf:"bytes,2,opt,name=msg,proto3" json:"msg,omitempty"`
+}
+
+func (x *UpdateAgencyResponse) Reset() {
+	*x = UpdateAgencyResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_proto_agency_srv_proto_msgTypes[7]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *UpdateAgencyResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateAgencyResponse) ProtoMessage() {}
+
+func (x *UpdateAgencyResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_agency_srv_proto_msgTypes[7]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateAgencyResponse.ProtoReflect.Descriptor instead.
+func (*UpdateAgencyResponse) Descriptor() ([]byte, []int) {
+	return file_proto_agency_srv_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *UpdateAgencyResponse) GetStatus() int32 {
+	if x != nil {
+		return x.Status
 	}
 	return 0
+}
+
+func (x *UpdateAgencyResponse) GetMsg() string {
+	if x != nil {
+		return x.Msg
+	}
+	return ""
+}
+
+type DeleteAgencyRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	AgencyID string `protobuf:"bytes,1,opt,name=AgencyID,proto3" json:"AgencyID,omitempty"`
+}
+
+func (x *DeleteAgencyRequest) Reset() {
+	*x = DeleteAgencyRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_proto_agency_srv_proto_msgTypes[8]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *DeleteAgencyRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteAgencyRequest) ProtoMessage() {}
+
+func (x *DeleteAgencyRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_agency_srv_proto_msgTypes[8]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteAgencyRequest.ProtoReflect.Descriptor instead.
+func (*DeleteAgencyRequest) Descriptor() ([]byte, []int) {
+	return file_proto_agency_srv_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *DeleteAgencyRequest) GetAgencyID() string {
+	if x != nil {
+		return x.AgencyID
+	}
+	return ""
+}
+
+type DeleteAgencyResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Status int32  `protobuf:"varint,1,opt,name=status,proto3" json:"status,omitempty"`
+	Msg    string `protobuf:"bytes,2,opt,name=msg,proto3" json:"msg,omitempty"`
+}
+
+func (x *DeleteAgencyResponse) Reset() {
+	*x = DeleteAgencyResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_proto_agency_srv_proto_msgTypes[9]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *DeleteAgencyResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteAgencyResponse) ProtoMessage() {}
+
+func (x *DeleteAgencyResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_agency_srv_proto_msgTypes[9]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteAgencyResponse.ProtoReflect.Descriptor instead.
+func (*DeleteAgencyResponse) Descriptor() ([]byte, []int) {
+	return file_proto_agency_srv_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *DeleteAgencyResponse) GetStatus() int32 {
+	if x != nil {
+		return x.Status
+	}
+	return 0
+}
+
+func (x *DeleteAgencyResponse) GetMsg() string {
+	if x != nil {
+		return x.Msg
+	}
+	return ""
 }
 
 var File_proto_agency_srv_proto protoreflect.FileDescriptor
@@ -359,35 +708,100 @@ var File_proto_agency_srv_proto protoreflect.FileDescriptor
 var file_proto_agency_srv_proto_rawDesc = []byte{
 	0x0a, 0x16, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x61, 0x67, 0x65, 0x6e, 0x63, 0x79, 0x2d, 0x73,
 	0x72, 0x76, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x09, 0x61, 0x67, 0x65, 0x6e, 0x63, 0x79,
-	0x73, 0x72, 0x76, 0x22, 0x1b, 0x0a, 0x07, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x12, 0x10,
-	0x0a, 0x03, 0x73, 0x61, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x73, 0x61, 0x79,
-	0x22, 0x1d, 0x0a, 0x07, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x12, 0x0a, 0x04, 0x6e,
-	0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x22,
-	0x1c, 0x0a, 0x08, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x10, 0x0a, 0x03, 0x6d,
-	0x73, 0x67, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6d, 0x73, 0x67, 0x22, 0x28, 0x0a,
-	0x10, 0x53, 0x74, 0x72, 0x65, 0x61, 0x6d, 0x69, 0x6e, 0x67, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
-	0x74, 0x12, 0x14, 0x0a, 0x05, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03,
-	0x52, 0x05, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x22, 0x29, 0x0a, 0x11, 0x53, 0x74, 0x72, 0x65, 0x61,
-	0x6d, 0x69, 0x6e, 0x67, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x14, 0x0a, 0x05,
-	0x63, 0x6f, 0x75, 0x6e, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x05, 0x63, 0x6f, 0x75,
-	0x6e, 0x74, 0x22, 0x1e, 0x0a, 0x04, 0x50, 0x69, 0x6e, 0x67, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x74,
-	0x72, 0x6f, 0x6b, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x06, 0x73, 0x74, 0x72, 0x6f,
-	0x6b, 0x65, 0x22, 0x1e, 0x0a, 0x04, 0x50, 0x6f, 0x6e, 0x67, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x74,
-	0x72, 0x6f, 0x6b, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x06, 0x73, 0x74, 0x72, 0x6f,
-	0x6b, 0x65, 0x32, 0xbb, 0x01, 0x0a, 0x09, 0x41, 0x67, 0x65, 0x6e, 0x63, 0x79, 0x53, 0x72, 0x76,
-	0x12, 0x31, 0x0a, 0x04, 0x43, 0x61, 0x6c, 0x6c, 0x12, 0x12, 0x2e, 0x61, 0x67, 0x65, 0x6e, 0x63,
-	0x79, 0x73, 0x72, 0x76, 0x2e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x13, 0x2e, 0x61,
-	0x67, 0x65, 0x6e, 0x63, 0x79, 0x73, 0x72, 0x76, 0x2e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
-	0x65, 0x22, 0x00, 0x12, 0x47, 0x0a, 0x06, 0x53, 0x74, 0x72, 0x65, 0x61, 0x6d, 0x12, 0x1b, 0x2e,
-	0x61, 0x67, 0x65, 0x6e, 0x63, 0x79, 0x73, 0x72, 0x76, 0x2e, 0x53, 0x74, 0x72, 0x65, 0x61, 0x6d,
-	0x69, 0x6e, 0x67, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1c, 0x2e, 0x61, 0x67, 0x65,
-	0x6e, 0x63, 0x79, 0x73, 0x72, 0x76, 0x2e, 0x53, 0x74, 0x72, 0x65, 0x61, 0x6d, 0x69, 0x6e, 0x67,
-	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x30, 0x01, 0x12, 0x32, 0x0a, 0x08,
-	0x50, 0x69, 0x6e, 0x67, 0x50, 0x6f, 0x6e, 0x67, 0x12, 0x0f, 0x2e, 0x61, 0x67, 0x65, 0x6e, 0x63,
-	0x79, 0x73, 0x72, 0x76, 0x2e, 0x50, 0x69, 0x6e, 0x67, 0x1a, 0x0f, 0x2e, 0x61, 0x67, 0x65, 0x6e,
-	0x63, 0x79, 0x73, 0x72, 0x76, 0x2e, 0x50, 0x6f, 0x6e, 0x67, 0x22, 0x00, 0x28, 0x01, 0x30, 0x01,
-	0x42, 0x11, 0x5a, 0x0f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x3b, 0x61, 0x67, 0x65, 0x6e, 0x63, 0x79,
-	0x73, 0x72, 0x76, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x73, 0x72, 0x76, 0x22, 0x61, 0x0a, 0x05, 0x43, 0x6c, 0x61, 0x73, 0x73, 0x12, 0x18, 0x0a, 0x07,
+	0x63, 0x6c, 0x61, 0x73, 0x73, 0x49, 0x44, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x63,
+	0x6c, 0x61, 0x73, 0x73, 0x49, 0x44, 0x12, 0x14, 0x0a, 0x05, 0x70, 0x72, 0x69, 0x63, 0x65, 0x18,
+	0x02, 0x20, 0x01, 0x28, 0x02, 0x52, 0x05, 0x70, 0x72, 0x69, 0x63, 0x65, 0x12, 0x12, 0x0a, 0x04,
+	0x6e, 0x61, 0x6d, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65,
+	0x12, 0x14, 0x0a, 0x05, 0x73, 0x61, 0x6c, 0x65, 0x73, 0x18, 0x04, 0x20, 0x01, 0x28, 0x05, 0x52,
+	0x05, 0x73, 0x61, 0x6c, 0x65, 0x73, 0x22, 0xca, 0x02, 0x0a, 0x06, 0x41, 0x67, 0x65, 0x6e, 0x63,
+	0x79, 0x12, 0x1a, 0x0a, 0x08, 0x61, 0x67, 0x65, 0x6e, 0x63, 0x79, 0x49, 0x44, 0x18, 0x01, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x08, 0x61, 0x67, 0x65, 0x6e, 0x63, 0x79, 0x49, 0x44, 0x12, 0x12, 0x0a,
+	0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d,
+	0x65, 0x12, 0x16, 0x0a, 0x06, 0x72, 0x61, 0x74, 0x69, 0x6e, 0x67, 0x18, 0x03, 0x20, 0x01, 0x28,
+	0x02, 0x52, 0x06, 0x72, 0x61, 0x74, 0x69, 0x6e, 0x67, 0x12, 0x1a, 0x0a, 0x08, 0x63, 0x6f, 0x6d,
+	0x6d, 0x65, 0x6e, 0x74, 0x73, 0x18, 0x04, 0x20, 0x01, 0x28, 0x05, 0x52, 0x08, 0x63, 0x6f, 0x6d,
+	0x6d, 0x65, 0x6e, 0x74, 0x73, 0x12, 0x14, 0x0a, 0x05, 0x6f, 0x72, 0x64, 0x65, 0x72, 0x18, 0x05,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x6f, 0x72, 0x64, 0x65, 0x72, 0x12, 0x12, 0x0a, 0x04, 0x74,
+	0x61, 0x67, 0x73, 0x18, 0x06, 0x20, 0x03, 0x28, 0x09, 0x52, 0x04, 0x74, 0x61, 0x67, 0x73, 0x12,
+	0x18, 0x0a, 0x07, 0x61, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x18, 0x07, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x07, 0x61, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x12, 0x24, 0x0a, 0x0d, 0x61, 0x64, 0x64,
+	0x72, 0x65, 0x73, 0x73, 0x44, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x18, 0x08, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x0d, 0x61, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x44, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x12,
+	0x1a, 0x0a, 0x08, 0x64, 0x69, 0x73, 0x74, 0x61, 0x6e, 0x63, 0x65, 0x18, 0x09, 0x20, 0x01, 0x28,
+	0x02, 0x52, 0x08, 0x64, 0x69, 0x73, 0x74, 0x61, 0x6e, 0x63, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x69,
+	0x63, 0x6f, 0x6e, 0x18, 0x0a, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x69, 0x63, 0x6f, 0x6e, 0x12,
+	0x16, 0x0a, 0x06, 0x70, 0x68, 0x6f, 0x74, 0x6f, 0x73, 0x18, 0x0b, 0x20, 0x03, 0x28, 0x09, 0x52,
+	0x06, 0x70, 0x68, 0x6f, 0x74, 0x6f, 0x73, 0x12, 0x2a, 0x0a, 0x07, 0x63, 0x6c, 0x61, 0x73, 0x73,
+	0x65, 0x73, 0x18, 0x0c, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x10, 0x2e, 0x61, 0x67, 0x65, 0x6e, 0x63,
+	0x79, 0x73, 0x72, 0x76, 0x2e, 0x43, 0x6c, 0x61, 0x73, 0x73, 0x52, 0x07, 0x63, 0x6c, 0x61, 0x73,
+	0x73, 0x65, 0x73, 0x22, 0xa0, 0x01, 0x0a, 0x11, 0x52, 0x65, 0x61, 0x64, 0x41, 0x67, 0x65, 0x6e,
+	0x63, 0x79, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1a, 0x0a, 0x08, 0x61, 0x67, 0x65,
+	0x6e, 0x63, 0x79, 0x49, 0x44, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x61, 0x67, 0x65,
+	0x6e, 0x63, 0x79, 0x49, 0x44, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x02, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x74, 0x61, 0x67,
+	0x73, 0x18, 0x03, 0x20, 0x03, 0x28, 0x09, 0x52, 0x04, 0x74, 0x61, 0x67, 0x73, 0x12, 0x16, 0x0a,
+	0x06, 0x66, 0x69, 0x6c, 0x74, 0x65, 0x72, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x66,
+	0x69, 0x6c, 0x74, 0x65, 0x72, 0x12, 0x21, 0x0a, 0x0c, 0x66, 0x69, 0x6c, 0x74, 0x65, 0x72, 0x5f,
+	0x69, 0x74, 0x65, 0x6d, 0x73, 0x18, 0x05, 0x20, 0x03, 0x28, 0x09, 0x52, 0x0b, 0x66, 0x69, 0x6c,
+	0x74, 0x65, 0x72, 0x49, 0x74, 0x65, 0x6d, 0x73, 0x12, 0x0c, 0x0a, 0x01, 0x73, 0x18, 0x06, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x01, 0x73, 0x22, 0x6d, 0x0a, 0x12, 0x52, 0x65, 0x61, 0x64, 0x41, 0x67,
+	0x65, 0x6e, 0x63, 0x79, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x16, 0x0a, 0x06,
+	0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x06, 0x73, 0x74,
+	0x61, 0x74, 0x75, 0x73, 0x12, 0x2d, 0x0a, 0x08, 0x61, 0x67, 0x65, 0x6e, 0x63, 0x69, 0x65, 0x73,
+	0x18, 0x02, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x11, 0x2e, 0x61, 0x67, 0x65, 0x6e, 0x63, 0x79, 0x73,
+	0x72, 0x76, 0x2e, 0x41, 0x67, 0x65, 0x6e, 0x63, 0x79, 0x52, 0x08, 0x61, 0x67, 0x65, 0x6e, 0x63,
+	0x69, 0x65, 0x73, 0x12, 0x10, 0x0a, 0x03, 0x6d, 0x73, 0x67, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x03, 0x6d, 0x73, 0x67, 0x22, 0x3d, 0x0a, 0x10, 0x41, 0x64, 0x64, 0x41, 0x67, 0x65, 0x6e,
+	0x63, 0x79, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x29, 0x0a, 0x06, 0x61, 0x67, 0x65,
+	0x6e, 0x63, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x11, 0x2e, 0x61, 0x67, 0x65, 0x6e,
+	0x63, 0x79, 0x73, 0x72, 0x76, 0x2e, 0x41, 0x67, 0x65, 0x6e, 0x63, 0x79, 0x52, 0x06, 0x61, 0x67,
+	0x65, 0x6e, 0x63, 0x79, 0x22, 0x59, 0x0a, 0x11, 0x41, 0x64, 0x64, 0x41, 0x67, 0x65, 0x6e, 0x63,
+	0x79, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x74, 0x61,
+	0x74, 0x75, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75,
+	0x73, 0x12, 0x1a, 0x0a, 0x08, 0x61, 0x67, 0x65, 0x6e, 0x63, 0x79, 0x49, 0x44, 0x18, 0x02, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x08, 0x61, 0x67, 0x65, 0x6e, 0x63, 0x79, 0x49, 0x44, 0x12, 0x10, 0x0a,
+	0x03, 0x6d, 0x73, 0x67, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6d, 0x73, 0x67, 0x22,
+	0x5c, 0x0a, 0x13, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x41, 0x67, 0x65, 0x6e, 0x63, 0x79, 0x52,
+	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1a, 0x0a, 0x08, 0x41, 0x67, 0x65, 0x6e, 0x63, 0x79,
+	0x49, 0x44, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x41, 0x67, 0x65, 0x6e, 0x63, 0x79,
+	0x49, 0x44, 0x12, 0x29, 0x0a, 0x06, 0x61, 0x67, 0x65, 0x6e, 0x63, 0x79, 0x18, 0x02, 0x20, 0x01,
+	0x28, 0x0b, 0x32, 0x11, 0x2e, 0x61, 0x67, 0x65, 0x6e, 0x63, 0x79, 0x73, 0x72, 0x76, 0x2e, 0x41,
+	0x67, 0x65, 0x6e, 0x63, 0x79, 0x52, 0x06, 0x61, 0x67, 0x65, 0x6e, 0x63, 0x79, 0x22, 0x40, 0x0a,
+	0x14, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x41, 0x67, 0x65, 0x6e, 0x63, 0x79, 0x52, 0x65, 0x73,
+	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x12, 0x10, 0x0a,
+	0x03, 0x6d, 0x73, 0x67, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6d, 0x73, 0x67, 0x22,
+	0x31, 0x0a, 0x13, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x41, 0x67, 0x65, 0x6e, 0x63, 0x79, 0x52,
+	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1a, 0x0a, 0x08, 0x41, 0x67, 0x65, 0x6e, 0x63, 0x79,
+	0x49, 0x44, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x41, 0x67, 0x65, 0x6e, 0x63, 0x79,
+	0x49, 0x44, 0x22, 0x40, 0x0a, 0x14, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x41, 0x67, 0x65, 0x6e,
+	0x63, 0x79, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x74,
+	0x61, 0x74, 0x75, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x06, 0x73, 0x74, 0x61, 0x74,
+	0x75, 0x73, 0x12, 0x10, 0x0a, 0x03, 0x6d, 0x73, 0x67, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x03, 0x6d, 0x73, 0x67, 0x32, 0xc7, 0x02, 0x0a, 0x09, 0x41, 0x67, 0x65, 0x6e, 0x63, 0x79, 0x53,
+	0x72, 0x76, 0x12, 0x50, 0x0a, 0x11, 0x52, 0x65, 0x61, 0x64, 0x41, 0x67, 0x65, 0x6e, 0x63, 0x79,
+	0x44, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x73, 0x12, 0x1c, 0x2e, 0x61, 0x67, 0x65, 0x6e, 0x63, 0x79,
+	0x73, 0x72, 0x76, 0x2e, 0x52, 0x65, 0x61, 0x64, 0x41, 0x67, 0x65, 0x6e, 0x63, 0x79, 0x52, 0x65,
+	0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1d, 0x2e, 0x61, 0x67, 0x65, 0x6e, 0x63, 0x79, 0x73, 0x72,
+	0x76, 0x2e, 0x52, 0x65, 0x61, 0x64, 0x41, 0x67, 0x65, 0x6e, 0x63, 0x79, 0x52, 0x65, 0x73, 0x70,
+	0x6f, 0x6e, 0x73, 0x65, 0x12, 0x46, 0x0a, 0x09, 0x41, 0x64, 0x64, 0x41, 0x67, 0x65, 0x6e, 0x63,
+	0x79, 0x12, 0x1b, 0x2e, 0x61, 0x67, 0x65, 0x6e, 0x63, 0x79, 0x73, 0x72, 0x76, 0x2e, 0x41, 0x64,
+	0x64, 0x41, 0x67, 0x65, 0x6e, 0x63, 0x79, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1c,
+	0x2e, 0x61, 0x67, 0x65, 0x6e, 0x63, 0x79, 0x73, 0x72, 0x76, 0x2e, 0x41, 0x64, 0x64, 0x41, 0x67,
+	0x65, 0x6e, 0x63, 0x79, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x4f, 0x0a, 0x0c,
+	0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x41, 0x67, 0x65, 0x6e, 0x63, 0x79, 0x12, 0x1e, 0x2e, 0x61,
+	0x67, 0x65, 0x6e, 0x63, 0x79, 0x73, 0x72, 0x76, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x41,
+	0x67, 0x65, 0x6e, 0x63, 0x79, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1f, 0x2e, 0x61,
+	0x67, 0x65, 0x6e, 0x63, 0x79, 0x73, 0x72, 0x76, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x41,
+	0x67, 0x65, 0x6e, 0x63, 0x79, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x4f, 0x0a,
+	0x0c, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x41, 0x67, 0x65, 0x6e, 0x63, 0x79, 0x12, 0x1e, 0x2e,
+	0x61, 0x67, 0x65, 0x6e, 0x63, 0x79, 0x73, 0x72, 0x76, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65,
+	0x41, 0x67, 0x65, 0x6e, 0x63, 0x79, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1f, 0x2e,
+	0x61, 0x67, 0x65, 0x6e, 0x63, 0x79, 0x73, 0x72, 0x76, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65,
+	0x41, 0x67, 0x65, 0x6e, 0x63, 0x79, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x42, 0x11,
+	0x5a, 0x0f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x3b, 0x61, 0x67, 0x65, 0x6e, 0x63, 0x79, 0x73, 0x72,
+	0x76, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -402,28 +816,37 @@ func file_proto_agency_srv_proto_rawDescGZIP() []byte {
 	return file_proto_agency_srv_proto_rawDescData
 }
 
-var file_proto_agency_srv_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_proto_agency_srv_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_proto_agency_srv_proto_goTypes = []interface{}{
-	(*Message)(nil),           // 0: agencysrv.Message
-	(*Request)(nil),           // 1: agencysrv.Request
-	(*Response)(nil),          // 2: agencysrv.Response
-	(*StreamingRequest)(nil),  // 3: agencysrv.StreamingRequest
-	(*StreamingResponse)(nil), // 4: agencysrv.StreamingResponse
-	(*Ping)(nil),              // 5: agencysrv.Ping
-	(*Pong)(nil),              // 6: agencysrv.Pong
+	(*Class)(nil),                // 0: agencysrv.Class
+	(*Agency)(nil),               // 1: agencysrv.Agency
+	(*ReadAgencyRequest)(nil),    // 2: agencysrv.ReadAgencyRequest
+	(*ReadAgencyResponse)(nil),   // 3: agencysrv.ReadAgencyResponse
+	(*AddAgencyRequest)(nil),     // 4: agencysrv.AddAgencyRequest
+	(*AddAgencyResponse)(nil),    // 5: agencysrv.AddAgencyResponse
+	(*UpdateAgencyRequest)(nil),  // 6: agencysrv.UpdateAgencyRequest
+	(*UpdateAgencyResponse)(nil), // 7: agencysrv.UpdateAgencyResponse
+	(*DeleteAgencyRequest)(nil),  // 8: agencysrv.DeleteAgencyRequest
+	(*DeleteAgencyResponse)(nil), // 9: agencysrv.DeleteAgencyResponse
 }
 var file_proto_agency_srv_proto_depIdxs = []int32{
-	1, // 0: agencysrv.AgencySrv.Call:input_type -> agencysrv.Request
-	3, // 1: agencysrv.AgencySrv.Stream:input_type -> agencysrv.StreamingRequest
-	5, // 2: agencysrv.AgencySrv.PingPong:input_type -> agencysrv.Ping
-	2, // 3: agencysrv.AgencySrv.Call:output_type -> agencysrv.Response
-	4, // 4: agencysrv.AgencySrv.Stream:output_type -> agencysrv.StreamingResponse
-	6, // 5: agencysrv.AgencySrv.PingPong:output_type -> agencysrv.Pong
-	3, // [3:6] is the sub-list for method output_type
-	0, // [0:3] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	0, // 0: agencysrv.Agency.classes:type_name -> agencysrv.Class
+	1, // 1: agencysrv.ReadAgencyResponse.agencies:type_name -> agencysrv.Agency
+	1, // 2: agencysrv.AddAgencyRequest.agency:type_name -> agencysrv.Agency
+	1, // 3: agencysrv.UpdateAgencyRequest.agency:type_name -> agencysrv.Agency
+	2, // 4: agencysrv.AgencySrv.ReadAgencyDetails:input_type -> agencysrv.ReadAgencyRequest
+	4, // 5: agencysrv.AgencySrv.AddAgency:input_type -> agencysrv.AddAgencyRequest
+	6, // 6: agencysrv.AgencySrv.UpdateAgency:input_type -> agencysrv.UpdateAgencyRequest
+	8, // 7: agencysrv.AgencySrv.DeleteAgency:input_type -> agencysrv.DeleteAgencyRequest
+	3, // 8: agencysrv.AgencySrv.ReadAgencyDetails:output_type -> agencysrv.ReadAgencyResponse
+	5, // 9: agencysrv.AgencySrv.AddAgency:output_type -> agencysrv.AddAgencyResponse
+	7, // 10: agencysrv.AgencySrv.UpdateAgency:output_type -> agencysrv.UpdateAgencyResponse
+	9, // 11: agencysrv.AgencySrv.DeleteAgency:output_type -> agencysrv.DeleteAgencyResponse
+	8, // [8:12] is the sub-list for method output_type
+	4, // [4:8] is the sub-list for method input_type
+	4, // [4:4] is the sub-list for extension type_name
+	4, // [4:4] is the sub-list for extension extendee
+	0, // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_proto_agency_srv_proto_init() }
@@ -433,7 +856,7 @@ func file_proto_agency_srv_proto_init() {
 	}
 	if !protoimpl.UnsafeEnabled {
 		file_proto_agency_srv_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Message); i {
+			switch v := v.(*Class); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -445,7 +868,7 @@ func file_proto_agency_srv_proto_init() {
 			}
 		}
 		file_proto_agency_srv_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Request); i {
+			switch v := v.(*Agency); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -457,7 +880,7 @@ func file_proto_agency_srv_proto_init() {
 			}
 		}
 		file_proto_agency_srv_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Response); i {
+			switch v := v.(*ReadAgencyRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -469,7 +892,7 @@ func file_proto_agency_srv_proto_init() {
 			}
 		}
 		file_proto_agency_srv_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*StreamingRequest); i {
+			switch v := v.(*ReadAgencyResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -481,7 +904,7 @@ func file_proto_agency_srv_proto_init() {
 			}
 		}
 		file_proto_agency_srv_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*StreamingResponse); i {
+			switch v := v.(*AddAgencyRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -493,7 +916,7 @@ func file_proto_agency_srv_proto_init() {
 			}
 		}
 		file_proto_agency_srv_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Ping); i {
+			switch v := v.(*AddAgencyResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -505,7 +928,43 @@ func file_proto_agency_srv_proto_init() {
 			}
 		}
 		file_proto_agency_srv_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Pong); i {
+			switch v := v.(*UpdateAgencyRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_proto_agency_srv_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*UpdateAgencyResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_proto_agency_srv_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*DeleteAgencyRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_proto_agency_srv_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*DeleteAgencyResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -523,7 +982,7 @@ func file_proto_agency_srv_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_proto_agency_srv_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   7,
+			NumMessages:   10,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
