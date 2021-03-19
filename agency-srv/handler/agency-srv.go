@@ -2,47 +2,91 @@ package handler
 
 import (
 	"context"
-
-	log "github.com/micro/micro/v3/service/logger"
-
-	agencysrv "agency-srv/proto"
+	"database/sql"
+	"github.com/micro/micro/v3/service/errors"
+	agencysrv "github.com/wen-qu/xuesou-backend-service/agency-srv/proto"
+	"github.com/wen-qu/xuesou-backend-service/basic/db"
+	"strings"
 )
 
 type AgencySrv struct{}
 
-// Call is a single request handler called via client.Call or the generated client code
-func (e *AgencySrv) Call(ctx context.Context, req *agencysrv.Request, rsp *agencysrv.Response) error {
-	log.Info("Received AgencySrv.Call request")
-	rsp.Msg = "Hello " + req.Name
-	return nil
-}
+func ReadAgencyDetails(ctx context.Context, req *agencysrv.ReadAgencyRequest, rsp *agencysrv.ReadAgencyResponse) error {
+	// read by AgencyID, name, search case or filter items
 
-// Stream is a server side stream handler called via client.Stream or the generated client code
-func (e *AgencySrv) Stream(ctx context.Context, req *agencysrv.StreamingRequest, stream agencysrv.AgencySrv_StreamStream) error {
-	log.Infof("Received AgencySrv.Stream request with count: %d", req.Count)
+	if len(req.AgencyID) == 0 && len(req.Name) == 0 && len(req.Tags) == 0 && len(req.FilterItems) == 0 && len(req.S) == 0 {
+		return errors.BadRequest("para:001", "missing parameters")
+	}
 
-	for i := 0; i < int(req.Count); i++ {
-		log.Infof("Responding: %d", i)
-		if err := stream.Send(&agencysrv.StreamingResponse{
-			Count: int64(i),
-		}); err != nil {
-			return err
+	// Cautions: temporarily ignored req.FilterItems and req.Tags
+
+	// accurate query
+	if len(req.AgencyID) > 0 {
+		var agency = new(agencysrv.Agency)
+		var tagString string
+		if err := db.GetDB().QueryRow("select agency_id, name, tel, rating, comments, order, tags, address, " +
+				"address_detail, icon, photos from agency_profile_table where agency_id = ?",
+				req.AgencyID).Scan(
+				&agency.AgencyID, &agency.Name, &agency.Tel, &agency.Rating, &agency.Comments,
+				&agency.Order, &tagString, &agency.Address, &agency.AddressDetail, &agency.Icon,
+				&agency.Photos); err != nil {
+			if err == sql.ErrNoRows {
+				return nil
+			} else {
+				return errors.InternalServerError("agency-srv.AgencySrv.ReadAgencyDetails:fatal:001", err.Error())
+			}
 		}
+
+		agency.Tags = strings.Split(tagString, ",") // separate the tags string to array
+
+		rsp.Status = 200
+		rsp.Agencies = append(rsp.Agencies, agency)
+		rsp.Msg = ""
+
+		return nil
+	}
+
+	if len(req.S) > 0 {
+		var agency = new(agencysrv.Agency)
+		var tagString string
+
+		rows, err := db.GetDB().Query("select agency_id, name, tel, rating, comments, order, tags, address, " +
+			"address_detail, icon, photos from agency_profile_table where name = ?", req.S) // not sure
+		if err == sql.ErrNoRows {
+			return nil
+		} else if err != nil {
+			return errors.InternalServerError("agency-srv.AgencySrv.ReadAgencyDetails:fatal:002", err.Error())
+		}
+
+		for rows.Next() {
+			err := rows.Scan(&agency.AgencyID, &agency.Name, &agency.Tel, &agency.Rating, &agency.Comments,
+				&agency.Order, &tagString, &agency.Address, &agency.AddressDetail, &agency.Icon,
+				&agency.Photos)
+			if err != nil {
+				return errors.InternalServerError("agency-srv.AgencySrv.ReadAgencyDetails:fatal:003", err.Error())
+			}
+
+			agency.Tags = strings.Split(tagString, ",")
+			rsp.Agencies = append(rsp.Agencies, agency)
+		}
+
+		rsp.Msg = ""
+		rsp.Status = 200
+
+		return nil
 	}
 
 	return nil
 }
 
-// PingPong is a bidirectional stream handler called via client.Stream or the generated client code
-func (e *AgencySrv) PingPong(ctx context.Context, stream agencysrv.AgencySrv_PingPongStream) error {
-	for {
-		req, err := stream.Recv()
-		if err != nil {
-			return err
-		}
-		log.Infof("Got ping %v", req.Stroke)
-		if err := stream.Send(&agencysrv.Pong{Stroke: req.Stroke}); err != nil {
-			return err
-		}
-	}
+func AddAgency(ctx context.Context, req *agencysrv.AddAgencyRequest, rsp *agencysrv.AddAgencyResponse) error {
+	return nil
+}
+
+func UpdateAgency(ctx context.Context, req *agencysrv.UpdateAgencyRequest, rsp *agencysrv.UpdateAgencyResponse) error {
+	return nil
+}
+
+func DeleteAgency(ctx context.Context, req *agencysrv.DeleteAgencyRequest, rsp *agencysrv.DeleteAgencyResponse) error {
+	return nil
 }

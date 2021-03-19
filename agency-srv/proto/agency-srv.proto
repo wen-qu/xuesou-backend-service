@@ -21,25 +21,25 @@ message Class {
 message Agency {
 	string agencyID = 1;
 	string name = 2;
-	float rating = 3;
-	int32 comments = 4;
-	string order = 5;
-	repeated string tags = 6;
-	string address = 7;
-	string addressDetail = 8;
-	float distance = 9;
-	string icon = 10;
-	repeated string photos = 11;
-	repeated Class classes = 12;
+	string tel = 3;
+	float rating = 4;
+	int32 comments = 5;
+	string order = 6;
+	repeated string tags = 7;
+	string address = 8;
+	string addressDetail = 9;
+	float distance = 10;
+	string icon = 11;
+	repeated string photos = 12;
+	repeated Class classes = 13;
 }
 
 message ReadAgencyRequest {
 	string agencyID = 1;
 	string name = 2;
 	repeated string tags = 3;
-	string filter = 4;
-	repeated string filter_items = 5;
-	string s = 6; // search
+	repeated string filter_items = 4;
+	string s = 5; // search
 }
 
 message ReadAgencyResponse {
