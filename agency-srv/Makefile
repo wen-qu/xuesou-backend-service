@@ -8,7 +8,6 @@ init:
 .PHONY: proto
 proto:
 	protoc --proto_path=. --micro_out=. --go_out=:. proto/agency-srv.proto
-	
 .PHONY: build
 build:
 	go build -o agency-srv *.go

@@ -42,9 +42,10 @@ func NewAgencyWebEndpoints() []*api.Endpoint {
 // Client API for AgencyWeb service
 
 type AgencyWebService interface {
-	Call(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error)
-	Stream(ctx context.Context, in *StreamingRequest, opts ...client.CallOption) (AgencyWeb_StreamService, error)
-	PingPong(ctx context.Context, opts ...client.CallOption) (AgencyWeb_PingPongService, error)
+	GetAgencies(ctx context.Context, in *GetAgenciesRequest, opts ...client.CallOption) (*GetAgenciesResponse, error)
+	Search(ctx context.Context, in *SearchRequest, opts ...client.CallOption) (*SearchResponse, error)
+	GetAgencyDetail(ctx context.Context, in *GetAgencyDetailRequest, opts ...client.CallOption) (*GetAgencyDetailResponse, error)
+	Login(ctx context.Context, in *LoginRequest, opts ...client.CallOption) (*LoginResponse, error)
 }
 
 type agencyWebService struct {
@@ -59,9 +60,9 @@ func NewAgencyWebService(name string, c client.Client) AgencyWebService {
 	}
 }
 
-func (c *agencyWebService) Call(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error) {
-	req := c.c.NewRequest(c.name, "AgencyWeb.Call", in)
-	out := new(Response)
+func (c *agencyWebService) GetAgencies(ctx context.Context, in *GetAgenciesRequest, opts ...client.CallOption) (*GetAgenciesResponse, error) {
+	req := c.c.NewRequest(c.name, "AgencyWeb.GetAgencies", in)
+	out := new(GetAgenciesResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -69,119 +70,51 @@ func (c *agencyWebService) Call(ctx context.Context, in *Request, opts ...client
 	return out, nil
 }
 
-func (c *agencyWebService) Stream(ctx context.Context, in *StreamingRequest, opts ...client.CallOption) (AgencyWeb_StreamService, error) {
-	req := c.c.NewRequest(c.name, "AgencyWeb.Stream", &StreamingRequest{})
-	stream, err := c.c.Stream(ctx, req, opts...)
+func (c *agencyWebService) Search(ctx context.Context, in *SearchRequest, opts ...client.CallOption) (*SearchResponse, error) {
+	req := c.c.NewRequest(c.name, "AgencyWeb.Search", in)
+	out := new(SearchResponse)
+	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
 	}
-	if err := stream.Send(in); err != nil {
-		return nil, err
-	}
-	return &agencyWebServiceStream{stream}, nil
+	return out, nil
 }
 
-type AgencyWeb_StreamService interface {
-	Context() context.Context
-	SendMsg(interface{}) error
-	RecvMsg(interface{}) error
-	Close() error
-	Recv() (*StreamingResponse, error)
-}
-
-type agencyWebServiceStream struct {
-	stream client.Stream
-}
-
-func (x *agencyWebServiceStream) Close() error {
-	return x.stream.Close()
-}
-
-func (x *agencyWebServiceStream) Context() context.Context {
-	return x.stream.Context()
-}
-
-func (x *agencyWebServiceStream) SendMsg(m interface{}) error {
-	return x.stream.Send(m)
-}
-
-func (x *agencyWebServiceStream) RecvMsg(m interface{}) error {
-	return x.stream.Recv(m)
-}
-
-func (x *agencyWebServiceStream) Recv() (*StreamingResponse, error) {
-	m := new(StreamingResponse)
-	err := x.stream.Recv(m)
+func (c *agencyWebService) GetAgencyDetail(ctx context.Context, in *GetAgencyDetailRequest, opts ...client.CallOption) (*GetAgencyDetailResponse, error) {
+	req := c.c.NewRequest(c.name, "AgencyWeb.GetAgencyDetail", in)
+	out := new(GetAgencyDetailResponse)
+	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return m, nil
+	return out, nil
 }
 
-func (c *agencyWebService) PingPong(ctx context.Context, opts ...client.CallOption) (AgencyWeb_PingPongService, error) {
-	req := c.c.NewRequest(c.name, "AgencyWeb.PingPong", &Ping{})
-	stream, err := c.c.Stream(ctx, req, opts...)
+func (c *agencyWebService) Login(ctx context.Context, in *LoginRequest, opts ...client.CallOption) (*LoginResponse, error) {
+	req := c.c.NewRequest(c.name, "AgencyWeb.Login", in)
+	out := new(LoginResponse)
+	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return &agencyWebServicePingPong{stream}, nil
-}
-
-type AgencyWeb_PingPongService interface {
-	Context() context.Context
-	SendMsg(interface{}) error
-	RecvMsg(interface{}) error
-	Close() error
-	Send(*Ping) error
-	Recv() (*Pong, error)
-}
-
-type agencyWebServicePingPong struct {
-	stream client.Stream
-}
-
-func (x *agencyWebServicePingPong) Close() error {
-	return x.stream.Close()
-}
-
-func (x *agencyWebServicePingPong) Context() context.Context {
-	return x.stream.Context()
-}
-
-func (x *agencyWebServicePingPong) SendMsg(m interface{}) error {
-	return x.stream.Send(m)
-}
-
-func (x *agencyWebServicePingPong) RecvMsg(m interface{}) error {
-	return x.stream.Recv(m)
-}
-
-func (x *agencyWebServicePingPong) Send(m *Ping) error {
-	return x.stream.Send(m)
-}
-
-func (x *agencyWebServicePingPong) Recv() (*Pong, error) {
-	m := new(Pong)
-	err := x.stream.Recv(m)
-	if err != nil {
-		return nil, err
-	}
-	return m, nil
+	return out, nil
 }
 
 // Server API for AgencyWeb service
 
 type AgencyWebHandler interface {
-	Call(context.Context, *Request, *Response) error
-	Stream(context.Context, *StreamingRequest, AgencyWeb_StreamStream) error
-	PingPong(context.Context, AgencyWeb_PingPongStream) error
+	GetAgencies(context.Context, *GetAgenciesRequest, *GetAgenciesResponse) error
+	Search(context.Context, *SearchRequest, *SearchResponse) error
+	GetAgencyDetail(context.Context, *GetAgencyDetailRequest, *GetAgencyDetailResponse) error
+	Login(context.Context, *LoginRequest, *LoginResponse) error
 }
 
 func RegisterAgencyWebHandler(s server.Server, hdlr AgencyWebHandler, opts ...server.HandlerOption) error {
 	type agencyWeb interface {
-		Call(ctx context.Context, in *Request, out *Response) error
-		Stream(ctx context.Context, stream server.Stream) error
-		PingPong(ctx context.Context, stream server.Stream) error
+		GetAgencies(ctx context.Context, in *GetAgenciesRequest, out *GetAgenciesResponse) error
+		Search(ctx context.Context, in *SearchRequest, out *SearchResponse) error
+		GetAgencyDetail(ctx context.Context, in *GetAgencyDetailRequest, out *GetAgencyDetailResponse) error
+		Login(ctx context.Context, in *LoginRequest, out *LoginResponse) error
 	}
 	type AgencyWeb struct {
 		agencyWeb
@@ -194,91 +127,18 @@ type agencyWebHandler struct {
 	AgencyWebHandler
 }
 
-func (h *agencyWebHandler) Call(ctx context.Context, in *Request, out *Response) error {
-	return h.AgencyWebHandler.Call(ctx, in, out)
+func (h *agencyWebHandler) GetAgencies(ctx context.Context, in *GetAgenciesRequest, out *GetAgenciesResponse) error {
+	return h.AgencyWebHandler.GetAgencies(ctx, in, out)
 }
 
-func (h *agencyWebHandler) Stream(ctx context.Context, stream server.Stream) error {
-	m := new(StreamingRequest)
-	if err := stream.Recv(m); err != nil {
-		return err
-	}
-	return h.AgencyWebHandler.Stream(ctx, m, &agencyWebStreamStream{stream})
+func (h *agencyWebHandler) Search(ctx context.Context, in *SearchRequest, out *SearchResponse) error {
+	return h.AgencyWebHandler.Search(ctx, in, out)
 }
 
-type AgencyWeb_StreamStream interface {
-	Context() context.Context
-	SendMsg(interface{}) error
-	RecvMsg(interface{}) error
-	Close() error
-	Send(*StreamingResponse) error
+func (h *agencyWebHandler) GetAgencyDetail(ctx context.Context, in *GetAgencyDetailRequest, out *GetAgencyDetailResponse) error {
+	return h.AgencyWebHandler.GetAgencyDetail(ctx, in, out)
 }
 
-type agencyWebStreamStream struct {
-	stream server.Stream
-}
-
-func (x *agencyWebStreamStream) Close() error {
-	return x.stream.Close()
-}
-
-func (x *agencyWebStreamStream) Context() context.Context {
-	return x.stream.Context()
-}
-
-func (x *agencyWebStreamStream) SendMsg(m interface{}) error {
-	return x.stream.Send(m)
-}
-
-func (x *agencyWebStreamStream) RecvMsg(m interface{}) error {
-	return x.stream.Recv(m)
-}
-
-func (x *agencyWebStreamStream) Send(m *StreamingResponse) error {
-	return x.stream.Send(m)
-}
-
-func (h *agencyWebHandler) PingPong(ctx context.Context, stream server.Stream) error {
-	return h.AgencyWebHandler.PingPong(ctx, &agencyWebPingPongStream{stream})
-}
-
-type AgencyWeb_PingPongStream interface {
-	Context() context.Context
-	SendMsg(interface{}) error
-	RecvMsg(interface{}) error
-	Close() error
-	Send(*Pong) error
-	Recv() (*Ping, error)
-}
-
-type agencyWebPingPongStream struct {
-	stream server.Stream
-}
-
-func (x *agencyWebPingPongStream) Close() error {
-	return x.stream.Close()
-}
-
-func (x *agencyWebPingPongStream) Context() context.Context {
-	return x.stream.Context()
-}
-
-func (x *agencyWebPingPongStream) SendMsg(m interface{}) error {
-	return x.stream.Send(m)
-}
-
-func (x *agencyWebPingPongStream) RecvMsg(m interface{}) error {
-	return x.stream.Recv(m)
-}
-
-func (x *agencyWebPingPongStream) Send(m *Pong) error {
-	return x.stream.Send(m)
-}
-
-func (x *agencyWebPingPongStream) Recv() (*Ping, error) {
-	m := new(Ping)
-	if err := x.stream.Recv(m); err != nil {
-		return nil, err
-	}
-	return m, nil
+func (h *agencyWebHandler) Login(ctx context.Context, in *LoginRequest, out *LoginResponse) error {
+	return h.AgencyWebHandler.Login(ctx, in, out)
 }

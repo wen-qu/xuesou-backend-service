@@ -5,17 +5,19 @@ package agencysrv;
 option go_package = "proto;agencysrv";
 
 service AgencySrv {
-	rpc ReadAgencyDetails(ReadAgencyRequest) returns (ReadAgencyResponse);
-	rpc AddAgency(AddAgencyRequest) returns (AddAgencyResponse);
-	rpc UpdateAgency(UpdateAgencyRequest) returns (UpdateAgencyResponse);
-	rpc DeleteAgency(DeleteAgencyRequest) returns (DeleteAgencyResponse);
+	rpc ReadAgencyDetails(ReadAgencyRequest) returns (ReadAgencyResponse) {}
+	rpc AddAgency(AddAgencyRequest) returns (AddAgencyResponse) {}
+	rpc UpdateAgency(UpdateAgencyRequest) returns (UpdateAgencyResponse) {}
+	rpc DeleteAgency(DeleteAgencyRequest) returns (DeleteAgencyResponse) {}
 }
 
 message Class {
 	string classID = 1;
 	float price = 2;
 	string name = 3;
-	int32 sales = 4;
+	string age = 4;
+	int32 stuNumber = 5;
+	string level = 6;
 }
 
 message Agency {

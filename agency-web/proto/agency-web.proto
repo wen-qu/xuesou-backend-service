@@ -5,35 +5,107 @@ package agencyweb;
 option go_package = "proto;agencyweb";
 
 service AgencyWeb {
-	rpc Call(Request) returns (Response) {}
-	rpc Stream(StreamingRequest) returns (stream StreamingResponse) {}
-	rpc PingPong(stream Ping) returns (stream Pong) {}
+	rpc GetAgencies(GetAgenciesRequest) returns (GetAgenciesResponse) {}
+	rpc Search(SearchRequest) returns (SearchResponse) {}
+	rpc GetAgencyDetail(GetAgencyDetailRequest) returns (GetAgencyDetailResponse) {}
+	rpc Login(LoginRequest) returns (LoginResponse) {}
+	rpc Register(RegisterRequest) returns (RegisterResponse) {}
 }
 
-message Message {
-	string say = 1;
+message Class {
+	string classID = 1;
+	float price = 2;
+	string name = 3;
+	string age = 4;
+	int32 stuNumber = 5;
+	string level = 6;
+}
+message Ad {}
+message Agency {
+	string agencyID = 1;
+	string name = 2;
+	string tel = 3;
+	float rating = 4;
+	int32 comments = 5;
+	string order = 6;
+	repeated string tags = 7;
+	string address = 8;
+	string addressDetail = 9;
+	float distance = 10;
+	string icon = 11;
+	repeated string photos = 12;
+	repeated Class classes = 13;
+}
+message Teacher {
+	string teacherID = 1;
+	string name = 2;
+	string pic = 3;
+	repeated string tag = 4;
+	string tel = 5;
+	string description = 6;
+}
+message OverEvaluation {
+	float generalRate = 1;
+	int32 upRate = 2;
+	float goodRate = 3;
+}
+message Evaluation {
+	string favicon = 1; // user's icon
+	float rating = 2;
+	string username = 3;
+	string detail = 4;
+	repeated string pics = 5;
 }
 
-message Request {
-	string name = 1;
+message LoginRequest {
+
 }
 
-message Response {
-	string msg = 1;
+message LoginResponse {
+
 }
 
-message StreamingRequest {
-	int64 count = 1;
+message RegisterRequest {
+
 }
 
-message StreamingResponse {
-	int64 count = 1;
+message RegisterResponse {
+
 }
 
-message Ping {
-	int64 stroke = 1;
+message GetAgenciesRequest {
+	repeated string filterItem = 1;
+	string s = 2;
 }
 
-message Pong {
-	int64 stroke = 1;
+message GetAgenciesResponse {
+	int32 status = 1;
+	repeated Agency agencies = 2;
+	string msg = 3;
+}
+
+message SearchRequest { // for search page, like historical search, hot search, etc.
+}
+
+message SearchResponse {
+	int32 status = 1;
+	string searchKeyword = 2;
+	repeated string hotSearch = 3;
+	repeated string searchHistory = 4;
+	string msg = 5;
+}
+
+message GetAgencyDetailRequest {
+	string agencyID = 1;
+}
+
+message GetAgencyDetailResponse {
+	Agency general = 1;
+	Ad ad = 2;
+	string brandStory = 3;
+	repeated string characteristic = 4;
+	repeated Teacher teachers = 5;
+	OverEvaluation overEvaluation = 6;
+	repeated Evaluation evaluations = 7;
+	repeated Agency nearbyAgencies = 8;
 }

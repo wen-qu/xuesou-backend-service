@@ -125,7 +125,7 @@ func (e *UserWeb) Register(ctx context.Context, req *userweb.UserRequest, rsp *u
 	// TODO: check the validation code.
 
 	// Generate the uid, and set username to uid
-	uid := uuid.New().String()
+	uid := "user_" + uuid.New().String()
 	username := uid
 
 	regRsp, err := UserClient.AddUser(ctx, &usersrv.AddRequest{
@@ -137,7 +137,7 @@ func (e *UserWeb) Register(ctx context.Context, req *userweb.UserRequest, rsp *u
 	})
 
 	if err != nil {
-		return errors.InternalServerError("fatal:001", err.Error())
+		return errors.InternalServerError("user-web.UserWeb.Register:fatal:001", err.Error())
 	}
 
 	if regRsp.Status == 400 {

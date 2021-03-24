@@ -84,13 +84,21 @@ create table if not exists `test_agency_chatting_table` ( -- only test table, st
 create table if not exists `test_agency_class_table` ( -- only test table, standard format: [agency_id]_agency_class_table
   `agency_id` varchar(20) not null,
   `class_id` varchar(19) not null,
+  `price` float not null,
+  `name` varchar(50) not null,
+  `stu_number` int not null,
+  `age` varchar(10) not null, -- eg. '4-14'; '20-30'
+  `level` varchar(20) not null, -- beginner, intermediate, advanced, expert
+  `sales` int not null -- number of sold
   `create_time` varchar(20) not null
 ) engine=innodb default charset=utf8; -- agency's all classes
 
-create table if not exists `test_class_table` ( -- only test table, standard format: [agency_id]_class_table
-  `agency_id` varchar(20) not null,
-  `class_id` varchar(19) not null,
-  `price` float not null,
-  `name` varchar(50) not null,
-  `sales` int not null
-) engine=innodb default charset=utf8; -- all information of agency's classes
+create table if not exists `test_agency_teacher_table` ( -- only test table, standard format: [agency_id]_agency_teacher_table
+    `agency_id` varchar(20) not null,
+    `teacher_id` varchar(21) not null,
+    `name` varchar(50) not null,
+    `pic`  varchar(60),
+    `tag`  varchar(120),
+    `tel`  varchar(11) not null,
+    `description` varchar(400) not null
+) engine=innodb default charset=utf8;

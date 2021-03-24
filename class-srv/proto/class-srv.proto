@@ -5,35 +5,55 @@ package classsrv;
 option go_package = "proto;classsrv";
 
 service ClassSrv {
-	rpc Call(Request) returns (Response) {}
-	rpc Stream(StreamingRequest) returns (stream StreamingResponse) {}
-	rpc PingPong(stream Ping) returns (stream Pong) {}
+	rpc ReadClassesByAgencyID(ReadClassRequest) returns (ReadClassResponse) {}
+	rpc AddClasses(AddClassRequest) returns (AddClassResponse) {}
+	rpc UpdateClass(UpdateClassRequest) returns (UpdateClassResponse) {}
+	rpc DeleteClass(DeleteClassRequest) returns (DeleteClassResponse) {}
 }
 
-message Message {
-	string say = 1;
+message Class {
+	string classID = 1;
+	float price = 2;
+	string name = 3;
+	string age = 4;
+	int32 stuNumber = 5;
+	string level = 6;
 }
 
-message Request {
-	string name = 1;
+message ReadClassRequest {
+	string agencyID = 1;
 }
 
-message Response {
-	string msg = 1;
+message ReadClassResponse {
+	int32 status = 1;
+	repeated Class classes = 2;
+	string msg = 3;
 }
 
-message StreamingRequest {
-	int64 count = 1;
+message AddClassRequest {
+	Class class = 1;
 }
 
-message StreamingResponse {
-	int64 count = 1;
+message AddClassResponse {
+	int32 status = 1;
+	string classID = 2;
+	string msg = 3;
 }
 
-message Ping {
-	int64 stroke = 1;
+message UpdateClassRequest {
+	Class class = 1;
 }
 
-message Pong {
-	int64 stroke = 1;
+message UpdateClassResponse {
+	int32 status = 1;
+	string msg = 2;
+}
+
+message DeleteClassRequest {
+	string classID = 1;
+}
+
+message DeleteClassResponse {
+	int32 status = 1;
+	string msg = 2;
 }

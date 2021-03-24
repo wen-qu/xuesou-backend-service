@@ -5,10 +5,10 @@ package usersrv;
 option go_package = "proto;usersrv";
 
 service UserSrv {
-	rpc InspectUser(InspectRequest) returns (InspectResponse);
-	rpc UpdateUser(UpdateRequest) returns (UpdateResponse);
-	rpc AddUser(AddRequest) returns (AddResponse);
-	rpc DeleteUser(DeleteRequest) returns (DeleteResponse);
+	rpc InspectUser(InspectRequest) returns (InspectResponse) {}
+	rpc UpdateUser(UpdateRequest) returns (UpdateResponse) {}
+	rpc AddUser(AddRequest) returns (AddResponse) {}
+	rpc DeleteUser(DeleteRequest) returns (DeleteResponse) {}
 }
 
 message User {

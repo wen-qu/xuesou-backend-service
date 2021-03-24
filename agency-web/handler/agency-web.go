@@ -2,47 +2,35 @@ package handler
 
 import (
 	"context"
+	"github.com/micro/micro/v3/service"
+	agencysrv "github.com/wen-qu/xuesou-backend-service/agency-srv/proto"
 
-	log "github.com/micro/micro/v3/service/logger"
+	// log "github.com/micro/micro/v3/service/logger"
 
-	agencyweb "agency-web/proto"
+	agencyweb "github.com/wen-qu/xuesou-backend-service/agency-web/proto"
 )
 
 type AgencyWeb struct{}
 
-// Call is a single request handler called via client.Call or the generated client code
-func (e *AgencyWeb) Call(ctx context.Context, req *agencyweb.Request, rsp *agencyweb.Response) error {
-	log.Info("Received AgencyWeb.Call request")
-	rsp.Msg = "Hello " + req.Name
+var AgencyClient agencysrv.AgencySrvService
+
+func Init(){
+	srv := service.New()
+	AgencyClient = agencysrv.NewAgencySrvService("agency-srv", srv.Client())
+}
+
+func (agency *AgencyWeb) Login(ctx context.Context, req *agencyweb.LoginRequest, rsp *agencyweb.LoginResponse) error {
 	return nil
 }
 
-// Stream is a server side stream handler called via client.Stream or the generated client code
-func (e *AgencyWeb) Stream(ctx context.Context, req *agencyweb.StreamingRequest, stream agencyweb.AgencyWeb_StreamStream) error {
-	log.Infof("Received AgencyWeb.Stream request with count: %d", req.Count)
-
-	for i := 0; i < int(req.Count); i++ {
-		log.Infof("Responding: %d", i)
-		if err := stream.Send(&agencyweb.StreamingResponse{
-			Count: int64(i),
-		}); err != nil {
-			return err
-		}
-	}
-
+func (agency *AgencyWeb) GetAgencies(ctx context.Context, req *agencyweb.GetAgenciesRequest, rsp *agencyweb.GetAgenciesResponse) error {
 	return nil
 }
 
-// PingPong is a bidirectional stream handler called via client.Stream or the generated client code
-func (e *AgencyWeb) PingPong(ctx context.Context, stream agencyweb.AgencyWeb_PingPongStream) error {
-	for {
-		req, err := stream.Recv()
-		if err != nil {
-			return err
-		}
-		log.Infof("Got ping %v", req.Stroke)
-		if err := stream.Send(&agencyweb.Pong{Stroke: req.Stroke}); err != nil {
-			return err
-		}
-	}
+func (agency *AgencyWeb) Search(ctx context.Context, req *agencyweb.SearchRequest, rsp *agencyweb.SearchResponse) error {
+	return nil
+}
+
+func (agency *AgencyWeb) GetAgencyDetail(ctx context.Context, req *agencyweb.GetAgencyDetailRequest, rsp *agencyweb.GetAgencyDetailResponse) error {
+	return nil
 }

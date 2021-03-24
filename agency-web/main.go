@@ -18,6 +18,7 @@ func main() {
 	// Register handler
 	_ = pb.RegisterAgencyWebHandler(srv.Server(), new(handler.AgencyWeb))
 
+	handler.Init()
 	// Run service
 	if err := srv.Run(); err != nil {
 		logger.Fatal(err)

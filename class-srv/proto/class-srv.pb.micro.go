@@ -42,9 +42,10 @@ func NewClassSrvEndpoints() []*api.Endpoint {
 // Client API for ClassSrv service
 
 type ClassSrvService interface {
-	Call(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error)
-	Stream(ctx context.Context, in *StreamingRequest, opts ...client.CallOption) (ClassSrv_StreamService, error)
-	PingPong(ctx context.Context, opts ...client.CallOption) (ClassSrv_PingPongService, error)
+	ReadClassesByAgencyID(ctx context.Context, in *ReadClassRequest, opts ...client.CallOption) (*ReadClassResponse, error)
+	AddClasses(ctx context.Context, in *AddClassRequest, opts ...client.CallOption) (*AddClassResponse, error)
+	UpdateClass(ctx context.Context, in *UpdateClassRequest, opts ...client.CallOption) (*UpdateClassResponse, error)
+	DeleteClass(ctx context.Context, in *DeleteClassRequest, opts ...client.CallOption) (*DeleteClassResponse, error)
 }
 
 type classSrvService struct {
@@ -59,9 +60,9 @@ func NewClassSrvService(name string, c client.Client) ClassSrvService {
 	}
 }
 
-func (c *classSrvService) Call(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error) {
-	req := c.c.NewRequest(c.name, "ClassSrv.Call", in)
-	out := new(Response)
+func (c *classSrvService) ReadClassesByAgencyID(ctx context.Context, in *ReadClassRequest, opts ...client.CallOption) (*ReadClassResponse, error) {
+	req := c.c.NewRequest(c.name, "ClassSrv.ReadClassesByAgencyID", in)
+	out := new(ReadClassResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -69,119 +70,51 @@ func (c *classSrvService) Call(ctx context.Context, in *Request, opts ...client.
 	return out, nil
 }
 
-func (c *classSrvService) Stream(ctx context.Context, in *StreamingRequest, opts ...client.CallOption) (ClassSrv_StreamService, error) {
-	req := c.c.NewRequest(c.name, "ClassSrv.Stream", &StreamingRequest{})
-	stream, err := c.c.Stream(ctx, req, opts...)
+func (c *classSrvService) AddClasses(ctx context.Context, in *AddClassRequest, opts ...client.CallOption) (*AddClassResponse, error) {
+	req := c.c.NewRequest(c.name, "ClassSrv.AddClasses", in)
+	out := new(AddClassResponse)
+	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
 	}
-	if err := stream.Send(in); err != nil {
-		return nil, err
-	}
-	return &classSrvServiceStream{stream}, nil
+	return out, nil
 }
 
-type ClassSrv_StreamService interface {
-	Context() context.Context
-	SendMsg(interface{}) error
-	RecvMsg(interface{}) error
-	Close() error
-	Recv() (*StreamingResponse, error)
-}
-
-type classSrvServiceStream struct {
-	stream client.Stream
-}
-
-func (x *classSrvServiceStream) Close() error {
-	return x.stream.Close()
-}
-
-func (x *classSrvServiceStream) Context() context.Context {
-	return x.stream.Context()
-}
-
-func (x *classSrvServiceStream) SendMsg(m interface{}) error {
-	return x.stream.Send(m)
-}
-
-func (x *classSrvServiceStream) RecvMsg(m interface{}) error {
-	return x.stream.Recv(m)
-}
-
-func (x *classSrvServiceStream) Recv() (*StreamingResponse, error) {
-	m := new(StreamingResponse)
-	err := x.stream.Recv(m)
+func (c *classSrvService) UpdateClass(ctx context.Context, in *UpdateClassRequest, opts ...client.CallOption) (*UpdateClassResponse, error) {
+	req := c.c.NewRequest(c.name, "ClassSrv.UpdateClass", in)
+	out := new(UpdateClassResponse)
+	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return m, nil
+	return out, nil
 }
 
-func (c *classSrvService) PingPong(ctx context.Context, opts ...client.CallOption) (ClassSrv_PingPongService, error) {
-	req := c.c.NewRequest(c.name, "ClassSrv.PingPong", &Ping{})
-	stream, err := c.c.Stream(ctx, req, opts...)
+func (c *classSrvService) DeleteClass(ctx context.Context, in *DeleteClassRequest, opts ...client.CallOption) (*DeleteClassResponse, error) {
+	req := c.c.NewRequest(c.name, "ClassSrv.DeleteClass", in)
+	out := new(DeleteClassResponse)
+	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return &classSrvServicePingPong{stream}, nil
-}
-
-type ClassSrv_PingPongService interface {
-	Context() context.Context
-	SendMsg(interface{}) error
-	RecvMsg(interface{}) error
-	Close() error
-	Send(*Ping) error
-	Recv() (*Pong, error)
-}
-
-type classSrvServicePingPong struct {
-	stream client.Stream
-}
-
-func (x *classSrvServicePingPong) Close() error {
-	return x.stream.Close()
-}
-
-func (x *classSrvServicePingPong) Context() context.Context {
-	return x.stream.Context()
-}
-
-func (x *classSrvServicePingPong) SendMsg(m interface{}) error {
-	return x.stream.Send(m)
-}
-
-func (x *classSrvServicePingPong) RecvMsg(m interface{}) error {
-	return x.stream.Recv(m)
-}
-
-func (x *classSrvServicePingPong) Send(m *Ping) error {
-	return x.stream.Send(m)
-}
-
-func (x *classSrvServicePingPong) Recv() (*Pong, error) {
-	m := new(Pong)
-	err := x.stream.Recv(m)
-	if err != nil {
-		return nil, err
-	}
-	return m, nil
+	return out, nil
 }
 
 // Server API for ClassSrv service
 
 type ClassSrvHandler interface {
-	Call(context.Context, *Request, *Response) error
-	Stream(context.Context, *StreamingRequest, ClassSrv_StreamStream) error
-	PingPong(context.Context, ClassSrv_PingPongStream) error
+	ReadClassesByAgencyID(context.Context, *ReadClassRequest, *ReadClassResponse) error
+	AddClasses(context.Context, *AddClassRequest, *AddClassResponse) error
+	UpdateClass(context.Context, *UpdateClassRequest, *UpdateClassResponse) error
+	DeleteClass(context.Context, *DeleteClassRequest, *DeleteClassResponse) error
 }
 
 func RegisterClassSrvHandler(s server.Server, hdlr ClassSrvHandler, opts ...server.HandlerOption) error {
 	type classSrv interface {
-		Call(ctx context.Context, in *Request, out *Response) error
-		Stream(ctx context.Context, stream server.Stream) error
-		PingPong(ctx context.Context, stream server.Stream) error
+		ReadClassesByAgencyID(ctx context.Context, in *ReadClassRequest, out *ReadClassResponse) error
+		AddClasses(ctx context.Context, in *AddClassRequest, out *AddClassResponse) error
+		UpdateClass(ctx context.Context, in *UpdateClassRequest, out *UpdateClassResponse) error
+		DeleteClass(ctx context.Context, in *DeleteClassRequest, out *DeleteClassResponse) error
 	}
 	type ClassSrv struct {
 		classSrv
@@ -194,91 +127,18 @@ type classSrvHandler struct {
 	ClassSrvHandler
 }
 
-func (h *classSrvHandler) Call(ctx context.Context, in *Request, out *Response) error {
-	return h.ClassSrvHandler.Call(ctx, in, out)
+func (h *classSrvHandler) ReadClassesByAgencyID(ctx context.Context, in *ReadClassRequest, out *ReadClassResponse) error {
+	return h.ClassSrvHandler.ReadClassesByAgencyID(ctx, in, out)
 }
 
-func (h *classSrvHandler) Stream(ctx context.Context, stream server.Stream) error {
-	m := new(StreamingRequest)
-	if err := stream.Recv(m); err != nil {
-		return err
-	}
-	return h.ClassSrvHandler.Stream(ctx, m, &classSrvStreamStream{stream})
+func (h *classSrvHandler) AddClasses(ctx context.Context, in *AddClassRequest, out *AddClassResponse) error {
+	return h.ClassSrvHandler.AddClasses(ctx, in, out)
 }
 
-type ClassSrv_StreamStream interface {
-	Context() context.Context
-	SendMsg(interface{}) error
-	RecvMsg(interface{}) error
-	Close() error
-	Send(*StreamingResponse) error
+func (h *classSrvHandler) UpdateClass(ctx context.Context, in *UpdateClassRequest, out *UpdateClassResponse) error {
+	return h.ClassSrvHandler.UpdateClass(ctx, in, out)
 }
 
-type classSrvStreamStream struct {
-	stream server.Stream
-}
-
-func (x *classSrvStreamStream) Close() error {
-	return x.stream.Close()
-}
-
-func (x *classSrvStreamStream) Context() context.Context {
-	return x.stream.Context()
-}
-
-func (x *classSrvStreamStream) SendMsg(m interface{}) error {
-	return x.stream.Send(m)
-}
-
-func (x *classSrvStreamStream) RecvMsg(m interface{}) error {
-	return x.stream.Recv(m)
-}
-
-func (x *classSrvStreamStream) Send(m *StreamingResponse) error {
-	return x.stream.Send(m)
-}
-
-func (h *classSrvHandler) PingPong(ctx context.Context, stream server.Stream) error {
-	return h.ClassSrvHandler.PingPong(ctx, &classSrvPingPongStream{stream})
-}
-
-type ClassSrv_PingPongStream interface {
-	Context() context.Context
-	SendMsg(interface{}) error
-	RecvMsg(interface{}) error
-	Close() error
-	Send(*Pong) error
-	Recv() (*Ping, error)
-}
-
-type classSrvPingPongStream struct {
-	stream server.Stream
-}
-
-func (x *classSrvPingPongStream) Close() error {
-	return x.stream.Close()
-}
-
-func (x *classSrvPingPongStream) Context() context.Context {
-	return x.stream.Context()
-}
-
-func (x *classSrvPingPongStream) SendMsg(m interface{}) error {
-	return x.stream.Send(m)
-}
-
-func (x *classSrvPingPongStream) RecvMsg(m interface{}) error {
-	return x.stream.Recv(m)
-}
-
-func (x *classSrvPingPongStream) Send(m *Pong) error {
-	return x.stream.Send(m)
-}
-
-func (x *classSrvPingPongStream) Recv() (*Ping, error) {
-	m := new(Ping)
-	if err := x.stream.Recv(m); err != nil {
-		return nil, err
-	}
-	return m, nil
+func (h *classSrvHandler) DeleteClass(ctx context.Context, in *DeleteClassRequest, out *DeleteClassResponse) error {
+	return h.ClassSrvHandler.DeleteClass(ctx, in, out)
 }

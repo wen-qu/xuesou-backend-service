@@ -1,6 +1,6 @@
-module class-srv
+module github.com/wen-qu/xuesou-backend-service/class-srv
 
-go 1.15
+go 1.16
 
 require (
 	github.com/micro/micro/v3 v3.0.0
