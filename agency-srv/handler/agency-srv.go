@@ -11,7 +11,7 @@ import (
 
 type AgencySrv struct{}
 
-func ReadAgencyDetails(ctx context.Context, req *agencysrv.ReadAgencyRequest, rsp *agencysrv.ReadAgencyResponse) error {
+func (agency *AgencySrv)ReadAgencyDetails(ctx context.Context, req *agencysrv.ReadAgencyRequest, rsp *agencysrv.ReadAgencyResponse) error {
 	// read by AgencyID, name, search case or filter items
 
 	if len(req.AgencyID) == 0 && len(req.Name) == 0 && len(req.Tags) == 0 && len(req.FilterItems) == 0 && len(req.S) == 0 {
@@ -83,7 +83,7 @@ func ReadAgencyDetails(ctx context.Context, req *agencysrv.ReadAgencyRequest, rs
 	return nil
 }
 
-func AddAgency(ctx context.Context, req *agencysrv.AddAgencyRequest, rsp *agencysrv.AddAgencyResponse) error {
+func (agency *AgencySrv)AddAgency(ctx context.Context, req *agencysrv.AddAgencyRequest, rsp *agencysrv.AddAgencyResponse) error {
 	if len(req.Agency.Name) == 0 {
 		return errors.BadRequest("para:001", "missing parameters")
 	}
@@ -106,10 +106,10 @@ func AddAgency(ctx context.Context, req *agencysrv.AddAgencyRequest, rsp *agency
 	return nil
 }
 
-func UpdateAgency(ctx context.Context, req *agencysrv.UpdateAgencyRequest, rsp *agencysrv.UpdateAgencyResponse) error {
+func (agency *AgencySrv)UpdateAgency(ctx context.Context, req *agencysrv.UpdateAgencyRequest, rsp *agencysrv.UpdateAgencyResponse) error {
 	return nil
 }
 
-func DeleteAgency(ctx context.Context, req *agencysrv.DeleteAgencyRequest, rsp *agencysrv.DeleteAgencyResponse) error {
+func (agency *AgencySrv)DeleteAgency(ctx context.Context, req *agencysrv.DeleteAgencyRequest, rsp *agencysrv.DeleteAgencyResponse) error {
 	return nil
 }

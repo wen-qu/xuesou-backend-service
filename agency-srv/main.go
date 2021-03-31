@@ -1,8 +1,8 @@
 package main
 
 import (
-	"agency-srv/handler"
-	pb "agency-srv/proto"
+	"github.com/wen-qu/xuesou-backend-service/agency-srv/handler"
+	pb "github.com/wen-qu/xuesou-backend-service/agency-srv/proto"
 
 	"github.com/micro/micro/v3/service"
 	"github.com/micro/micro/v3/service/logger"
@@ -16,7 +16,7 @@ func main() {
 	)
 
 	// Register handler
-	pb.RegisterAgencySrvHandler(srv.Server(), new(handler.AgencySrv))
+	_ = pb.RegisterAgencySrvHandler(srv.Server(), new(handler.AgencySrv))
 
 	// Run service
 	if err := srv.Run(); err != nil {
