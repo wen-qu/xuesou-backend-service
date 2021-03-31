@@ -40,6 +40,10 @@ create table if not exists `test_user_chatting_table` ( -- only test table, stan
   `agency_name` varchar(50) not null
 ) engine=innodb default charset=utf8; -- user's all chatting box
 
+create table if not exists `test_user_evaluations_table` ( -- only test table, standard format: [uid]_user_evaluations_table
+
+)
+
 create table if not exists `user_agency_chatting_contents` ( -- only test table, standard format: [uid]_[agency_id]_chatting_contents
   `content_id` varchar(21) primary key not null,
   `uid` varchar(18) not null,
@@ -105,3 +109,7 @@ create table if not exists `test_agency_teacher_table` ( -- only test table, sta
     `tel`  varchar(11) not null,
     `description` varchar(400)
 ) engine=innodb default charset=utf8;
+
+create table if not exists `test_agency_evaluations_table` ( -- only test table, standard format: [agency_id]_agency_evaluations_table
+
+)

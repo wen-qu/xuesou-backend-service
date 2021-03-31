@@ -47,6 +47,8 @@ type AgencyWebService interface {
 	GetAgencyDetail(ctx context.Context, in *GetAgencyDetailRequest, opts ...client.CallOption) (*GetAgencyDetailResponse, error)
 	AddNewAgency(ctx context.Context, in *AddAgencyRequest, opts ...client.CallOption) (*AddAgencyResponse, error)
 	UpdateAgencyProfile(ctx context.Context, in *UpdateAgencyRequest, opts ...client.CallOption) (*UpdateAgencyResponse, error)
+	GetEvaluation(ctx context.Context, in *GetEvaluationRequest, opts ...client.CallOption) (*GetEvaluationResponse, error)
+	GetNearbyAgencies(ctx context.Context, in *GetNearbyAgenciesRequest, opts ...client.CallOption) (*GetNearbyAgenciesResponse, error)
 	Login(ctx context.Context, in *LoginRequest, opts ...client.CallOption) (*LoginResponse, error)
 	Register(ctx context.Context, in *RegisterRequest, opts ...client.CallOption) (*RegisterResponse, error)
 }
@@ -113,6 +115,26 @@ func (c *agencyWebService) UpdateAgencyProfile(ctx context.Context, in *UpdateAg
 	return out, nil
 }
 
+func (c *agencyWebService) GetEvaluation(ctx context.Context, in *GetEvaluationRequest, opts ...client.CallOption) (*GetEvaluationResponse, error) {
+	req := c.c.NewRequest(c.name, "AgencyWeb.GetEvaluation", in)
+	out := new(GetEvaluationResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agencyWebService) GetNearbyAgencies(ctx context.Context, in *GetNearbyAgenciesRequest, opts ...client.CallOption) (*GetNearbyAgenciesResponse, error) {
+	req := c.c.NewRequest(c.name, "AgencyWeb.GetNearbyAgencies", in)
+	out := new(GetNearbyAgenciesResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *agencyWebService) Login(ctx context.Context, in *LoginRequest, opts ...client.CallOption) (*LoginResponse, error) {
 	req := c.c.NewRequest(c.name, "AgencyWeb.Login", in)
 	out := new(LoginResponse)
@@ -141,6 +163,8 @@ type AgencyWebHandler interface {
 	GetAgencyDetail(context.Context, *GetAgencyDetailRequest, *GetAgencyDetailResponse) error
 	AddNewAgency(context.Context, *AddAgencyRequest, *AddAgencyResponse) error
 	UpdateAgencyProfile(context.Context, *UpdateAgencyRequest, *UpdateAgencyResponse) error
+	GetEvaluation(context.Context, *GetEvaluationRequest, *GetEvaluationResponse) error
+	GetNearbyAgencies(context.Context, *GetNearbyAgenciesRequest, *GetNearbyAgenciesResponse) error
 	Login(context.Context, *LoginRequest, *LoginResponse) error
 	Register(context.Context, *RegisterRequest, *RegisterResponse) error
 }
@@ -152,6 +176,8 @@ func RegisterAgencyWebHandler(s server.Server, hdlr AgencyWebHandler, opts ...se
 		GetAgencyDetail(ctx context.Context, in *GetAgencyDetailRequest, out *GetAgencyDetailResponse) error
 		AddNewAgency(ctx context.Context, in *AddAgencyRequest, out *AddAgencyResponse) error
 		UpdateAgencyProfile(ctx context.Context, in *UpdateAgencyRequest, out *UpdateAgencyResponse) error
+		GetEvaluation(ctx context.Context, in *GetEvaluationRequest, out *GetEvaluationResponse) error
+		GetNearbyAgencies(ctx context.Context, in *GetNearbyAgenciesRequest, out *GetNearbyAgenciesResponse) error
 		Login(ctx context.Context, in *LoginRequest, out *LoginResponse) error
 		Register(ctx context.Context, in *RegisterRequest, out *RegisterResponse) error
 	}
@@ -184,6 +210,14 @@ func (h *agencyWebHandler) AddNewAgency(ctx context.Context, in *AddAgencyReques
 
 func (h *agencyWebHandler) UpdateAgencyProfile(ctx context.Context, in *UpdateAgencyRequest, out *UpdateAgencyResponse) error {
 	return h.AgencyWebHandler.UpdateAgencyProfile(ctx, in, out)
+}
+
+func (h *agencyWebHandler) GetEvaluation(ctx context.Context, in *GetEvaluationRequest, out *GetEvaluationResponse) error {
+	return h.AgencyWebHandler.GetEvaluation(ctx, in, out)
+}
+
+func (h *agencyWebHandler) GetNearbyAgencies(ctx context.Context, in *GetNearbyAgenciesRequest, out *GetNearbyAgenciesResponse) error {
+	return h.AgencyWebHandler.GetNearbyAgencies(ctx, in, out)
 }
 
 func (h *agencyWebHandler) Login(ctx context.Context, in *LoginRequest, out *LoginResponse) error {

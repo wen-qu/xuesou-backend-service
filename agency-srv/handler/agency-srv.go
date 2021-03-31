@@ -113,3 +113,23 @@ func (agency *AgencySrv)UpdateAgency(ctx context.Context, req *agencysrv.UpdateA
 func (agency *AgencySrv)DeleteAgency(ctx context.Context, req *agencysrv.DeleteAgencyRequest, rsp *agencysrv.DeleteAgencyResponse) error {
 	return nil
 }
+
+func (agency *AgencySrv)ReadEvaluations(ctx context.Context, req *agencysrv.ReadEvaluationsRequest, rsp *agencysrv.ReadEvaluationsResponse) error {
+	return nil
+}
+
+func (agency *AgencySrv)AddEvaluation(ctx context.Context, req *agencysrv.AddEvaluationRequest, rsp *agencysrv.AddEvaluationResponse) error {
+	return nil
+}
+
+func (agency *AgencySrv)UpdateEvaluation(ctx context.Context, req *agencysrv.UpdateEvaluationRequest, rsp *agencysrv.UpdateAgencyResponse) error {
+	return nil
+}
+
+func (agency *AgencySrv)DeleteEvaluation(ctx context.Context, req *agencysrv.DeleteEvaluationRequest, rsp *agencysrv.DeleteEvaluationResponse) error {
+	return nil
+}
+
+func (agency *AgencySrv)GetNearbyAgencies(ctx context.Context, req *agencysrv.GetNearbyAgenciesRequest, rsp *agencysrv.GetNearbyAgenciesResponse) error {
+	return nil
+}

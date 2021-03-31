@@ -46,6 +46,11 @@ type AgencySrvService interface {
 	AddAgency(ctx context.Context, in *AddAgencyRequest, opts ...client.CallOption) (*AddAgencyResponse, error)
 	UpdateAgency(ctx context.Context, in *UpdateAgencyRequest, opts ...client.CallOption) (*UpdateAgencyResponse, error)
 	DeleteAgency(ctx context.Context, in *DeleteAgencyRequest, opts ...client.CallOption) (*DeleteAgencyResponse, error)
+	ReadEvaluations(ctx context.Context, in *ReadEvaluationsRequest, opts ...client.CallOption) (*ReadEvaluationsResponse, error)
+	AddEvaluation(ctx context.Context, in *AddEvaluationRequest, opts ...client.CallOption) (*AddEvaluationResponse, error)
+	UpdateEvaluation(ctx context.Context, in *UpdateEvaluationRequest, opts ...client.CallOption) (*AddEvaluationResponse, error)
+	DeleteEvaluation(ctx context.Context, in *DeleteEvaluationRequest, opts ...client.CallOption) (*DeleteEvaluationResponse, error)
+	GetNearbyAgencies(ctx context.Context, in *GetNearbyAgenciesRequest, opts ...client.CallOption) (*GetNearbyAgenciesResponse, error)
 }
 
 type agencySrvService struct {
@@ -100,6 +105,56 @@ func (c *agencySrvService) DeleteAgency(ctx context.Context, in *DeleteAgencyReq
 	return out, nil
 }
 
+func (c *agencySrvService) ReadEvaluations(ctx context.Context, in *ReadEvaluationsRequest, opts ...client.CallOption) (*ReadEvaluationsResponse, error) {
+	req := c.c.NewRequest(c.name, "AgencySrv.ReadEvaluations", in)
+	out := new(ReadEvaluationsResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agencySrvService) AddEvaluation(ctx context.Context, in *AddEvaluationRequest, opts ...client.CallOption) (*AddEvaluationResponse, error) {
+	req := c.c.NewRequest(c.name, "AgencySrv.AddEvaluation", in)
+	out := new(AddEvaluationResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agencySrvService) UpdateEvaluation(ctx context.Context, in *UpdateEvaluationRequest, opts ...client.CallOption) (*AddEvaluationResponse, error) {
+	req := c.c.NewRequest(c.name, "AgencySrv.UpdateEvaluation", in)
+	out := new(AddEvaluationResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agencySrvService) DeleteEvaluation(ctx context.Context, in *DeleteEvaluationRequest, opts ...client.CallOption) (*DeleteEvaluationResponse, error) {
+	req := c.c.NewRequest(c.name, "AgencySrv.DeleteEvaluation", in)
+	out := new(DeleteEvaluationResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agencySrvService) GetNearbyAgencies(ctx context.Context, in *GetNearbyAgenciesRequest, opts ...client.CallOption) (*GetNearbyAgenciesResponse, error) {
+	req := c.c.NewRequest(c.name, "AgencySrv.GetNearbyAgencies", in)
+	out := new(GetNearbyAgenciesResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for AgencySrv service
 
 type AgencySrvHandler interface {
@@ -107,6 +162,11 @@ type AgencySrvHandler interface {
 	AddAgency(context.Context, *AddAgencyRequest, *AddAgencyResponse) error
 	UpdateAgency(context.Context, *UpdateAgencyRequest, *UpdateAgencyResponse) error
 	DeleteAgency(context.Context, *DeleteAgencyRequest, *DeleteAgencyResponse) error
+	ReadEvaluations(context.Context, *ReadEvaluationsRequest, *ReadEvaluationsResponse) error
+	AddEvaluation(context.Context, *AddEvaluationRequest, *AddEvaluationResponse) error
+	UpdateEvaluation(context.Context, *UpdateEvaluationRequest, *AddEvaluationResponse) error
+	DeleteEvaluation(context.Context, *DeleteEvaluationRequest, *DeleteEvaluationResponse) error
+	GetNearbyAgencies(context.Context, *GetNearbyAgenciesRequest, *GetNearbyAgenciesResponse) error
 }
 
 func RegisterAgencySrvHandler(s server.Server, hdlr AgencySrvHandler, opts ...server.HandlerOption) error {
@@ -115,6 +175,11 @@ func RegisterAgencySrvHandler(s server.Server, hdlr AgencySrvHandler, opts ...se
 		AddAgency(ctx context.Context, in *AddAgencyRequest, out *AddAgencyResponse) error
 		UpdateAgency(ctx context.Context, in *UpdateAgencyRequest, out *UpdateAgencyResponse) error
 		DeleteAgency(ctx context.Context, in *DeleteAgencyRequest, out *DeleteAgencyResponse) error
+		ReadEvaluations(ctx context.Context, in *ReadEvaluationsRequest, out *ReadEvaluationsResponse) error
+		AddEvaluation(ctx context.Context, in *AddEvaluationRequest, out *AddEvaluationResponse) error
+		UpdateEvaluation(ctx context.Context, in *UpdateEvaluationRequest, out *AddEvaluationResponse) error
+		DeleteEvaluation(ctx context.Context, in *DeleteEvaluationRequest, out *DeleteEvaluationResponse) error
+		GetNearbyAgencies(ctx context.Context, in *GetNearbyAgenciesRequest, out *GetNearbyAgenciesResponse) error
 	}
 	type AgencySrv struct {
 		agencySrv
@@ -141,4 +206,24 @@ func (h *agencySrvHandler) UpdateAgency(ctx context.Context, in *UpdateAgencyReq
 
 func (h *agencySrvHandler) DeleteAgency(ctx context.Context, in *DeleteAgencyRequest, out *DeleteAgencyResponse) error {
 	return h.AgencySrvHandler.DeleteAgency(ctx, in, out)
+}
+
+func (h *agencySrvHandler) ReadEvaluations(ctx context.Context, in *ReadEvaluationsRequest, out *ReadEvaluationsResponse) error {
+	return h.AgencySrvHandler.ReadEvaluations(ctx, in, out)
+}
+
+func (h *agencySrvHandler) AddEvaluation(ctx context.Context, in *AddEvaluationRequest, out *AddEvaluationResponse) error {
+	return h.AgencySrvHandler.AddEvaluation(ctx, in, out)
+}
+
+func (h *agencySrvHandler) UpdateEvaluation(ctx context.Context, in *UpdateEvaluationRequest, out *AddEvaluationResponse) error {
+	return h.AgencySrvHandler.UpdateEvaluation(ctx, in, out)
+}
+
+func (h *agencySrvHandler) DeleteEvaluation(ctx context.Context, in *DeleteEvaluationRequest, out *DeleteEvaluationResponse) error {
+	return h.AgencySrvHandler.DeleteEvaluation(ctx, in, out)
+}
+
+func (h *agencySrvHandler) GetNearbyAgencies(ctx context.Context, in *GetNearbyAgenciesRequest, out *GetNearbyAgenciesResponse) error {
+	return h.AgencySrvHandler.GetNearbyAgencies(ctx, in, out)
 }

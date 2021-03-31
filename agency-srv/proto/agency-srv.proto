@@ -9,6 +9,11 @@ service AgencySrv {
 	rpc AddAgency(AddAgencyRequest) returns (AddAgencyResponse) {}
 	rpc UpdateAgency(UpdateAgencyRequest) returns (UpdateAgencyResponse) {}
 	rpc DeleteAgency(DeleteAgencyRequest) returns (DeleteAgencyResponse) {}
+	rpc ReadEvaluations(ReadEvaluationsRequest) returns (ReadEvaluationsResponse) {}
+	rpc AddEvaluation(AddEvaluationRequest) returns (AddEvaluationResponse) {}
+	rpc UpdateEvaluation(UpdateEvaluationRequest) returns (AddEvaluationResponse) {}
+	rpc DeleteEvaluation(DeleteEvaluationRequest) returns (DeleteEvaluationResponse) {}
+	rpc GetNearbyAgencies(GetNearbyAgenciesRequest) returns (GetNearbyAgenciesResponse) {}
 }
 
 message Class {
@@ -43,6 +48,21 @@ message Teacher {
 	repeated string tag = 4;
 	string tel = 5;
 	string description = 6;
+}
+
+message OverEvaluation {
+	float generalRate = 1;
+	int32 upRate = 2;
+	float goodRate = 3;
+}
+message Evaluation {
+	string evaluationID = 1;
+	string favicon = 2; // user's icon
+	float rating = 3;
+	string username = 4;
+	Class class = 5;
+	string detail = 6;
+	repeated string pics = 7;
 }
 
 message ReadAgencyRequest {
@@ -95,4 +115,49 @@ message DeleteAgencyResponse {
 	string msg = 2;
 }
 
+message ReadEvaluationsRequest {
+	string agencyID = 1;
+	string uid = 2;
+}
 
+message ReadEvaluationsResponse {
+	Evaluation evaluation = 1;
+	OverEvaluation overEvaluation = 2;
+	string msg = 3;
+	int32 status = 4;
+}
+
+message AddEvaluationRequest {
+	Evaluation evaluation = 1;
+}
+
+message AddEvaluationResponse {
+	string msg = 1;
+	int32 status = 2;
+}
+
+message UpdateEvaluationRequest {
+	Evaluation evaluation = 1;
+}
+
+message UpdateEvaluationResponse {
+	string msg = 1;
+	int32 status = 2;
+}
+
+message DeleteEvaluationRequest {
+	string evaluationID = 1;
+}
+
+message DeleteEvaluationResponse {
+	string msg = 1;
+	int32 status = 2;
+}
+
+message GetNearbyAgenciesRequest {
+
+}
+
+message GetNearbyAgenciesResponse {
+
+}

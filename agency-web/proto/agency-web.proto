@@ -10,6 +10,8 @@ service AgencyWeb {
 	rpc GetAgencyDetail(GetAgencyDetailRequest) returns (GetAgencyDetailResponse) {}
 	rpc AddNewAgency(AddAgencyRequest) returns (AddAgencyResponse) {}
 	rpc UpdateAgencyProfile(UpdateAgencyRequest) returns (UpdateAgencyResponse) {}
+	rpc GetEvaluation(GetEvaluationRequest) returns (GetEvaluationResponse) {}
+	rpc GetNearbyAgencies(GetNearbyAgenciesRequest) returns (GetNearbyAgenciesResponse) {}
 	rpc Login(LoginRequest) returns (LoginResponse) {}
 	rpc Register(RegisterRequest) returns (RegisterResponse) {}
 }
@@ -55,8 +57,9 @@ message Evaluation {
 	string favicon = 1; // user's icon
 	float rating = 2;
 	string username = 3;
-	string detail = 4;
-	repeated string pics = 5;
+	Class class = 4;
+	string detail = 5;
+	repeated string pics = 6;
 }
 
 message LoginRequest {
@@ -125,9 +128,27 @@ message GetAgencyDetailResponse {
 	string brandStory = 3;
 	repeated string characteristic = 4;
 	repeated Teacher teachers = 5;
-	OverEvaluation overEvaluation = 6;
-	repeated Evaluation evaluations = 7;
-	repeated Agency nearbyAgencies = 8;
-	string msg = 9;
-	int32 status = 10;
+	string msg = 6;
+	int32 status = 7;
+}
+
+message GetEvaluationRequest {
+	string agencyID = 1;
+}
+
+message GetEvaluationResponse {
+	OverEvaluation overEvaluation = 1;
+	repeated Evaluation evaluations = 2;
+	string msg = 3;
+	int32 status = 4;
+}
+
+message GetNearbyAgenciesRequest {
+	string agencyID = 1;
+}
+
+message GetNearbyAgenciesResponse {
+	repeated Agency nearbyAgencies = 1;
+	string msg = 2;
+	int32 status = 3;
 }
