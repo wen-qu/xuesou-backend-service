@@ -5,6 +5,7 @@ import (
 	"github.com/micro/micro/v3/service"
 	"github.com/micro/micro/v3/service/errors"
 	agencysrv "github.com/wen-qu/xuesou-backend-service/agency-srv/proto"
+	classsrv "github.com/wen-qu/xuesou-backend-service/class-srv/proto"
 	"reflect"
 
 	// log "github.com/micro/micro/v3/service/logger"
@@ -15,10 +16,12 @@ import (
 type AgencyWeb struct{}
 
 var AgencyClient agencysrv.AgencySrvService
+var ClassClient classsrv.ClassSrvService
 
 func Init(){
 	srv := service.New()
 	AgencyClient = agencysrv.NewAgencySrvService("agency-srv", srv.Client())
+	ClassClient = classsrv.NewClassSrvService("class-srv", srv.Client())
 }
 
 func (agency *AgencyWeb) Login(ctx context.Context, req *agencyweb.LoginRequest, rsp *agencyweb.LoginResponse) error {
@@ -26,9 +29,14 @@ func (agency *AgencyWeb) Login(ctx context.Context, req *agencyweb.LoginRequest,
 	return nil
 }
 
+func (agency *AgencyWeb) Register(ctx context.Context, req *agencyweb.RegisterRequest, rsp *agencyweb.LoginResponse) error {
+
+	return nil
+}
+
 func (agency *AgencyWeb) GetAgencies(ctx context.Context, req *agencyweb.GetAgenciesRequest, rsp *agencyweb.GetAgenciesResponse) error {
 	if len(req.S) == 0 {
-		return errors.BadRequest("para:001", "missing parameters")
+		return errors.BadRequest("para:001", "missing parameters: s")
 	}
 
 	rspAgencies, err := AgencyClient.ReadAgencyDetails(ctx, &agencysrv.ReadAgencyRequest{
@@ -71,9 +79,10 @@ func (agency *AgencyWeb) Search(ctx context.Context, req *agencyweb.SearchReques
 
 func (agency *AgencyWeb) GetAgencyDetail(ctx context.Context, req *agencyweb.GetAgencyDetailRequest, rsp *agencyweb.GetAgencyDetailResponse) error {
 	if len(req.AgencyID) == 0 {
-		return errors.BadRequest("para:001", "missing parameters")
+		return errors.BadRequest("para:001", "missing parameters: agencyID")
 	}
 
+	// get general information
 	rspAgency, err := AgencyClient.ReadAgencyDetails(ctx, &agencysrv.ReadAgencyRequest{
 		AgencyID: req.AgencyID,
 	})
@@ -90,6 +99,7 @@ func (agency *AgencyWeb) GetAgencyDetail(ctx context.Context, req *agencyweb.Get
 	vSrvAgency := reflect.ValueOf(rspAgency.Agencies[0])
 	vWebAgency := reflect.ValueOf(rsp.General)
 
+	// assign rspAgency.Agencies[0] to rsp.General
 	for i := 0; i < vSrvAgency.NumField(); i++ {
 		switch vSrvAgency.Field(i).Kind() {
 		case reflect.String:
@@ -100,5 +110,6 @@ func (agency *AgencyWeb) GetAgencyDetail(ctx context.Context, req *agencyweb.Get
 			vField.Elem().SetInt(vSrvAgency.Field(i).Interface().(int64))
 		}
 	}
+
 	return nil
 }

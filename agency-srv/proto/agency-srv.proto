@@ -47,11 +47,15 @@ message ReadAgencyRequest {
 message ReadAgencyResponse {
 	int32 status = 1;
 	repeated Agency agencies = 2;
-	string msg = 3;
+	string brandHistory = 3;
+	repeated string characteristics = 4;
+	string msg = 5;
 }
 
 message AddAgencyRequest {
 	Agency agency = 1;
+	string brandHistory = 2;
+	repeated string characteristics = 3;
 }
 
 message AddAgencyResponse {

@@ -61,7 +61,9 @@ create table if not exists `agency_profile_table` ( -- agencies' basic profile
   `address` varchar(256) not null,
   `address_detail` varchar(256) not null,
   `icon` varchar(60) not null,
-  `photos` varchar(700) -- maximum 20 photos, save each photo's filename(a hash)
+  `photos` varchar(700), -- maximum 20 photos, save each photo's filename(a hash)
+  `brand_history` varchar(5000),
+  `characteristics` varchar(250) -- maximum 8 words, each word maximum 30 characters. eg. 'excellent teacher,professional course,flexible time'
 ) engine=innodb default charset=utf8;
 
 create table if not exists `agency_login_inf_table` ( -- agencies' login information
@@ -84,13 +86,14 @@ create table if not exists `test_agency_chatting_table` ( -- only test table, st
 create table if not exists `test_agency_class_table` ( -- only test table, standard format: [agency_id]_agency_class_table
   `agency_id` varchar(20) not null,
   `class_id` varchar(19) not null,
-  `price` float not null,
+  `price` float,
   `name` varchar(50) not null,
-  `stu_number` int not null,
-  `age` varchar(10) not null, -- eg. '4-14'; '20-30'
-  `level` varchar(20) not null, -- beginner, intermediate, advanced, expert
-  `sales` int not null -- number of sold
-  `create_time` varchar(20) not null
+  `stu_number` int,
+  `age` varchar(10), -- eg. '4-14'; '20-30'
+  `level` varchar(20), -- beginner, intermediate, advanced, expert
+  `sales` int, -- number of sold
+  `create_time` varchar(19), -- eg. '2006-07-01 12:24:58'
+  `last_update_time` varchar(19) -- same as `create_time`
 ) engine=innodb default charset=utf8; -- agency's all classes
 
 create table if not exists `test_agency_teacher_table` ( -- only test table, standard format: [agency_id]_agency_teacher_table
@@ -100,5 +103,5 @@ create table if not exists `test_agency_teacher_table` ( -- only test table, sta
     `pic`  varchar(60),
     `tag`  varchar(120),
     `tel`  varchar(11) not null,
-    `description` varchar(400) not null
+    `description` varchar(400)
 ) engine=innodb default charset=utf8;

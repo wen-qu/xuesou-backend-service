@@ -3,7 +3,11 @@ module github.com/wen-qu/xuesou-backend-service/agency-web
 go 1.15
 
 require (
+	github.com/golang/protobuf v1.4.3
 	github.com/micro/micro/v3 v3.0.0
+	github.com/wen-qu/xuesou-backend-service/agency-srv v0.0.0-20210325152105-ea9f2abd9285
+	github.com/wen-qu/xuesou-backend-service/class-srv v0.0.0-20210325152105-ea9f2abd9285
+	google.golang.org/protobuf v1.25.0
 )
 
 // This can be removed once etcd becomes go gettable, version 3.4 and 3.5 is not,

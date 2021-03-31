@@ -45,7 +45,10 @@ type AgencyWebService interface {
 	GetAgencies(ctx context.Context, in *GetAgenciesRequest, opts ...client.CallOption) (*GetAgenciesResponse, error)
 	Search(ctx context.Context, in *SearchRequest, opts ...client.CallOption) (*SearchResponse, error)
 	GetAgencyDetail(ctx context.Context, in *GetAgencyDetailRequest, opts ...client.CallOption) (*GetAgencyDetailResponse, error)
+	AddNewAgency(ctx context.Context, in *AddAgencyRequest, opts ...client.CallOption) (*AddAgencyResponse, error)
+	UpdateAgencyProfile(ctx context.Context, in *UpdateAgencyRequest, opts ...client.CallOption) (*UpdateAgencyResponse, error)
 	Login(ctx context.Context, in *LoginRequest, opts ...client.CallOption) (*LoginResponse, error)
+	Register(ctx context.Context, in *RegisterRequest, opts ...client.CallOption) (*RegisterResponse, error)
 }
 
 type agencyWebService struct {
@@ -90,9 +93,39 @@ func (c *agencyWebService) GetAgencyDetail(ctx context.Context, in *GetAgencyDet
 	return out, nil
 }
 
+func (c *agencyWebService) AddNewAgency(ctx context.Context, in *AddAgencyRequest, opts ...client.CallOption) (*AddAgencyResponse, error) {
+	req := c.c.NewRequest(c.name, "AgencyWeb.AddNewAgency", in)
+	out := new(AddAgencyResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agencyWebService) UpdateAgencyProfile(ctx context.Context, in *UpdateAgencyRequest, opts ...client.CallOption) (*UpdateAgencyResponse, error) {
+	req := c.c.NewRequest(c.name, "AgencyWeb.UpdateAgencyProfile", in)
+	out := new(UpdateAgencyResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *agencyWebService) Login(ctx context.Context, in *LoginRequest, opts ...client.CallOption) (*LoginResponse, error) {
 	req := c.c.NewRequest(c.name, "AgencyWeb.Login", in)
 	out := new(LoginResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agencyWebService) Register(ctx context.Context, in *RegisterRequest, opts ...client.CallOption) (*RegisterResponse, error) {
+	req := c.c.NewRequest(c.name, "AgencyWeb.Register", in)
+	out := new(RegisterResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -106,7 +139,10 @@ type AgencyWebHandler interface {
 	GetAgencies(context.Context, *GetAgenciesRequest, *GetAgenciesResponse) error
 	Search(context.Context, *SearchRequest, *SearchResponse) error
 	GetAgencyDetail(context.Context, *GetAgencyDetailRequest, *GetAgencyDetailResponse) error
+	AddNewAgency(context.Context, *AddAgencyRequest, *AddAgencyResponse) error
+	UpdateAgencyProfile(context.Context, *UpdateAgencyRequest, *UpdateAgencyResponse) error
 	Login(context.Context, *LoginRequest, *LoginResponse) error
+	Register(context.Context, *RegisterRequest, *RegisterResponse) error
 }
 
 func RegisterAgencyWebHandler(s server.Server, hdlr AgencyWebHandler, opts ...server.HandlerOption) error {
@@ -114,7 +150,10 @@ func RegisterAgencyWebHandler(s server.Server, hdlr AgencyWebHandler, opts ...se
 		GetAgencies(ctx context.Context, in *GetAgenciesRequest, out *GetAgenciesResponse) error
 		Search(ctx context.Context, in *SearchRequest, out *SearchResponse) error
 		GetAgencyDetail(ctx context.Context, in *GetAgencyDetailRequest, out *GetAgencyDetailResponse) error
+		AddNewAgency(ctx context.Context, in *AddAgencyRequest, out *AddAgencyResponse) error
+		UpdateAgencyProfile(ctx context.Context, in *UpdateAgencyRequest, out *UpdateAgencyResponse) error
 		Login(ctx context.Context, in *LoginRequest, out *LoginResponse) error
+		Register(ctx context.Context, in *RegisterRequest, out *RegisterResponse) error
 	}
 	type AgencyWeb struct {
 		agencyWeb
@@ -139,6 +178,18 @@ func (h *agencyWebHandler) GetAgencyDetail(ctx context.Context, in *GetAgencyDet
 	return h.AgencyWebHandler.GetAgencyDetail(ctx, in, out)
 }
 
+func (h *agencyWebHandler) AddNewAgency(ctx context.Context, in *AddAgencyRequest, out *AddAgencyResponse) error {
+	return h.AgencyWebHandler.AddNewAgency(ctx, in, out)
+}
+
+func (h *agencyWebHandler) UpdateAgencyProfile(ctx context.Context, in *UpdateAgencyRequest, out *UpdateAgencyResponse) error {
+	return h.AgencyWebHandler.UpdateAgencyProfile(ctx, in, out)
+}
+
 func (h *agencyWebHandler) Login(ctx context.Context, in *LoginRequest, out *LoginResponse) error {
 	return h.AgencyWebHandler.Login(ctx, in, out)
+}
+
+func (h *agencyWebHandler) Register(ctx context.Context, in *RegisterRequest, out *RegisterResponse) error {
+	return h.AgencyWebHandler.Register(ctx, in, out)
 }
