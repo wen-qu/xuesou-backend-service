@@ -50,7 +50,7 @@ func (agency *AgencySrv)ReadAgencyDetails(ctx context.Context, req *agencysrv.Re
 		return nil
 	}
 
-	if len(req.S) > 0 {
+	if len(req.S) > 0 { // search agencies from search page, so needn't to read brandHistory, characteristics.
 		var agency = new(agencysrv.Agency)
 		var tagString string
 

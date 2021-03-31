@@ -4,10 +4,10 @@ import (
 	"context"
 	"database/sql"
 	"github.com/google/uuid"
+	"github.com/jinzhu/copier"
 	"github.com/micro/micro/v3/service/errors"
 	"github.com/wen-qu/xuesou-backend-service/basic/db"
 	classsrv "github.com/wen-qu/xuesou-backend-service/class-srv/proto"
-	"reflect"
 	"regexp"
 	"time"
 )
@@ -99,22 +99,8 @@ func (class *ClassSrv) UpdateClass(ctx context.Context, req *classsrv.UpdateClas
 		return errors.Forbidden("class:001", "class not existed")
 	}
 
-	vReqClass := reflect.ValueOf(req.Class)
-	vCurClass := reflect.ValueOf(currentClass.Classes[0])
-
-	for i := 0; i < vCurClass.NumField(); i++ {
-		switch vCurClass.Field(i).Kind() {
-		case reflect.String:
-			if len(vReqClass.Field(i).Interface().(string)) == 0 {
-				vField := reflect.ValueOf(vReqClass.Field(i).Pointer())
-				vField.Elem().SetString(vCurClass.Field(i).Interface().(string))
-			}
-		case reflect.Int32:
-			if vReqClass.Field(i).Interface().(int32) == 0 {
-				vField := reflect.ValueOf(vReqClass.Field(i).Pointer())
-				vField.Elem().SetInt(vCurClass.Field(i).Interface().(int64))
-			}
-		}
+	if err := copier.Copy(req.Class, currentClass.Classes[0]); err != nil {
+		return errors.InternalServerError("class-srv.ClassSrv.UpdateClass:fatal:002", err.Error())
 	}
 
 	tableName := req.Class.AgencyID + "_agency_class_name"

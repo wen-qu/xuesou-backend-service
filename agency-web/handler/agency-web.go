@@ -6,10 +6,8 @@ import (
 	"github.com/micro/micro/v3/service/errors"
 	agencysrv "github.com/wen-qu/xuesou-backend-service/agency-srv/proto"
 	classsrv "github.com/wen-qu/xuesou-backend-service/class-srv/proto"
-	"reflect"
 
-	// log "github.com/micro/micro/v3/service/logger"
-
+	"github.com/jinzhu/copier"
 	agencyweb "github.com/wen-qu/xuesou-backend-service/agency-web/proto"
 )
 
@@ -52,18 +50,8 @@ func (agency *AgencyWeb) GetAgencies(ctx context.Context, req *agencyweb.GetAgen
 
 	for i := 0; i < len(rspAgencies.Agencies); i++ {
 		rsp.Agencies = append(rsp.Agencies, new(agencyweb.Agency))
-		vSrvAgency := reflect.ValueOf(rspAgencies.Agencies[i])
-		vWebAgency := reflect.ValueOf(rsp.Agencies[i])
-
-		for j := 0; j < vSrvAgency.NumField(); j++ {
-			switch vSrvAgency.Field(j).Kind() {
-			case reflect.String:
-				vField := reflect.ValueOf(vWebAgency.Field(j).Pointer())
-				vField.Elem().SetString(vSrvAgency.Field(j).Interface().(string))
-			case reflect.Int32:
-				vField := reflect.ValueOf(vWebAgency.Field(j).Pointer())
-				vField.Elem().SetInt(vSrvAgency.Field(j).Interface().(int64))
-			}
+		if err := copier.Copy(rsp.Agencies[i], rspAgencies.Agencies[i]); err != nil {
+			return errors.InternalServerError("agency-web.AgencyWeb.GetAgencies:fatal:002", err.Error())
 		}
 	}
 
@@ -96,20 +84,26 @@ func (agency *AgencyWeb) GetAgencyDetail(ctx context.Context, req *agencyweb.Get
 	}
 
 	rsp.General = new(agencyweb.Agency)
-	vSrvAgency := reflect.ValueOf(rspAgency.Agencies[0])
-	vWebAgency := reflect.ValueOf(rsp.General)
 
-	// assign rspAgency.Agencies[0] to rsp.General
-	for i := 0; i < vSrvAgency.NumField(); i++ {
-		switch vSrvAgency.Field(i).Kind() {
-		case reflect.String:
-			vField := reflect.ValueOf(vWebAgency.Field(i).Pointer())
-			vField.Elem().SetString(vSrvAgency.Field(i).Interface().(string))
-		case reflect.Int32:
-			vField := reflect.ValueOf(vWebAgency.Field(i).Pointer())
-			vField.Elem().SetInt(vSrvAgency.Field(i).Interface().(int64))
-		}
+	if err := copier.Copy(rsp.General, rspAgency.Agencies[0]); err != nil {
+		return errors.InternalServerError("agency-web.AgencyWeb.GetAgencyDetail:fatal?:002", err.Error())
 	}
 
+	rsp.BrandStory = rspAgency.BrandHistory
+	rsp.Characteristic = rspAgency.Characteristics
+
+	// get classes information
+	rspClass, err := ClassClient.ReadClassesByAgencyID(ctx, &classsrv.ReadClassRequest{
+		AgencyID: rsp.General.AgencyID,
+	})
+	if err != nil {
+		return errors.InternalServerError("agency-web.AgencyWeb.GetAgencyDetail:fatal:002", err.Error())
+	}
+
+	if err := copier.Copy(rsp.General.Classes, rspClass.Classes); err != nil {
+		return errors.InternalServerError("agency-web.AgencyWeb.GetAgencyDetail:fatal?:003", err.Error())
+	}
+
+	// TODO: read teachers, evaluations and nearby agencies information.
 	return nil
 }

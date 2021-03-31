@@ -36,6 +36,15 @@ message Agency {
 	repeated Class classes = 13;
 }
 
+message Teacher {
+	string teacherID = 1;
+	string name = 2;
+	string pic = 3;
+	repeated string tag = 4;
+	string tel = 5;
+	string description = 6;
+}
+
 message ReadAgencyRequest {
 	string agencyID = 1;
 	string name = 2;
@@ -67,6 +76,9 @@ message AddAgencyResponse {
 message UpdateAgencyRequest {
 	string AgencyID = 1;
 	Agency agency = 2;
+	string brandHistory = 3;
+	repeated string characteristics = 4;
+	repeated Teacher teachers = 5;
 }
 
 message UpdateAgencyResponse {
