@@ -41,8 +41,15 @@ create table if not exists `test_user_chatting_table` ( -- only test table, stan
 ) engine=innodb default charset=utf8; -- user's all chatting box
 
 create table if not exists `test_user_evaluations_table` ( -- only test table, standard format: [uid]_user_evaluations_table
-
-)
+  `evaluation_id` varchar(20) primary key not null, -- e.g. 'evalua_1615280517432'
+  `favicon` varchar(60),
+  `rating` float not null,
+  `username` varchar(50) not null,
+  `agency_id` varchar(20) not null,
+  `class_id` varchar(19) not null,
+  `detail` varchar(10000),
+  `pics` varchar(700), -- maximum 20 photos
+) engine=innodb default charset=utf8; -- user's all evaluations
 
 create table if not exists `user_agency_chatting_contents` ( -- only test table, standard format: [uid]_[agency_id]_chatting_contents
   `content_id` varchar(21) primary key not null,
@@ -58,7 +65,7 @@ create table if not exists `agency_profile_table` ( -- agencies' basic profile
   `agency_id` varchar(20) primary key not null, -- e.g. 'agency_1615280518432'
   `name` varchar(50) not null, -- initialized as uid=agency_name
   `tel` varchar(11) not null,
-  `rating` float not null,
+  `rating` float not null, -- 0-10
   `comments` int not null,
   `order` int not null,
   `tags` varchar(120), -- maximum 6 tags, each tag max 8 characters
@@ -111,5 +118,12 @@ create table if not exists `test_agency_teacher_table` ( -- only test table, sta
 ) engine=innodb default charset=utf8;
 
 create table if not exists `test_agency_evaluations_table` ( -- only test table, standard format: [agency_id]_agency_evaluations_table
-
-)
+    `evaluation_id` varchar(20) primary key not null, -- e.g. 'evalua_1615280517432'
+    `favicon` varchar(60),
+    `rating` float not null, -- 0-10
+    `username` varchar(50) not null,
+    `agency_id` varchar(20) not null,
+    `class_id` varchar(19) not null,
+    `detail` varchar(10000),
+    `pics` varchar(700), -- maximum 20 photos
+) engine=innodb default charset=utf8;

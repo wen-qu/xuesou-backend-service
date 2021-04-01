@@ -86,24 +86,36 @@ func (agency *AgencyWeb) GetAgencyDetail(ctx context.Context, req *agencyweb.Get
 	rsp.General = new(agencyweb.Agency)
 
 	if err := copier.Copy(rsp.General, rspAgency.Agencies[0]); err != nil {
-		return errors.InternalServerError("agency-web.AgencyWeb.GetAgencyDetail:fatal?:002", err.Error())
+		return errors.InternalServerError("agency-web.AgencyWeb.GetAgencyDetail:fatal:002", err.Error())
 	}
 
 	rsp.BrandStory = rspAgency.BrandHistory
-	rsp.Characteristic = rspAgency.Characteristics
+	rsp.Characteristics = rspAgency.Characteristics
 
 	// get classes information
 	rspClass, err := ClassClient.ReadClassesByAgencyID(ctx, &classsrv.ReadClassRequest{
 		AgencyID: rsp.General.AgencyID,
 	})
 	if err != nil {
-		return errors.InternalServerError("agency-web.AgencyWeb.GetAgencyDetail:fatal:002", err.Error())
+		return errors.InternalServerError("agency-web.AgencyWeb.GetAgencyDetail:fatal:003", err.Error())
 	}
 
 	if err := copier.Copy(rsp.General.Classes, rspClass.Classes); err != nil {
-		return errors.InternalServerError("agency-web.AgencyWeb.GetAgencyDetail:fatal?:003", err.Error())
+		return errors.InternalServerError("agency-web.AgencyWeb.GetAgencyDetail:fatal:004", err.Error())
 	}
 
 	// TODO: read teachers, evaluations and nearby agencies information.
+	return nil
+}
+
+func (agency *AgencyWeb)UpdateAgencyProfile(ctx context.Context, req *agencyweb.UpdateAgencyRequest, rsp *agencyweb.UpdateAgencyResponse) error {
+	return nil
+}
+
+func (agency *AgencyWeb)GetEvaluation(ctx context.Context, req *agencyweb.GetEvaluationRequest, rsp *agencyweb.GetEvaluationResponse) error {
+	return nil
+}
+
+func (agency *AgencyWeb)GetNearbyAgencies(ctx context.Context, req *agencyweb.GetNearbyAgenciesRequest, rsp *agencyweb.GetNearbyAgenciesResponse) error {
 	return nil
 }

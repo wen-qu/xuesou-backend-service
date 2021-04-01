@@ -45,7 +45,6 @@ type AgencyWebService interface {
 	GetAgencies(ctx context.Context, in *GetAgenciesRequest, opts ...client.CallOption) (*GetAgenciesResponse, error)
 	Search(ctx context.Context, in *SearchRequest, opts ...client.CallOption) (*SearchResponse, error)
 	GetAgencyDetail(ctx context.Context, in *GetAgencyDetailRequest, opts ...client.CallOption) (*GetAgencyDetailResponse, error)
-	AddNewAgency(ctx context.Context, in *AddAgencyRequest, opts ...client.CallOption) (*AddAgencyResponse, error)
 	UpdateAgencyProfile(ctx context.Context, in *UpdateAgencyRequest, opts ...client.CallOption) (*UpdateAgencyResponse, error)
 	GetEvaluation(ctx context.Context, in *GetEvaluationRequest, opts ...client.CallOption) (*GetEvaluationResponse, error)
 	GetNearbyAgencies(ctx context.Context, in *GetNearbyAgenciesRequest, opts ...client.CallOption) (*GetNearbyAgenciesResponse, error)
@@ -88,16 +87,6 @@ func (c *agencyWebService) Search(ctx context.Context, in *SearchRequest, opts .
 func (c *agencyWebService) GetAgencyDetail(ctx context.Context, in *GetAgencyDetailRequest, opts ...client.CallOption) (*GetAgencyDetailResponse, error) {
 	req := c.c.NewRequest(c.name, "AgencyWeb.GetAgencyDetail", in)
 	out := new(GetAgencyDetailResponse)
-	err := c.c.Call(ctx, req, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *agencyWebService) AddNewAgency(ctx context.Context, in *AddAgencyRequest, opts ...client.CallOption) (*AddAgencyResponse, error) {
-	req := c.c.NewRequest(c.name, "AgencyWeb.AddNewAgency", in)
-	out := new(AddAgencyResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -161,7 +150,6 @@ type AgencyWebHandler interface {
 	GetAgencies(context.Context, *GetAgenciesRequest, *GetAgenciesResponse) error
 	Search(context.Context, *SearchRequest, *SearchResponse) error
 	GetAgencyDetail(context.Context, *GetAgencyDetailRequest, *GetAgencyDetailResponse) error
-	AddNewAgency(context.Context, *AddAgencyRequest, *AddAgencyResponse) error
 	UpdateAgencyProfile(context.Context, *UpdateAgencyRequest, *UpdateAgencyResponse) error
 	GetEvaluation(context.Context, *GetEvaluationRequest, *GetEvaluationResponse) error
 	GetNearbyAgencies(context.Context, *GetNearbyAgenciesRequest, *GetNearbyAgenciesResponse) error
@@ -174,7 +162,6 @@ func RegisterAgencyWebHandler(s server.Server, hdlr AgencyWebHandler, opts ...se
 		GetAgencies(ctx context.Context, in *GetAgenciesRequest, out *GetAgenciesResponse) error
 		Search(ctx context.Context, in *SearchRequest, out *SearchResponse) error
 		GetAgencyDetail(ctx context.Context, in *GetAgencyDetailRequest, out *GetAgencyDetailResponse) error
-		AddNewAgency(ctx context.Context, in *AddAgencyRequest, out *AddAgencyResponse) error
 		UpdateAgencyProfile(ctx context.Context, in *UpdateAgencyRequest, out *UpdateAgencyResponse) error
 		GetEvaluation(ctx context.Context, in *GetEvaluationRequest, out *GetEvaluationResponse) error
 		GetNearbyAgencies(ctx context.Context, in *GetNearbyAgenciesRequest, out *GetNearbyAgenciesResponse) error
@@ -202,10 +189,6 @@ func (h *agencyWebHandler) Search(ctx context.Context, in *SearchRequest, out *S
 
 func (h *agencyWebHandler) GetAgencyDetail(ctx context.Context, in *GetAgencyDetailRequest, out *GetAgencyDetailResponse) error {
 	return h.AgencyWebHandler.GetAgencyDetail(ctx, in, out)
-}
-
-func (h *agencyWebHandler) AddNewAgency(ctx context.Context, in *AddAgencyRequest, out *AddAgencyResponse) error {
-	return h.AgencyWebHandler.AddNewAgency(ctx, in, out)
 }
 
 func (h *agencyWebHandler) UpdateAgencyProfile(ctx context.Context, in *UpdateAgencyRequest, out *UpdateAgencyResponse) error {

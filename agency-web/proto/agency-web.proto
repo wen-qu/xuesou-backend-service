@@ -8,7 +8,6 @@ service AgencyWeb {
 	rpc GetAgencies(GetAgenciesRequest) returns (GetAgenciesResponse) {}
 	rpc Search(SearchRequest) returns (SearchResponse) {}
 	rpc GetAgencyDetail(GetAgencyDetailRequest) returns (GetAgencyDetailResponse) {}
-	rpc AddNewAgency(AddAgencyRequest) returns (AddAgencyResponse) {}
 	rpc UpdateAgencyProfile(UpdateAgencyRequest) returns (UpdateAgencyResponse) {}
 	rpc GetEvaluation(GetEvaluationRequest) returns (GetEvaluationResponse) {}
 	rpc GetNearbyAgencies(GetNearbyAgenciesRequest) returns (GetNearbyAgenciesResponse) {}
@@ -54,12 +53,13 @@ message OverEvaluation {
 	float goodRate = 3;
 }
 message Evaluation {
-	string favicon = 1; // user's icon
-	float rating = 2;
-	string username = 3;
-	Class class = 4;
-	string detail = 5;
-	repeated string pics = 6;
+	string evaluationID = 1;
+	string favicon = 2; // user's icon
+	float rating = 3;
+	string username = 4;
+	Class class = 5;
+	string detail = 6;
+	repeated string pics = 7;
 }
 
 message LoginRequest {
@@ -71,11 +71,13 @@ message LoginResponse {
 }
 
 message RegisterRequest {
-
+	Agency agency = 1;
 }
 
 message RegisterResponse {
-
+	string agencyID = 1;
+	int32 status = 2;
+	string msg = 3;
 }
 
 message GetAgenciesRequest {
@@ -100,22 +102,16 @@ message SearchResponse {
 	string msg = 5;
 }
 
-message AddAgencyRequest {
-	Agency agency = 1;
-}
-
-message AddAgencyResponse {
-	string agencyID = 1;
-	int32 status = 2;
-	string msg = 3;
-}
-
 message UpdateAgencyRequest {
-
+	Agency general = 1;
+	string brandHistory = 2;
+	repeated string characteristics = 3;
+	repeated Teacher teachers = 4;
 }
 
 message UpdateAgencyResponse {
-
+	string msg = 1;
+	int32 status = 2;
 }
 
 message GetAgencyDetailRequest {
@@ -126,7 +122,7 @@ message GetAgencyDetailResponse {
 	Agency general = 1;
 	Ad ad = 2;
 	string brandStory = 3;
-	repeated string characteristic = 4;
+	repeated string characteristics = 4;
 	repeated Teacher teachers = 5;
 	string msg = 6;
 	int32 status = 7;

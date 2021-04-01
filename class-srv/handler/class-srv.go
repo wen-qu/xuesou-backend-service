@@ -111,7 +111,7 @@ func (class *ClassSrv) UpdateClass(ctx context.Context, req *classsrv.UpdateClas
 		req.Class.Name, req.Class.Price, req.Class.StuNumber, req.Class.Age,
 		req.Class.Level, req.Class.Sales, lastUpdateTime, req.Class.AgencyID, req.Class.ClassID)
 	if err != nil {
-		return errors.InternalServerError("class-srv.ClassSrv.UpdateClass:fatal:002", err.Error())
+		return errors.InternalServerError("class-srv.ClassSrv.UpdateClass:fatal:003", err.Error())
 	}
 
 	rsp.Status = 200
@@ -131,6 +131,10 @@ func (class *ClassSrv) DeleteClass(ctx context.Context, req *classsrv.DeleteClas
 	if err := class.ReadClassesByAgencyID(ctx, &classsrv.ReadClassRequest{
 		AgencyID: req.AgencyID,
 	}, &currentClass); err != nil {
+		return errors.InternalServerError("class-srv.ClassSrv.DeleteClass:fatal:001", err.Error())
+	}
+
+	if len(currentClass.Classes) == 0 {
 		return errors.Forbidden("class:001", "class not existed")
 	}
 
@@ -141,8 +145,10 @@ func (class *ClassSrv) DeleteClass(ctx context.Context, req *classsrv.DeleteClas
 	_, err := db.GetDB().Exec("delete from " + tableName + "where class_id = ?", currentClass.Classes[0].ClassID)
 
 	if err != nil {
-		return errors.InternalServerError("class-srv.ClassSrv.DeleteClass:fatal:001", err.Error())
+		return errors.InternalServerError("class-srv.ClassSrv.DeleteClass:fatal:002", err.Error())
 	}
+
+	// TODO: delete all evaluations of the class [optional]
 
 	rsp.Msg = ""
 	rsp.Status = 200

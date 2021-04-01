@@ -94,11 +94,10 @@ message AddAgencyResponse {
 }
 
 message UpdateAgencyRequest {
-	string AgencyID = 1;
-	Agency agency = 2;
-	string brandHistory = 3;
-	repeated string characteristics = 4;
-	repeated Teacher teachers = 5;
+	Agency agency = 1;
+	string brandHistory = 2;
+	repeated string characteristics = 3;
+	repeated Teacher teachers = 4;
 }
 
 message UpdateAgencyResponse {
@@ -121,7 +120,7 @@ message ReadEvaluationsRequest {
 }
 
 message ReadEvaluationsResponse {
-	Evaluation evaluation = 1;
+	repeated Evaluation evaluation = 1;
 	OverEvaluation overEvaluation = 2;
 	string msg = 3;
 	int32 status = 4;
