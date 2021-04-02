@@ -3,8 +3,8 @@ package handler
 import (
 	"context"
 	"database/sql"
+	"github.com/jinzhu/copier"
 	"github.com/micro/micro/v3/service/errors"
-	"reflect"
 
 	log "github.com/micro/micro/v3/service/logger"
 
@@ -55,9 +55,11 @@ func (e *UserSrv) InspectUser(ctx context.Context, req *usersrv.InspectRequest, 
 	var row *sql.Row
 
 	if len(req.Uid) > 0 {
-		row = db.GetDB().QueryRow("select * from user where uid = ?", req.Uid)
+		row = db.GetDB().QueryRow("select uid, username, password, tel, age, sex, email, " +
+			"address, class_num, img from user where uid = ?", req.Uid)
 	} else if len(req.Tel) > 0 {
-		row = db.GetDB().QueryRow("select * from user where tel = ?", req.Tel)
+		row = db.GetDB().QueryRow("select uid, username, password, tel, age, sex, email, " +
+			"address, class_num, img from user where uid = ?", req.Uid)
 	} else {
 		return errors.BadRequest("para:002", "missing uid or tel")
 	}
@@ -94,36 +96,19 @@ func (e *UserSrv) UpdateUser(ctx context.Context, req *usersrv.UpdateRequest, rs
 		return errors.Forbidden("user:001", "user not existed")
 	}
 
-	// set req.User, if a field of req.User is a zero value, set it to the value of the currentUser's field
-	vReqUser := reflect.ValueOf(req.User)
-	vCurUser := reflect.ValueOf(currentUser.User)
-
-	for i := 0; i < vReqUser.NumField(); i++{
-		switch vReqUser.Field(i).Kind() {
-		case reflect.String:
-			if len(vReqUser.Field(i).Interface().(string)) == 0 {
-				//vReqUser.Field(i).Elem()
-				vField := reflect.ValueOf(vReqUser.Field(i).Pointer())
-				vField.Elem().SetString(vCurUser.Field(i).Interface().(string))
-			}
-		case reflect.Int32:
-			if vReqUser.Field(i).Interface().(int32) == 0 {
-				vField := reflect.ValueOf(vReqUser.Field(i).Pointer())
-				vField.Elem().SetInt(vReqUser.Field(i).Interface().(int64))
-			}
-		}
+	if err := copier.Copy(req.User, currentUser.User); err != nil {
+		return errors.InternalServerError("user-srv.UserSrv.UpdateUser:fatal:002", err.Error())
 	}
 
-
-	_, err := db.GetDB().Exec("update user set (uid, username, password, tel, age, sex, email, address, class_num, img) " +
-		"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) where uid = ?",
+	_, err := db.GetDB().Exec("update user set uid = ?, username = ?, password = ?, tel = ?, " +
+		"age = ?, sex = ?, email = ?, address = ?, class_num = ?, img = ? where uid = ? ",
 		req.User.Uid, req.User.Username, req.User.Password,
 		req.User.Tel, req.User.Age, req.User.Sex,
 		req.User.Email, req.User.Address, req.User.ClassNum,
 		req.User.Img, req.User.Uid)
 
 	if err != nil {
-		return errors.InternalServerError("user-srv.UserSrv.UpdateUser:fatal:002", err.Error())
+		return errors.InternalServerError("user-srv.UserSrv.UpdateUser:fatal:003", err.Error())
 	}
 
 	rsp.Status = 200
@@ -137,7 +122,7 @@ func (e *UserSrv) DeleteUser(ctx context.Context, req *usersrv.DeleteRequest, rs
 	log.Info("Received UserSrv.Register request")
 
 	if len(req.Tel) == 0 && len(req.Uid) == 0 {
-		return errors.BadRequest("para:002", "missing tel or uid")
+		return errors.BadRequest("para:002", "missing parameters")
 	}
 
 	var goalUser usersrv.InspectResponse
@@ -163,6 +148,8 @@ func (e *UserSrv) DeleteUser(ctx context.Context, req *usersrv.DeleteRequest, rs
 	if err != nil {
 		return errors.InternalServerError("user-srv.UserSrv.DeleteUser:fatal:002", err.Error())
 	}
+
+	// TODO: delete user's chatting table, evaluations table, class table
 
 	rsp.Status = 200
 	rsp.Msg = "success"

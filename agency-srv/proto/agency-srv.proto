@@ -117,6 +117,7 @@ message DeleteAgencyResponse {
 message ReadEvaluationsRequest {
 	string agencyID = 1;
 	string uid = 2;
+	string evaluationID = 3;
 }
 
 message ReadEvaluationsResponse {
@@ -128,15 +129,20 @@ message ReadEvaluationsResponse {
 
 message AddEvaluationRequest {
 	Evaluation evaluation = 1;
+	string uid = 2;
+	string agencyID = 3;
 }
 
 message AddEvaluationResponse {
-	string msg = 1;
-	int32 status = 2;
+	string evaluationID = 1;
+	string msg = 2;
+	int32 status = 3;
 }
 
 message UpdateEvaluationRequest {
 	Evaluation evaluation = 1;
+	string uid = 2;
+	string agencyID = 3;
 }
 
 message UpdateEvaluationResponse {
@@ -146,6 +152,8 @@ message UpdateEvaluationResponse {
 
 message DeleteEvaluationRequest {
 	string evaluationID = 1;
+	string uid = 2;
+	string agencyID = 3;
 }
 
 message DeleteEvaluationResponse {
@@ -154,7 +162,7 @@ message DeleteEvaluationResponse {
 }
 
 message GetNearbyAgenciesRequest {
-
+	Agency agency = 1;
 }
 
 message GetNearbyAgenciesResponse {

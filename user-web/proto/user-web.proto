@@ -12,19 +12,30 @@ service UserWeb {
 	rpc ReadProfile(UserProfileRequest) returns (UserProfileResponse) {}
 }
 
+message Profile {
+	string username = 1;
+	string email = 2;
+	string tel = 3;
+	int32  sex = 4;
+	int32  age = 5;
+	string address = 6;
+	int32  classNum = 7;
+	string img = 8;
+}
+
 message UserRequest { // use tel number to do, return a uid
 	string tel = 1;
-	string validation_code = 2;
+	string validationCode = 2;
 }
 
 message UserProfileRequest {
 	string uid = 1;
 	string tel = 2;
-	int64 information_type = 3;
+	int64 informationType = 3;
 }
 
 message UserResponse {
-	int64 code = 1;
+	int32 status = 1;
 	string uid = 2;
 	string msg = 3;
 	string token = 4;
@@ -35,20 +46,6 @@ message UserProfileResponse {
 	string type = 2;
 	Profile profile = 3;
 	string msg = 4;
+	int32 status = 5;
 }
 
-message Profile {
-	string username = 1;
-	string email = 2;
-	string tel = 3;
-	int32  sex = 4;
-	int32  age = 5;
-	string address = 6;
-	int32  class_num = 7;
-	string img = 8;
-}
-
-message ErrorResponse {
-	string code = 1;
-	string msg = 2;
-}

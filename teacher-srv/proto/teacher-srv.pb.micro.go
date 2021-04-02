@@ -42,9 +42,10 @@ func NewTeacherSrvEndpoints() []*api.Endpoint {
 // Client API for TeacherSrv service
 
 type TeacherSrvService interface {
-	Call(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error)
-	Stream(ctx context.Context, in *StreamingRequest, opts ...client.CallOption) (TeacherSrv_StreamService, error)
-	PingPong(ctx context.Context, opts ...client.CallOption) (TeacherSrv_PingPongService, error)
+	GetTeachers(ctx context.Context, in *GetTeachersRequest, opts ...client.CallOption) (*GetTeachersResponse, error)
+	AddTeacher(ctx context.Context, in *AddTeacherRequest, opts ...client.CallOption) (*AddTeacherResponse, error)
+	UpdateTeacher(ctx context.Context, in *UpdateTeacherRequest, opts ...client.CallOption) (*UpdateTeacherResponse, error)
+	DeleteTeacher(ctx context.Context, in *DeleteTeacherRequest, opts ...client.CallOption) (*DeleteTeacherResponse, error)
 }
 
 type teacherSrvService struct {
@@ -59,9 +60,9 @@ func NewTeacherSrvService(name string, c client.Client) TeacherSrvService {
 	}
 }
 
-func (c *teacherSrvService) Call(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error) {
-	req := c.c.NewRequest(c.name, "TeacherSrv.Call", in)
-	out := new(Response)
+func (c *teacherSrvService) GetTeachers(ctx context.Context, in *GetTeachersRequest, opts ...client.CallOption) (*GetTeachersResponse, error) {
+	req := c.c.NewRequest(c.name, "TeacherSrv.GetTeachers", in)
+	out := new(GetTeachersResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -69,119 +70,51 @@ func (c *teacherSrvService) Call(ctx context.Context, in *Request, opts ...clien
 	return out, nil
 }
 
-func (c *teacherSrvService) Stream(ctx context.Context, in *StreamingRequest, opts ...client.CallOption) (TeacherSrv_StreamService, error) {
-	req := c.c.NewRequest(c.name, "TeacherSrv.Stream", &StreamingRequest{})
-	stream, err := c.c.Stream(ctx, req, opts...)
+func (c *teacherSrvService) AddTeacher(ctx context.Context, in *AddTeacherRequest, opts ...client.CallOption) (*AddTeacherResponse, error) {
+	req := c.c.NewRequest(c.name, "TeacherSrv.AddTeacher", in)
+	out := new(AddTeacherResponse)
+	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
 	}
-	if err := stream.Send(in); err != nil {
-		return nil, err
-	}
-	return &teacherSrvServiceStream{stream}, nil
+	return out, nil
 }
 
-type TeacherSrv_StreamService interface {
-	Context() context.Context
-	SendMsg(interface{}) error
-	RecvMsg(interface{}) error
-	Close() error
-	Recv() (*StreamingResponse, error)
-}
-
-type teacherSrvServiceStream struct {
-	stream client.Stream
-}
-
-func (x *teacherSrvServiceStream) Close() error {
-	return x.stream.Close()
-}
-
-func (x *teacherSrvServiceStream) Context() context.Context {
-	return x.stream.Context()
-}
-
-func (x *teacherSrvServiceStream) SendMsg(m interface{}) error {
-	return x.stream.Send(m)
-}
-
-func (x *teacherSrvServiceStream) RecvMsg(m interface{}) error {
-	return x.stream.Recv(m)
-}
-
-func (x *teacherSrvServiceStream) Recv() (*StreamingResponse, error) {
-	m := new(StreamingResponse)
-	err := x.stream.Recv(m)
+func (c *teacherSrvService) UpdateTeacher(ctx context.Context, in *UpdateTeacherRequest, opts ...client.CallOption) (*UpdateTeacherResponse, error) {
+	req := c.c.NewRequest(c.name, "TeacherSrv.UpdateTeacher", in)
+	out := new(UpdateTeacherResponse)
+	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return m, nil
+	return out, nil
 }
 
-func (c *teacherSrvService) PingPong(ctx context.Context, opts ...client.CallOption) (TeacherSrv_PingPongService, error) {
-	req := c.c.NewRequest(c.name, "TeacherSrv.PingPong", &Ping{})
-	stream, err := c.c.Stream(ctx, req, opts...)
+func (c *teacherSrvService) DeleteTeacher(ctx context.Context, in *DeleteTeacherRequest, opts ...client.CallOption) (*DeleteTeacherResponse, error) {
+	req := c.c.NewRequest(c.name, "TeacherSrv.DeleteTeacher", in)
+	out := new(DeleteTeacherResponse)
+	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return &teacherSrvServicePingPong{stream}, nil
-}
-
-type TeacherSrv_PingPongService interface {
-	Context() context.Context
-	SendMsg(interface{}) error
-	RecvMsg(interface{}) error
-	Close() error
-	Send(*Ping) error
-	Recv() (*Pong, error)
-}
-
-type teacherSrvServicePingPong struct {
-	stream client.Stream
-}
-
-func (x *teacherSrvServicePingPong) Close() error {
-	return x.stream.Close()
-}
-
-func (x *teacherSrvServicePingPong) Context() context.Context {
-	return x.stream.Context()
-}
-
-func (x *teacherSrvServicePingPong) SendMsg(m interface{}) error {
-	return x.stream.Send(m)
-}
-
-func (x *teacherSrvServicePingPong) RecvMsg(m interface{}) error {
-	return x.stream.Recv(m)
-}
-
-func (x *teacherSrvServicePingPong) Send(m *Ping) error {
-	return x.stream.Send(m)
-}
-
-func (x *teacherSrvServicePingPong) Recv() (*Pong, error) {
-	m := new(Pong)
-	err := x.stream.Recv(m)
-	if err != nil {
-		return nil, err
-	}
-	return m, nil
+	return out, nil
 }
 
 // Server API for TeacherSrv service
 
 type TeacherSrvHandler interface {
-	Call(context.Context, *Request, *Response) error
-	Stream(context.Context, *StreamingRequest, TeacherSrv_StreamStream) error
-	PingPong(context.Context, TeacherSrv_PingPongStream) error
+	GetTeachers(context.Context, *GetTeachersRequest, *GetTeachersResponse) error
+	AddTeacher(context.Context, *AddTeacherRequest, *AddTeacherResponse) error
+	UpdateTeacher(context.Context, *UpdateTeacherRequest, *UpdateTeacherResponse) error
+	DeleteTeacher(context.Context, *DeleteTeacherRequest, *DeleteTeacherResponse) error
 }
 
 func RegisterTeacherSrvHandler(s server.Server, hdlr TeacherSrvHandler, opts ...server.HandlerOption) error {
 	type teacherSrv interface {
-		Call(ctx context.Context, in *Request, out *Response) error
-		Stream(ctx context.Context, stream server.Stream) error
-		PingPong(ctx context.Context, stream server.Stream) error
+		GetTeachers(ctx context.Context, in *GetTeachersRequest, out *GetTeachersResponse) error
+		AddTeacher(ctx context.Context, in *AddTeacherRequest, out *AddTeacherResponse) error
+		UpdateTeacher(ctx context.Context, in *UpdateTeacherRequest, out *UpdateTeacherResponse) error
+		DeleteTeacher(ctx context.Context, in *DeleteTeacherRequest, out *DeleteTeacherResponse) error
 	}
 	type TeacherSrv struct {
 		teacherSrv
@@ -194,91 +127,18 @@ type teacherSrvHandler struct {
 	TeacherSrvHandler
 }
 
-func (h *teacherSrvHandler) Call(ctx context.Context, in *Request, out *Response) error {
-	return h.TeacherSrvHandler.Call(ctx, in, out)
+func (h *teacherSrvHandler) GetTeachers(ctx context.Context, in *GetTeachersRequest, out *GetTeachersResponse) error {
+	return h.TeacherSrvHandler.GetTeachers(ctx, in, out)
 }
 
-func (h *teacherSrvHandler) Stream(ctx context.Context, stream server.Stream) error {
-	m := new(StreamingRequest)
-	if err := stream.Recv(m); err != nil {
-		return err
-	}
-	return h.TeacherSrvHandler.Stream(ctx, m, &teacherSrvStreamStream{stream})
+func (h *teacherSrvHandler) AddTeacher(ctx context.Context, in *AddTeacherRequest, out *AddTeacherResponse) error {
+	return h.TeacherSrvHandler.AddTeacher(ctx, in, out)
 }
 
-type TeacherSrv_StreamStream interface {
-	Context() context.Context
-	SendMsg(interface{}) error
-	RecvMsg(interface{}) error
-	Close() error
-	Send(*StreamingResponse) error
+func (h *teacherSrvHandler) UpdateTeacher(ctx context.Context, in *UpdateTeacherRequest, out *UpdateTeacherResponse) error {
+	return h.TeacherSrvHandler.UpdateTeacher(ctx, in, out)
 }
 
-type teacherSrvStreamStream struct {
-	stream server.Stream
-}
-
-func (x *teacherSrvStreamStream) Close() error {
-	return x.stream.Close()
-}
-
-func (x *teacherSrvStreamStream) Context() context.Context {
-	return x.stream.Context()
-}
-
-func (x *teacherSrvStreamStream) SendMsg(m interface{}) error {
-	return x.stream.Send(m)
-}
-
-func (x *teacherSrvStreamStream) RecvMsg(m interface{}) error {
-	return x.stream.Recv(m)
-}
-
-func (x *teacherSrvStreamStream) Send(m *StreamingResponse) error {
-	return x.stream.Send(m)
-}
-
-func (h *teacherSrvHandler) PingPong(ctx context.Context, stream server.Stream) error {
-	return h.TeacherSrvHandler.PingPong(ctx, &teacherSrvPingPongStream{stream})
-}
-
-type TeacherSrv_PingPongStream interface {
-	Context() context.Context
-	SendMsg(interface{}) error
-	RecvMsg(interface{}) error
-	Close() error
-	Send(*Pong) error
-	Recv() (*Ping, error)
-}
-
-type teacherSrvPingPongStream struct {
-	stream server.Stream
-}
-
-func (x *teacherSrvPingPongStream) Close() error {
-	return x.stream.Close()
-}
-
-func (x *teacherSrvPingPongStream) Context() context.Context {
-	return x.stream.Context()
-}
-
-func (x *teacherSrvPingPongStream) SendMsg(m interface{}) error {
-	return x.stream.Send(m)
-}
-
-func (x *teacherSrvPingPongStream) RecvMsg(m interface{}) error {
-	return x.stream.Recv(m)
-}
-
-func (x *teacherSrvPingPongStream) Send(m *Pong) error {
-	return x.stream.Send(m)
-}
-
-func (x *teacherSrvPingPongStream) Recv() (*Ping, error) {
-	m := new(Ping)
-	if err := x.stream.Recv(m); err != nil {
-		return nil, err
-	}
-	return m, nil
+func (h *teacherSrvHandler) DeleteTeacher(ctx context.Context, in *DeleteTeacherRequest, out *DeleteTeacherResponse) error {
+	return h.TeacherSrvHandler.DeleteTeacher(ctx, in, out)
 }

@@ -97,7 +97,7 @@ func (e *UserWeb) Login(ctx context.Context, req *userweb.UserRequest, rsp *user
 		//     return errors.InternalServerError("fatal:001", "cannot update login information")
 		// }
 
-		rsp.Code = 200
+		rsp.Status = 200
 		rsp.Uid = loginRsp.User.Uid
 		rsp.Msg = "login success"
 		rsp.Token = acc.Secret
@@ -147,7 +147,7 @@ func (e *UserWeb) Register(ctx context.Context, req *userweb.UserRequest, rsp *u
 	// TODO: create user's chat table, class table, then insert login_inf into user_login_inf table
 
 	rsp = &userweb.UserResponse{
-		Code: 200,
+		Status: 200,
 		Msg: "register success",
 	}
 	return nil

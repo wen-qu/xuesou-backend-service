@@ -46,6 +46,7 @@ create table if not exists `test_user_evaluations_table` ( -- only test table, s
   `rating` float not null,
   `username` varchar(50) not null,
   `agency_id` varchar(20) not null,
+  `uid` varchar(18) not null,
   `class_id` varchar(19) not null,
   `detail` varchar(10000),
   `pics` varchar(700), -- maximum 20 photos
@@ -123,6 +124,7 @@ create table if not exists `test_agency_evaluations_table` ( -- only test table,
     `rating` float not null, -- 0-10
     `username` varchar(50) not null,
     `agency_id` varchar(20) not null,
+    `uid` varchar(18) not null,
     `class_id` varchar(19) not null,
     `detail` varchar(10000),
     `pics` varchar(700), -- maximum 20 photos

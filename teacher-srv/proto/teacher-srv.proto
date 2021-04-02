@@ -5,35 +5,60 @@ package teachersrv;
 option go_package = "proto;teachersrv";
 
 service TeacherSrv {
-	rpc Call(Request) returns (Response) {}
-	rpc Stream(StreamingRequest) returns (stream StreamingResponse) {}
-	rpc PingPong(stream Ping) returns (stream Pong) {}
+	rpc GetTeachers(GetTeachersRequest) returns (GetTeachersResponse) {}
+	rpc AddTeacher(AddTeacherRequest) returns (AddTeacherResponse) {}
+	rpc UpdateTeacher(UpdateTeacherRequest) returns (UpdateTeacherResponse) {}
+	rpc DeleteTeacher(DeleteTeacherRequest) returns (DeleteTeacherResponse) {}
 }
 
-message Message {
-	string say = 1;
+message Teacher {
+	string teacherID = 1;
+	string name = 2;
+	string pic = 3;
+	repeated string tag = 4;
+	string tel = 5;
+	string description = 6;
 }
 
-message Request {
-	string name = 1;
+message GetTeachersRequest {
+	string teacherID = 1;
+	string agencyID = 2;
 }
 
-message Response {
+message GetTeachersResponse {
+	repeated Teacher teachers = 1;
+	string msg = 2;
+	int32 status = 3;
+}
+
+message AddTeacherRequest {
+	string agencyID = 1;
+	Teacher teacher = 2;
+}
+
+message AddTeacherResponse {
+	string teacherID = 1;
+	string msg = 2;
+	int32 status = 3;
+}
+
+message UpdateTeacherRequest {
+	Teacher teacher = 1;
+	string agencyID = 2;
+}
+
+message UpdateTeacherResponse {
 	string msg = 1;
+	int32 status = 2;
 }
 
-message StreamingRequest {
-	int64 count = 1;
+message DeleteTeacherRequest {
+	string teacherID = 1;
+	string agencyID = 2;
 }
 
-message StreamingResponse {
-	int64 count = 1;
+message DeleteTeacherResponse {
+	string msg = 1;
+	int32 status = 2;
 }
 
-message Ping {
-	int64 stroke = 1;
-}
-
-message Pong {
-	int64 stroke = 1;
-}

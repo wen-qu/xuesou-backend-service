@@ -25,16 +25,21 @@ const (
 // of the legacy proto package is being used.
 const _ = proto.ProtoPackageIsVersion4
 
-type Message struct {
+type Teacher struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Say string `protobuf:"bytes,1,opt,name=say,proto3" json:"say,omitempty"`
+	TeacherID   string   `protobuf:"bytes,1,opt,name=teacherID,proto3" json:"teacherID,omitempty"`
+	Name        string   `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Pic         string   `protobuf:"bytes,3,opt,name=pic,proto3" json:"pic,omitempty"`
+	Tag         []string `protobuf:"bytes,4,rep,name=tag,proto3" json:"tag,omitempty"`
+	Tel         string   `protobuf:"bytes,5,opt,name=tel,proto3" json:"tel,omitempty"`
+	Description string   `protobuf:"bytes,6,opt,name=description,proto3" json:"description,omitempty"`
 }
 
-func (x *Message) Reset() {
-	*x = Message{}
+func (x *Teacher) Reset() {
+	*x = Teacher{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_proto_teacher_srv_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -42,13 +47,13 @@ func (x *Message) Reset() {
 	}
 }
 
-func (x *Message) String() string {
+func (x *Teacher) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Message) ProtoMessage() {}
+func (*Teacher) ProtoMessage() {}
 
-func (x *Message) ProtoReflect() protoreflect.Message {
+func (x *Teacher) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_teacher_srv_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -60,28 +65,64 @@ func (x *Message) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message.ProtoReflect.Descriptor instead.
-func (*Message) Descriptor() ([]byte, []int) {
+// Deprecated: Use Teacher.ProtoReflect.Descriptor instead.
+func (*Teacher) Descriptor() ([]byte, []int) {
 	return file_proto_teacher_srv_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *Message) GetSay() string {
+func (x *Teacher) GetTeacherID() string {
 	if x != nil {
-		return x.Say
+		return x.TeacherID
 	}
 	return ""
 }
 
-type Request struct {
+func (x *Teacher) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *Teacher) GetPic() string {
+	if x != nil {
+		return x.Pic
+	}
+	return ""
+}
+
+func (x *Teacher) GetTag() []string {
+	if x != nil {
+		return x.Tag
+	}
+	return nil
+}
+
+func (x *Teacher) GetTel() string {
+	if x != nil {
+		return x.Tel
+	}
+	return ""
+}
+
+func (x *Teacher) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+type GetTeachersRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	TeacherID string `protobuf:"bytes,1,opt,name=teacherID,proto3" json:"teacherID,omitempty"`
+	AgencyID  string `protobuf:"bytes,2,opt,name=agencyID,proto3" json:"agencyID,omitempty"`
 }
 
-func (x *Request) Reset() {
-	*x = Request{}
+func (x *GetTeachersRequest) Reset() {
+	*x = GetTeachersRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_proto_teacher_srv_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -89,13 +130,13 @@ func (x *Request) Reset() {
 	}
 }
 
-func (x *Request) String() string {
+func (x *GetTeachersRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Request) ProtoMessage() {}
+func (*GetTeachersRequest) ProtoMessage() {}
 
-func (x *Request) ProtoReflect() protoreflect.Message {
+func (x *GetTeachersRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_teacher_srv_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -107,28 +148,37 @@ func (x *Request) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Request.ProtoReflect.Descriptor instead.
-func (*Request) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetTeachersRequest.ProtoReflect.Descriptor instead.
+func (*GetTeachersRequest) Descriptor() ([]byte, []int) {
 	return file_proto_teacher_srv_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *Request) GetName() string {
+func (x *GetTeachersRequest) GetTeacherID() string {
 	if x != nil {
-		return x.Name
+		return x.TeacherID
 	}
 	return ""
 }
 
-type Response struct {
+func (x *GetTeachersRequest) GetAgencyID() string {
+	if x != nil {
+		return x.AgencyID
+	}
+	return ""
+}
+
+type GetTeachersResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Msg string `protobuf:"bytes,1,opt,name=msg,proto3" json:"msg,omitempty"`
+	Teachers []*Teacher `protobuf:"bytes,1,rep,name=teachers,proto3" json:"teachers,omitempty"`
+	Msg      string     `protobuf:"bytes,2,opt,name=msg,proto3" json:"msg,omitempty"`
+	Status   int32      `protobuf:"varint,3,opt,name=status,proto3" json:"status,omitempty"`
 }
 
-func (x *Response) Reset() {
-	*x = Response{}
+func (x *GetTeachersResponse) Reset() {
+	*x = GetTeachersResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_proto_teacher_srv_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -136,13 +186,13 @@ func (x *Response) Reset() {
 	}
 }
 
-func (x *Response) String() string {
+func (x *GetTeachersResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Response) ProtoMessage() {}
+func (*GetTeachersResponse) ProtoMessage() {}
 
-func (x *Response) ProtoReflect() protoreflect.Message {
+func (x *GetTeachersResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_teacher_srv_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -154,28 +204,43 @@ func (x *Response) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Response.ProtoReflect.Descriptor instead.
-func (*Response) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetTeachersResponse.ProtoReflect.Descriptor instead.
+func (*GetTeachersResponse) Descriptor() ([]byte, []int) {
 	return file_proto_teacher_srv_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *Response) GetMsg() string {
+func (x *GetTeachersResponse) GetTeachers() []*Teacher {
+	if x != nil {
+		return x.Teachers
+	}
+	return nil
+}
+
+func (x *GetTeachersResponse) GetMsg() string {
 	if x != nil {
 		return x.Msg
 	}
 	return ""
 }
 
-type StreamingRequest struct {
+func (x *GetTeachersResponse) GetStatus() int32 {
+	if x != nil {
+		return x.Status
+	}
+	return 0
+}
+
+type AddTeacherRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Count int64 `protobuf:"varint,1,opt,name=count,proto3" json:"count,omitempty"`
+	AgencyID string   `protobuf:"bytes,1,opt,name=agencyID,proto3" json:"agencyID,omitempty"`
+	Teacher  *Teacher `protobuf:"bytes,2,opt,name=teacher,proto3" json:"teacher,omitempty"`
 }
 
-func (x *StreamingRequest) Reset() {
-	*x = StreamingRequest{}
+func (x *AddTeacherRequest) Reset() {
+	*x = AddTeacherRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_proto_teacher_srv_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -183,13 +248,13 @@ func (x *StreamingRequest) Reset() {
 	}
 }
 
-func (x *StreamingRequest) String() string {
+func (x *AddTeacherRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*StreamingRequest) ProtoMessage() {}
+func (*AddTeacherRequest) ProtoMessage() {}
 
-func (x *StreamingRequest) ProtoReflect() protoreflect.Message {
+func (x *AddTeacherRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_teacher_srv_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -201,28 +266,37 @@ func (x *StreamingRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use StreamingRequest.ProtoReflect.Descriptor instead.
-func (*StreamingRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use AddTeacherRequest.ProtoReflect.Descriptor instead.
+func (*AddTeacherRequest) Descriptor() ([]byte, []int) {
 	return file_proto_teacher_srv_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *StreamingRequest) GetCount() int64 {
+func (x *AddTeacherRequest) GetAgencyID() string {
 	if x != nil {
-		return x.Count
+		return x.AgencyID
 	}
-	return 0
+	return ""
 }
 
-type StreamingResponse struct {
+func (x *AddTeacherRequest) GetTeacher() *Teacher {
+	if x != nil {
+		return x.Teacher
+	}
+	return nil
+}
+
+type AddTeacherResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Count int64 `protobuf:"varint,1,opt,name=count,proto3" json:"count,omitempty"`
+	TeacherID string `protobuf:"bytes,1,opt,name=teacherID,proto3" json:"teacherID,omitempty"`
+	Msg       string `protobuf:"bytes,2,opt,name=msg,proto3" json:"msg,omitempty"`
+	Status    int32  `protobuf:"varint,3,opt,name=status,proto3" json:"status,omitempty"`
 }
 
-func (x *StreamingResponse) Reset() {
-	*x = StreamingResponse{}
+func (x *AddTeacherResponse) Reset() {
+	*x = AddTeacherResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_proto_teacher_srv_proto_msgTypes[4]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -230,13 +304,13 @@ func (x *StreamingResponse) Reset() {
 	}
 }
 
-func (x *StreamingResponse) String() string {
+func (x *AddTeacherResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*StreamingResponse) ProtoMessage() {}
+func (*AddTeacherResponse) ProtoMessage() {}
 
-func (x *StreamingResponse) ProtoReflect() protoreflect.Message {
+func (x *AddTeacherResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_teacher_srv_proto_msgTypes[4]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -248,28 +322,43 @@ func (x *StreamingResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use StreamingResponse.ProtoReflect.Descriptor instead.
-func (*StreamingResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use AddTeacherResponse.ProtoReflect.Descriptor instead.
+func (*AddTeacherResponse) Descriptor() ([]byte, []int) {
 	return file_proto_teacher_srv_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *StreamingResponse) GetCount() int64 {
+func (x *AddTeacherResponse) GetTeacherID() string {
 	if x != nil {
-		return x.Count
+		return x.TeacherID
+	}
+	return ""
+}
+
+func (x *AddTeacherResponse) GetMsg() string {
+	if x != nil {
+		return x.Msg
+	}
+	return ""
+}
+
+func (x *AddTeacherResponse) GetStatus() int32 {
+	if x != nil {
+		return x.Status
 	}
 	return 0
 }
 
-type Ping struct {
+type UpdateTeacherRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Stroke int64 `protobuf:"varint,1,opt,name=stroke,proto3" json:"stroke,omitempty"`
+	Teacher  *Teacher `protobuf:"bytes,1,opt,name=teacher,proto3" json:"teacher,omitempty"`
+	AgencyID string   `protobuf:"bytes,2,opt,name=agencyID,proto3" json:"agencyID,omitempty"`
 }
 
-func (x *Ping) Reset() {
-	*x = Ping{}
+func (x *UpdateTeacherRequest) Reset() {
+	*x = UpdateTeacherRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_proto_teacher_srv_proto_msgTypes[5]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -277,13 +366,13 @@ func (x *Ping) Reset() {
 	}
 }
 
-func (x *Ping) String() string {
+func (x *UpdateTeacherRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Ping) ProtoMessage() {}
+func (*UpdateTeacherRequest) ProtoMessage() {}
 
-func (x *Ping) ProtoReflect() protoreflect.Message {
+func (x *UpdateTeacherRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_teacher_srv_proto_msgTypes[5]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -295,28 +384,36 @@ func (x *Ping) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Ping.ProtoReflect.Descriptor instead.
-func (*Ping) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateTeacherRequest.ProtoReflect.Descriptor instead.
+func (*UpdateTeacherRequest) Descriptor() ([]byte, []int) {
 	return file_proto_teacher_srv_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *Ping) GetStroke() int64 {
+func (x *UpdateTeacherRequest) GetTeacher() *Teacher {
 	if x != nil {
-		return x.Stroke
+		return x.Teacher
 	}
-	return 0
+	return nil
 }
 
-type Pong struct {
+func (x *UpdateTeacherRequest) GetAgencyID() string {
+	if x != nil {
+		return x.AgencyID
+	}
+	return ""
+}
+
+type UpdateTeacherResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Stroke int64 `protobuf:"varint,1,opt,name=stroke,proto3" json:"stroke,omitempty"`
+	Msg    string `protobuf:"bytes,1,opt,name=msg,proto3" json:"msg,omitempty"`
+	Status int32  `protobuf:"varint,2,opt,name=status,proto3" json:"status,omitempty"`
 }
 
-func (x *Pong) Reset() {
-	*x = Pong{}
+func (x *UpdateTeacherResponse) Reset() {
+	*x = UpdateTeacherResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_proto_teacher_srv_proto_msgTypes[6]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -324,13 +421,13 @@ func (x *Pong) Reset() {
 	}
 }
 
-func (x *Pong) String() string {
+func (x *UpdateTeacherResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Pong) ProtoMessage() {}
+func (*UpdateTeacherResponse) ProtoMessage() {}
 
-func (x *Pong) ProtoReflect() protoreflect.Message {
+func (x *UpdateTeacherResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_teacher_srv_proto_msgTypes[6]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -342,14 +439,131 @@ func (x *Pong) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Pong.ProtoReflect.Descriptor instead.
-func (*Pong) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateTeacherResponse.ProtoReflect.Descriptor instead.
+func (*UpdateTeacherResponse) Descriptor() ([]byte, []int) {
 	return file_proto_teacher_srv_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *Pong) GetStroke() int64 {
+func (x *UpdateTeacherResponse) GetMsg() string {
 	if x != nil {
-		return x.Stroke
+		return x.Msg
+	}
+	return ""
+}
+
+func (x *UpdateTeacherResponse) GetStatus() int32 {
+	if x != nil {
+		return x.Status
+	}
+	return 0
+}
+
+type DeleteTeacherRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	TeacherID string `protobuf:"bytes,1,opt,name=teacherID,proto3" json:"teacherID,omitempty"`
+	AgencyID  string `protobuf:"bytes,2,opt,name=agencyID,proto3" json:"agencyID,omitempty"`
+}
+
+func (x *DeleteTeacherRequest) Reset() {
+	*x = DeleteTeacherRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_proto_teacher_srv_proto_msgTypes[7]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *DeleteTeacherRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteTeacherRequest) ProtoMessage() {}
+
+func (x *DeleteTeacherRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_teacher_srv_proto_msgTypes[7]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteTeacherRequest.ProtoReflect.Descriptor instead.
+func (*DeleteTeacherRequest) Descriptor() ([]byte, []int) {
+	return file_proto_teacher_srv_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *DeleteTeacherRequest) GetTeacherID() string {
+	if x != nil {
+		return x.TeacherID
+	}
+	return ""
+}
+
+func (x *DeleteTeacherRequest) GetAgencyID() string {
+	if x != nil {
+		return x.AgencyID
+	}
+	return ""
+}
+
+type DeleteTeacherResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Msg    string `protobuf:"bytes,1,opt,name=msg,proto3" json:"msg,omitempty"`
+	Status int32  `protobuf:"varint,2,opt,name=status,proto3" json:"status,omitempty"`
+}
+
+func (x *DeleteTeacherResponse) Reset() {
+	*x = DeleteTeacherResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_proto_teacher_srv_proto_msgTypes[8]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *DeleteTeacherResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteTeacherResponse) ProtoMessage() {}
+
+func (x *DeleteTeacherResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_teacher_srv_proto_msgTypes[8]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteTeacherResponse.ProtoReflect.Descriptor instead.
+func (*DeleteTeacherResponse) Descriptor() ([]byte, []int) {
+	return file_proto_teacher_srv_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *DeleteTeacherResponse) GetMsg() string {
+	if x != nil {
+		return x.Msg
+	}
+	return ""
+}
+
+func (x *DeleteTeacherResponse) GetStatus() int32 {
+	if x != nil {
+		return x.Status
 	}
 	return 0
 }
@@ -359,36 +573,84 @@ var File_proto_teacher_srv_proto protoreflect.FileDescriptor
 var file_proto_teacher_srv_proto_rawDesc = []byte{
 	0x0a, 0x17, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x74, 0x65, 0x61, 0x63, 0x68, 0x65, 0x72, 0x2d,
 	0x73, 0x72, 0x76, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x0a, 0x74, 0x65, 0x61, 0x63, 0x68,
-	0x65, 0x72, 0x73, 0x72, 0x76, 0x22, 0x1b, 0x0a, 0x07, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65,
-	0x12, 0x10, 0x0a, 0x03, 0x73, 0x61, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x73,
-	0x61, 0x79, 0x22, 0x1d, 0x0a, 0x07, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x12, 0x0a,
-	0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d,
-	0x65, 0x22, 0x1c, 0x0a, 0x08, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x10, 0x0a,
-	0x03, 0x6d, 0x73, 0x67, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6d, 0x73, 0x67, 0x22,
-	0x28, 0x0a, 0x10, 0x53, 0x74, 0x72, 0x65, 0x61, 0x6d, 0x69, 0x6e, 0x67, 0x52, 0x65, 0x71, 0x75,
-	0x65, 0x73, 0x74, 0x12, 0x14, 0x0a, 0x05, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x18, 0x01, 0x20, 0x01,
-	0x28, 0x03, 0x52, 0x05, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x22, 0x29, 0x0a, 0x11, 0x53, 0x74, 0x72,
-	0x65, 0x61, 0x6d, 0x69, 0x6e, 0x67, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x14,
-	0x0a, 0x05, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x05, 0x63,
-	0x6f, 0x75, 0x6e, 0x74, 0x22, 0x1e, 0x0a, 0x04, 0x50, 0x69, 0x6e, 0x67, 0x12, 0x16, 0x0a, 0x06,
-	0x73, 0x74, 0x72, 0x6f, 0x6b, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x06, 0x73, 0x74,
-	0x72, 0x6f, 0x6b, 0x65, 0x22, 0x1e, 0x0a, 0x04, 0x50, 0x6f, 0x6e, 0x67, 0x12, 0x16, 0x0a, 0x06,
-	0x73, 0x74, 0x72, 0x6f, 0x6b, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x06, 0x73, 0x74,
-	0x72, 0x6f, 0x6b, 0x65, 0x32, 0xc2, 0x01, 0x0a, 0x0a, 0x54, 0x65, 0x61, 0x63, 0x68, 0x65, 0x72,
-	0x53, 0x72, 0x76, 0x12, 0x33, 0x0a, 0x04, 0x43, 0x61, 0x6c, 0x6c, 0x12, 0x13, 0x2e, 0x74, 0x65,
-	0x61, 0x63, 0x68, 0x65, 0x72, 0x73, 0x72, 0x76, 0x2e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
-	0x1a, 0x14, 0x2e, 0x74, 0x65, 0x61, 0x63, 0x68, 0x65, 0x72, 0x73, 0x72, 0x76, 0x2e, 0x52, 0x65,
-	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x49, 0x0a, 0x06, 0x53, 0x74, 0x72, 0x65,
-	0x61, 0x6d, 0x12, 0x1c, 0x2e, 0x74, 0x65, 0x61, 0x63, 0x68, 0x65, 0x72, 0x73, 0x72, 0x76, 0x2e,
-	0x53, 0x74, 0x72, 0x65, 0x61, 0x6d, 0x69, 0x6e, 0x67, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
-	0x1a, 0x1d, 0x2e, 0x74, 0x65, 0x61, 0x63, 0x68, 0x65, 0x72, 0x73, 0x72, 0x76, 0x2e, 0x53, 0x74,
-	0x72, 0x65, 0x61, 0x6d, 0x69, 0x6e, 0x67, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22,
-	0x00, 0x30, 0x01, 0x12, 0x34, 0x0a, 0x08, 0x50, 0x69, 0x6e, 0x67, 0x50, 0x6f, 0x6e, 0x67, 0x12,
-	0x10, 0x2e, 0x74, 0x65, 0x61, 0x63, 0x68, 0x65, 0x72, 0x73, 0x72, 0x76, 0x2e, 0x50, 0x69, 0x6e,
-	0x67, 0x1a, 0x10, 0x2e, 0x74, 0x65, 0x61, 0x63, 0x68, 0x65, 0x72, 0x73, 0x72, 0x76, 0x2e, 0x50,
-	0x6f, 0x6e, 0x67, 0x22, 0x00, 0x28, 0x01, 0x30, 0x01, 0x42, 0x12, 0x5a, 0x10, 0x70, 0x72, 0x6f,
-	0x74, 0x6f, 0x3b, 0x74, 0x65, 0x61, 0x63, 0x68, 0x65, 0x72, 0x73, 0x72, 0x76, 0x62, 0x06, 0x70,
-	0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x65, 0x72, 0x73, 0x72, 0x76, 0x22, 0x93, 0x01, 0x0a, 0x07, 0x54, 0x65, 0x61, 0x63, 0x68, 0x65,
+	0x72, 0x12, 0x1c, 0x0a, 0x09, 0x74, 0x65, 0x61, 0x63, 0x68, 0x65, 0x72, 0x49, 0x44, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x74, 0x65, 0x61, 0x63, 0x68, 0x65, 0x72, 0x49, 0x44, 0x12,
+	0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e,
+	0x61, 0x6d, 0x65, 0x12, 0x10, 0x0a, 0x03, 0x70, 0x69, 0x63, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x03, 0x70, 0x69, 0x63, 0x12, 0x10, 0x0a, 0x03, 0x74, 0x61, 0x67, 0x18, 0x04, 0x20, 0x03,
+	0x28, 0x09, 0x52, 0x03, 0x74, 0x61, 0x67, 0x12, 0x10, 0x0a, 0x03, 0x74, 0x65, 0x6c, 0x18, 0x05,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x74, 0x65, 0x6c, 0x12, 0x20, 0x0a, 0x0b, 0x64, 0x65, 0x73,
+	0x63, 0x72, 0x69, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x06, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b,
+	0x64, 0x65, 0x73, 0x63, 0x72, 0x69, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x22, 0x4e, 0x0a, 0x12, 0x47,
+	0x65, 0x74, 0x54, 0x65, 0x61, 0x63, 0x68, 0x65, 0x72, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
+	0x74, 0x12, 0x1c, 0x0a, 0x09, 0x74, 0x65, 0x61, 0x63, 0x68, 0x65, 0x72, 0x49, 0x44, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x74, 0x65, 0x61, 0x63, 0x68, 0x65, 0x72, 0x49, 0x44, 0x12,
+	0x1a, 0x0a, 0x08, 0x61, 0x67, 0x65, 0x6e, 0x63, 0x79, 0x49, 0x44, 0x18, 0x02, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x08, 0x61, 0x67, 0x65, 0x6e, 0x63, 0x79, 0x49, 0x44, 0x22, 0x70, 0x0a, 0x13, 0x47,
+	0x65, 0x74, 0x54, 0x65, 0x61, 0x63, 0x68, 0x65, 0x72, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
+	0x73, 0x65, 0x12, 0x2f, 0x0a, 0x08, 0x74, 0x65, 0x61, 0x63, 0x68, 0x65, 0x72, 0x73, 0x18, 0x01,
+	0x20, 0x03, 0x28, 0x0b, 0x32, 0x13, 0x2e, 0x74, 0x65, 0x61, 0x63, 0x68, 0x65, 0x72, 0x73, 0x72,
+	0x76, 0x2e, 0x54, 0x65, 0x61, 0x63, 0x68, 0x65, 0x72, 0x52, 0x08, 0x74, 0x65, 0x61, 0x63, 0x68,
+	0x65, 0x72, 0x73, 0x12, 0x10, 0x0a, 0x03, 0x6d, 0x73, 0x67, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x03, 0x6d, 0x73, 0x67, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x18,
+	0x03, 0x20, 0x01, 0x28, 0x05, 0x52, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x22, 0x5e, 0x0a,
+	0x11, 0x41, 0x64, 0x64, 0x54, 0x65, 0x61, 0x63, 0x68, 0x65, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65,
+	0x73, 0x74, 0x12, 0x1a, 0x0a, 0x08, 0x61, 0x67, 0x65, 0x6e, 0x63, 0x79, 0x49, 0x44, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x61, 0x67, 0x65, 0x6e, 0x63, 0x79, 0x49, 0x44, 0x12, 0x2d,
+	0x0a, 0x07, 0x74, 0x65, 0x61, 0x63, 0x68, 0x65, 0x72, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32,
+	0x13, 0x2e, 0x74, 0x65, 0x61, 0x63, 0x68, 0x65, 0x72, 0x73, 0x72, 0x76, 0x2e, 0x54, 0x65, 0x61,
+	0x63, 0x68, 0x65, 0x72, 0x52, 0x07, 0x74, 0x65, 0x61, 0x63, 0x68, 0x65, 0x72, 0x22, 0x5c, 0x0a,
+	0x12, 0x41, 0x64, 0x64, 0x54, 0x65, 0x61, 0x63, 0x68, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f,
+	0x6e, 0x73, 0x65, 0x12, 0x1c, 0x0a, 0x09, 0x74, 0x65, 0x61, 0x63, 0x68, 0x65, 0x72, 0x49, 0x44,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x74, 0x65, 0x61, 0x63, 0x68, 0x65, 0x72, 0x49,
+	0x44, 0x12, 0x10, 0x0a, 0x03, 0x6d, 0x73, 0x67, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03,
+	0x6d, 0x73, 0x67, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x18, 0x03, 0x20,
+	0x01, 0x28, 0x05, 0x52, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x22, 0x61, 0x0a, 0x14, 0x55,
+	0x70, 0x64, 0x61, 0x74, 0x65, 0x54, 0x65, 0x61, 0x63, 0x68, 0x65, 0x72, 0x52, 0x65, 0x71, 0x75,
+	0x65, 0x73, 0x74, 0x12, 0x2d, 0x0a, 0x07, 0x74, 0x65, 0x61, 0x63, 0x68, 0x65, 0x72, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x0b, 0x32, 0x13, 0x2e, 0x74, 0x65, 0x61, 0x63, 0x68, 0x65, 0x72, 0x73, 0x72,
+	0x76, 0x2e, 0x54, 0x65, 0x61, 0x63, 0x68, 0x65, 0x72, 0x52, 0x07, 0x74, 0x65, 0x61, 0x63, 0x68,
+	0x65, 0x72, 0x12, 0x1a, 0x0a, 0x08, 0x61, 0x67, 0x65, 0x6e, 0x63, 0x79, 0x49, 0x44, 0x18, 0x02,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x61, 0x67, 0x65, 0x6e, 0x63, 0x79, 0x49, 0x44, 0x22, 0x41,
+	0x0a, 0x15, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x54, 0x65, 0x61, 0x63, 0x68, 0x65, 0x72, 0x52,
+	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x10, 0x0a, 0x03, 0x6d, 0x73, 0x67, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6d, 0x73, 0x67, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x74, 0x61,
+	0x74, 0x75, 0x73, 0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75,
+	0x73, 0x22, 0x50, 0x0a, 0x14, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x54, 0x65, 0x61, 0x63, 0x68,
+	0x65, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1c, 0x0a, 0x09, 0x74, 0x65, 0x61,
+	0x63, 0x68, 0x65, 0x72, 0x49, 0x44, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x74, 0x65,
+	0x61, 0x63, 0x68, 0x65, 0x72, 0x49, 0x44, 0x12, 0x1a, 0x0a, 0x08, 0x61, 0x67, 0x65, 0x6e, 0x63,
+	0x79, 0x49, 0x44, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x61, 0x67, 0x65, 0x6e, 0x63,
+	0x79, 0x49, 0x44, 0x22, 0x41, 0x0a, 0x15, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x54, 0x65, 0x61,
+	0x63, 0x68, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x10, 0x0a, 0x03,
+	0x6d, 0x73, 0x67, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6d, 0x73, 0x67, 0x12, 0x16,
+	0x0a, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52, 0x06,
+	0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x32, 0xdd, 0x02, 0x0a, 0x0a, 0x54, 0x65, 0x61, 0x63, 0x68,
+	0x65, 0x72, 0x53, 0x72, 0x76, 0x12, 0x50, 0x0a, 0x0b, 0x47, 0x65, 0x74, 0x54, 0x65, 0x61, 0x63,
+	0x68, 0x65, 0x72, 0x73, 0x12, 0x1e, 0x2e, 0x74, 0x65, 0x61, 0x63, 0x68, 0x65, 0x72, 0x73, 0x72,
+	0x76, 0x2e, 0x47, 0x65, 0x74, 0x54, 0x65, 0x61, 0x63, 0x68, 0x65, 0x72, 0x73, 0x52, 0x65, 0x71,
+	0x75, 0x65, 0x73, 0x74, 0x1a, 0x1f, 0x2e, 0x74, 0x65, 0x61, 0x63, 0x68, 0x65, 0x72, 0x73, 0x72,
+	0x76, 0x2e, 0x47, 0x65, 0x74, 0x54, 0x65, 0x61, 0x63, 0x68, 0x65, 0x72, 0x73, 0x52, 0x65, 0x73,
+	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x4d, 0x0a, 0x0a, 0x41, 0x64, 0x64, 0x54, 0x65,
+	0x61, 0x63, 0x68, 0x65, 0x72, 0x12, 0x1d, 0x2e, 0x74, 0x65, 0x61, 0x63, 0x68, 0x65, 0x72, 0x73,
+	0x72, 0x76, 0x2e, 0x41, 0x64, 0x64, 0x54, 0x65, 0x61, 0x63, 0x68, 0x65, 0x72, 0x52, 0x65, 0x71,
+	0x75, 0x65, 0x73, 0x74, 0x1a, 0x1e, 0x2e, 0x74, 0x65, 0x61, 0x63, 0x68, 0x65, 0x72, 0x73, 0x72,
+	0x76, 0x2e, 0x41, 0x64, 0x64, 0x54, 0x65, 0x61, 0x63, 0x68, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70,
+	0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x56, 0x0a, 0x0d, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65,
+	0x54, 0x65, 0x61, 0x63, 0x68, 0x65, 0x72, 0x12, 0x20, 0x2e, 0x74, 0x65, 0x61, 0x63, 0x68, 0x65,
+	0x72, 0x73, 0x72, 0x76, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x54, 0x65, 0x61, 0x63, 0x68,
+	0x65, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x21, 0x2e, 0x74, 0x65, 0x61, 0x63,
+	0x68, 0x65, 0x72, 0x73, 0x72, 0x76, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x54, 0x65, 0x61,
+	0x63, 0x68, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x56,
+	0x0a, 0x0d, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x54, 0x65, 0x61, 0x63, 0x68, 0x65, 0x72, 0x12,
+	0x20, 0x2e, 0x74, 0x65, 0x61, 0x63, 0x68, 0x65, 0x72, 0x73, 0x72, 0x76, 0x2e, 0x44, 0x65, 0x6c,
+	0x65, 0x74, 0x65, 0x54, 0x65, 0x61, 0x63, 0x68, 0x65, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
+	0x74, 0x1a, 0x21, 0x2e, 0x74, 0x65, 0x61, 0x63, 0x68, 0x65, 0x72, 0x73, 0x72, 0x76, 0x2e, 0x44,
+	0x65, 0x6c, 0x65, 0x74, 0x65, 0x54, 0x65, 0x61, 0x63, 0x68, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70,
+	0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x42, 0x12, 0x5a, 0x10, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x3b,
+	0x74, 0x65, 0x61, 0x63, 0x68, 0x65, 0x72, 0x73, 0x72, 0x76, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74,
+	0x6f, 0x33,
 }
 
 var (
@@ -403,28 +665,35 @@ func file_proto_teacher_srv_proto_rawDescGZIP() []byte {
 	return file_proto_teacher_srv_proto_rawDescData
 }
 
-var file_proto_teacher_srv_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_proto_teacher_srv_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_proto_teacher_srv_proto_goTypes = []interface{}{
-	(*Message)(nil),           // 0: teachersrv.Message
-	(*Request)(nil),           // 1: teachersrv.Request
-	(*Response)(nil),          // 2: teachersrv.Response
-	(*StreamingRequest)(nil),  // 3: teachersrv.StreamingRequest
-	(*StreamingResponse)(nil), // 4: teachersrv.StreamingResponse
-	(*Ping)(nil),              // 5: teachersrv.Ping
-	(*Pong)(nil),              // 6: teachersrv.Pong
+	(*Teacher)(nil),               // 0: teachersrv.Teacher
+	(*GetTeachersRequest)(nil),    // 1: teachersrv.GetTeachersRequest
+	(*GetTeachersResponse)(nil),   // 2: teachersrv.GetTeachersResponse
+	(*AddTeacherRequest)(nil),     // 3: teachersrv.AddTeacherRequest
+	(*AddTeacherResponse)(nil),    // 4: teachersrv.AddTeacherResponse
+	(*UpdateTeacherRequest)(nil),  // 5: teachersrv.UpdateTeacherRequest
+	(*UpdateTeacherResponse)(nil), // 6: teachersrv.UpdateTeacherResponse
+	(*DeleteTeacherRequest)(nil),  // 7: teachersrv.DeleteTeacherRequest
+	(*DeleteTeacherResponse)(nil), // 8: teachersrv.DeleteTeacherResponse
 }
 var file_proto_teacher_srv_proto_depIdxs = []int32{
-	1, // 0: teachersrv.TeacherSrv.Call:input_type -> teachersrv.Request
-	3, // 1: teachersrv.TeacherSrv.Stream:input_type -> teachersrv.StreamingRequest
-	5, // 2: teachersrv.TeacherSrv.PingPong:input_type -> teachersrv.Ping
-	2, // 3: teachersrv.TeacherSrv.Call:output_type -> teachersrv.Response
-	4, // 4: teachersrv.TeacherSrv.Stream:output_type -> teachersrv.StreamingResponse
-	6, // 5: teachersrv.TeacherSrv.PingPong:output_type -> teachersrv.Pong
-	3, // [3:6] is the sub-list for method output_type
-	0, // [0:3] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	0, // 0: teachersrv.GetTeachersResponse.teachers:type_name -> teachersrv.Teacher
+	0, // 1: teachersrv.AddTeacherRequest.teacher:type_name -> teachersrv.Teacher
+	0, // 2: teachersrv.UpdateTeacherRequest.teacher:type_name -> teachersrv.Teacher
+	1, // 3: teachersrv.TeacherSrv.GetTeachers:input_type -> teachersrv.GetTeachersRequest
+	3, // 4: teachersrv.TeacherSrv.AddTeacher:input_type -> teachersrv.AddTeacherRequest
+	5, // 5: teachersrv.TeacherSrv.UpdateTeacher:input_type -> teachersrv.UpdateTeacherRequest
+	7, // 6: teachersrv.TeacherSrv.DeleteTeacher:input_type -> teachersrv.DeleteTeacherRequest
+	2, // 7: teachersrv.TeacherSrv.GetTeachers:output_type -> teachersrv.GetTeachersResponse
+	4, // 8: teachersrv.TeacherSrv.AddTeacher:output_type -> teachersrv.AddTeacherResponse
+	6, // 9: teachersrv.TeacherSrv.UpdateTeacher:output_type -> teachersrv.UpdateTeacherResponse
+	8, // 10: teachersrv.TeacherSrv.DeleteTeacher:output_type -> teachersrv.DeleteTeacherResponse
+	7, // [7:11] is the sub-list for method output_type
+	3, // [3:7] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_proto_teacher_srv_proto_init() }
@@ -434,7 +703,7 @@ func file_proto_teacher_srv_proto_init() {
 	}
 	if !protoimpl.UnsafeEnabled {
 		file_proto_teacher_srv_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Message); i {
+			switch v := v.(*Teacher); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -446,7 +715,7 @@ func file_proto_teacher_srv_proto_init() {
 			}
 		}
 		file_proto_teacher_srv_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Request); i {
+			switch v := v.(*GetTeachersRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -458,7 +727,7 @@ func file_proto_teacher_srv_proto_init() {
 			}
 		}
 		file_proto_teacher_srv_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Response); i {
+			switch v := v.(*GetTeachersResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -470,7 +739,7 @@ func file_proto_teacher_srv_proto_init() {
 			}
 		}
 		file_proto_teacher_srv_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*StreamingRequest); i {
+			switch v := v.(*AddTeacherRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -482,7 +751,7 @@ func file_proto_teacher_srv_proto_init() {
 			}
 		}
 		file_proto_teacher_srv_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*StreamingResponse); i {
+			switch v := v.(*AddTeacherResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -494,7 +763,7 @@ func file_proto_teacher_srv_proto_init() {
 			}
 		}
 		file_proto_teacher_srv_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Ping); i {
+			switch v := v.(*UpdateTeacherRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -506,7 +775,31 @@ func file_proto_teacher_srv_proto_init() {
 			}
 		}
 		file_proto_teacher_srv_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Pong); i {
+			switch v := v.(*UpdateTeacherResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_proto_teacher_srv_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*DeleteTeacherRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_proto_teacher_srv_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*DeleteTeacherResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -524,7 +817,7 @@ func file_proto_teacher_srv_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_proto_teacher_srv_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   7,
+			NumMessages:   9,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
