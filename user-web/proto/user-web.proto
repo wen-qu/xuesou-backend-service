@@ -8,8 +8,8 @@ service UserWeb {
 	rpc Login(UserRequest) returns (UserResponse) {}
 	rpc Register(UserRequest) returns (UserResponse) {}
 	rpc Validation(UserRequest) returns (UserResponse) {}
-	rpc UpdateProfile(UserProfileRequest) returns (UserProfileResponse) {}
-	rpc ReadProfile(UserProfileRequest) returns (UserProfileResponse) {}
+	rpc UpdateProfile(UpdateProfileRequest) returns (UpdateProfileResponse) {}
+	rpc ReadProfile(ReadProfileRequest) returns (ReadProfileResponse) {}
 }
 
 message Profile {
@@ -28,12 +28,6 @@ message UserRequest { // use tel number to do, return a uid
 	string validationCode = 2;
 }
 
-message UserProfileRequest {
-	string uid = 1;
-	string tel = 2;
-	int64 informationType = 3;
-}
-
 message UserResponse {
 	int32 status = 1;
 	string uid = 2;
@@ -41,7 +35,13 @@ message UserResponse {
 	string token = 4;
 }
 
-message UserProfileResponse {
+message ReadProfileRequest {
+	string uid = 1;
+	string tel = 2;
+	int32 informationType = 3;
+}
+
+message ReadProfileResponse {
 	string uid = 1;
 	string type = 2;
 	Profile profile = 3;
@@ -49,3 +49,14 @@ message UserProfileResponse {
 	int32 status = 5;
 }
 
+message UpdateProfileRequest {
+	string uid = 1;
+	Profile profile = 2;
+	int32 informationType = 3;
+}
+
+message UpdateProfileResponse {
+	string msg = 1;
+	int32 status = 2;
+	int32 type = 3;
+}

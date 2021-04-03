@@ -277,7 +277,7 @@ func (agency *AgencySrv)AddEvaluation(ctx context.Context, req *agencysrv.AddEva
 	}
 
 	tableName := req.Uid + "_user_evaluations_table"
-	evaluationID := uuid.New().String()
+	evaluationID := "evalua_" + uuid.New().String()
 	// 1. insert into user_evaluations_table
 	if _, err := db.GetDB().Exec("insert into " + tableName + "(evaluation_id, favicon, rating, username, " +
 		"agency_id, uid, class_id, detail, pics) values (?, ?, ?, ?, ?, ?, ?, ?, ?)", evaluationID,

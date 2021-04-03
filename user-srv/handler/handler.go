@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"database/sql"
+	"github.com/google/uuid"
 	"github.com/jinzhu/copier"
 	"github.com/micro/micro/v3/service/errors"
 
@@ -33,12 +34,49 @@ func (e *UserSrv) AddUser(ctx context.Context, req *usersrv.AddRequest, rsp *use
 		return nil
 	}
 
+	uid := "user_" + uuid.New().String()
 	if _, err := db.GetDB().Exec("insert into user " +
 		"(uid, username, password, tel, email, sex, age, address, class_num, img) " +
-		"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", req.User.Uid, req.User.Username, req.User.Password,
+		"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", uid, req.User.Username, req.User.Password,
 		req.User.Tel, req.User.Email, req.User.Sex, req.User.Age, req.User.Address,
 		req.User.ClassNum, req.User.Img); err != nil {
 		return errors.InternalServerError("user-srv.UserSrv.AddUser:fatal:002", err.Error())
+	}
+
+	// create table [uid]_user_class_table, [uid]_user_chatting_table, [uid]_user_evaluations_table
+	tableName := uid + "_user_class_table"
+	if _, err := db.GetDB().Exec("create table `" + tableName + "` (" +
+		"`uid` varchar(18) not null," +
+		"`class_id` varchar(19) not null," +
+		"`bought_time` varchar(20) not null," +
+		"`agency_id` varchar(20) not null" +
+		") engine=innodb default charset=utf8"); err != nil {
+		return errors.InternalServerError("user-srv.UserSrv.AddUser:fatal:003", err.Error())
+	}
+	tableName = uid + "_user_chatting_table"
+	if _, err := db.GetDB().Exec("create table `" + tableName + "` (" +
+		"`chat_id` varchar(18) primary key not null," +
+		"`uid` varchar(18) not null," +
+		"`msg_num` int not null," +
+		"`agency_icon` varchar(60)," +
+		"`agency_id` varchar(20) not null," +
+		"`agency_name` varchar(50) not null" +
+		") engine=innodb default charset=utf8"); err != nil {
+		return errors.InternalServerError("user-srv.UserSrv.AddUser:fatal:004", err.Error())
+	}
+	tableName = uid + "_user_evaluations_table"
+	if _, err := db.GetDB().Exec("create table `" + tableName + "` (" +
+		"`evaluation_id` varchar(20) primary key not null," +
+		"`favicon` varchar(60)," +
+		"`rating` float not null," +
+		"`username` varchar(50) not null," +
+		"`agency_id` varchar(20) not null," +
+		"`uid` varchar(18) not null," +
+		"`class_id` varchar(19) not null," +
+		"`detail` varchar(10000)," +
+		"`pics` varchar(700)" +
+		") engine=innodb default charset=utf8"); err != nil {
+		return errors.InternalServerError("user-srv.UserSrv.AddUser:fatal:005", err.Error())
 	}
 
 	rsp.Status = 200
@@ -50,7 +88,6 @@ func (e *UserSrv) AddUser(ctx context.Context, req *usersrv.AddRequest, rsp *use
 // InspectUser inspect a user by uid or tel
 func (e *UserSrv) InspectUser(ctx context.Context, req *usersrv.InspectRequest, rsp *usersrv.InspectResponse) error {
 	log.Info("Received UserSrv.Register request")
-	// rsp.Msg = "Hello InspectUser, " + req.Tel
 	var user usersrv.User
 	var row *sql.Row
 

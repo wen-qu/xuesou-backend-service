@@ -49,7 +49,7 @@ create table if not exists `test_user_evaluations_table` ( -- only test table, s
   `uid` varchar(18) not null,
   `class_id` varchar(19) not null,
   `detail` varchar(10000),
-  `pics` varchar(700), -- maximum 20 photos
+  `pics` varchar(700) -- maximum 20 photos
 ) engine=innodb default charset=utf8; -- user's all evaluations
 
 create table if not exists `user_agency_chatting_contents` ( -- only test table, standard format: [uid]_[agency_id]_chatting_contents

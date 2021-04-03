@@ -124,14 +124,8 @@ func (e *UserWeb) Register(ctx context.Context, req *userweb.UserRequest, rsp *u
 
 	// TODO: check the validation code.
 
-	// Generate the uid, and set username to uid
-	uid := "user_" + uuid.New().String()
-	username := uid
-
 	regRsp, err := UserClient.AddUser(ctx, &usersrv.AddRequest{
 		User: &usersrv.User{
-			Uid: uid,
-			Username: username,
 			Tel: req.Tel,
 		},
 	})
@@ -143,8 +137,6 @@ func (e *UserWeb) Register(ctx context.Context, req *userweb.UserRequest, rsp *u
 	if regRsp.Status == 400 {
 		return errors.Forbidden("user:001", "registered")
 	}
-
-	// TODO: create user's chat table, class table, then insert login_inf into user_login_inf table
 
 	rsp = &userweb.UserResponse{
 		Status: 200,
