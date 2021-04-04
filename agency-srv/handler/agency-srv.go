@@ -22,7 +22,7 @@ func (agency *AgencySrv)InspectAgency(ctx context.Context, req *agencysrv.Inspec
 	currAgency := new(agencysrv.Agency)
 	var tags string
 	var photos string
-	err := db.GetDB().QueryRow("select agency_id, name, rating, comments, order, " +
+	err := db.GetAgencyDB().QueryRow("select agency_id, name, rating, comments, order, " +
 		"tags, address, address_detail, icon, photos from agency_profile_table where " +
 		"tel = ? and password = ?", req.Tel, req.Password).Scan(&currAgency.AgencyID, &currAgency.Name,
 			&currAgency.Rating, &currAgency.Comments, &currAgency.Order, &tags, &currAgency.Address,
@@ -58,7 +58,7 @@ func (agency *AgencySrv)ReadAgencyDetails(ctx context.Context, req *agencysrv.Re
 		var tagString string
 		var characteristics string
 		var brandHistory string
-		if err := db.GetDB().QueryRow("select agency_id, name, tel, rating, comments, order, tags, address, " +
+		if err := db.GetAgencyDB().QueryRow("select agency_id, name, tel, rating, comments, order, tags, address, " +
 				"address_detail, icon, photos, brand_history, characteristic from agency_profile_table where agency_id = ?",
 				req.AgencyID).Scan(
 				&agency.AgencyID, &agency.Name, &agency.Tel, &agency.Rating, &agency.Comments,
@@ -86,7 +86,7 @@ func (agency *AgencySrv)ReadAgencyDetails(ctx context.Context, req *agencysrv.Re
 		var agency = new(agencysrv.Agency)
 		var tagString string
 
-		rows, err := db.GetDB().Query("select agency_id, name, tel, rating, comments, order, tags, address, " +
+		rows, err := db.GetAgencyDB().Query("select agency_id, name, tel, rating, comments, order, tags, address, " +
 			"address_detail, icon, photos from agency_profile_table where name regexp ? ", req.S)
 		if err == sql.ErrNoRows {
 			return nil
@@ -121,7 +121,7 @@ func (agency *AgencySrv)AddAgency(ctx context.Context, req *agencysrv.AddAgencyR
 	}
 
 	var currAgencyID string
-	err := db.GetDB().QueryRow("select agency_id from agency_profile_table where " +
+	err := db.GetAgencyDB().QueryRow("select agency_id from agency_profile_table where " +
 		"tel = ?", req.Agency.Tel).Scan(&currAgencyID)
 	if err != sql.ErrNoRows && err != nil {
 		return errors.InternalServerError("agency-srv.AgencySrv.AddAgency:fatal:001", err.Error())
@@ -135,7 +135,7 @@ func (agency *AgencySrv)AddAgency(ctx context.Context, req *agencysrv.AddAgencyR
 	var tableName string
 	var agencyID string
 	agencyID = uuid.New().String()
-	if _, err := db.GetDB().Exec("insert into agency_profile_table (" +
+	if _, err := db.GetAgencyDB().Exec("insert into agency_profile_table (" +
 		"agency_id, name, password, tel, comments, order, tags, address, address_detail, " +
 		"icon, photos, brand_history, characteristics) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 		agencyID, req.Agency.Name, req.Agency.Password, req.Agency.Tel, req.Agency.Comments,
@@ -147,7 +147,7 @@ func (agency *AgencySrv)AddAgency(ctx context.Context, req *agencysrv.AddAgencyR
 
 	// then create agency_chatting_table agency_class_table agency_teacher_table agency_evaluation_table
 	tableName = agencyID + "_agency_chatting_table"
-	if _, err := db.GetDB().Exec("create table `" + tableName + "` (" +
+	if _, err := db.GetAgencyDB().Exec("create table `" + tableName + "` (" +
 		"`chat_id` varchar(18) primary key not null," +
 		"`agency_id` varchar(18) not null," +
 		"`msg_num` int not null," +
@@ -158,7 +158,7 @@ func (agency *AgencySrv)AddAgency(ctx context.Context, req *agencysrv.AddAgencyR
 		return errors.InternalServerError("agency-srv.AgencySrv.AddAgency:fatal:003", err.Error())
 	}
 	tableName = agencyID + "_agency_class_table"
-	if _, err := db.GetDB().Exec("create table `" + tableName + "` (" +
+	if _, err := db.GetAgencyDB().Exec("create table `" + tableName + "` (" +
 		"`agency_id` varchar(20) not null," +
 		"`class_id` varchar(19) not null," +
 		"`price` float," +
@@ -173,7 +173,7 @@ func (agency *AgencySrv)AddAgency(ctx context.Context, req *agencysrv.AddAgencyR
 		return errors.InternalServerError("agency-srv.AgencySrv.AddAgency:fatal:004", err.Error())
 	}
 	tableName = agencyID + "_agency_teacher_table"
-	if _, err := db.GetDB().Exec("create table `" + tableName + "` (" +
+	if _, err := db.GetAgencyDB().Exec("create table `" + tableName + "` (" +
 		"`agency_id` varchar(20) not null," +
 		"`teacher_id` varchar(21) not null," +
 		"`name` varchar(50) not null," +
@@ -185,7 +185,7 @@ func (agency *AgencySrv)AddAgency(ctx context.Context, req *agencysrv.AddAgencyR
 		return errors.InternalServerError("agency-srv.AgencySrv.AddAgency:fatal:005", err.Error())
 	}
 	tableName = agencyID + "_agency_evaluation_table"
-	if _, err := db.GetDB().Exec("create table `" + tableName + "` (" +
+	if _, err := db.GetAgencyDB().Exec("create table `" + tableName + "` (" +
 		"`evaluation_id` varchar(20) primary key not null," +
 		"`favicon` varchar(60)," +
 		"`rating` float not null," +
@@ -232,7 +232,7 @@ func (agency *AgencySrv)UpdateAgency(ctx context.Context, req *agencysrv.UpdateA
 		currentAgency.Characteristics = req.Characteristics
 	}
 	// 1. update agency's profile
-	if _, err := db.GetDB().Exec("update agency_profile_table set (" +
+	if _, err := db.GetAgencyDB().Exec("update agency_profile_table set (" +
 		"name, tel, password, comments, order, tags, address, address_detail, " +
 		"icon, photos, brand_history, characteristics) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 		currentAgency.Agencies[0].Name, currentAgency.Agencies[0].Tel,currentAgency.Agencies[0].Password,
@@ -271,7 +271,7 @@ func (agency *AgencySrv)ReadEvaluations(ctx context.Context, req *agencysrv.Read
 	if len(req.AgencyID) > 0 && len(req.EvaluationID) == 0{
 		tableName := req.AgencyID + "_agency_evaluation_table"
 		good := 0
-		rows, err := db.GetDB().Query("select evaluation_id, favicon, rating, username, " +
+		rows, err := db.GetAgencyDB().Query("select evaluation_id, favicon, rating, username, " +
 			"class_id, detail, pics from " + tableName)
 		if err == sql.ErrNoRows {
 			return nil
@@ -298,12 +298,12 @@ func (agency *AgencySrv)ReadEvaluations(ctx context.Context, req *agencysrv.Read
 		// GoodRate
 		rsp.OverEvaluation.GoodRate = float32(good) / float32(len(rsp.Evaluation))
 		// GeneralRate
-		if err := db.GetDB().QueryRow("select rating from agency_profile_table " +
+		if err := db.GetAgencyDB().QueryRow("select rating from agency_profile_table " +
 			"where agency_id = ?", req.AgencyID).Scan(&rsp.OverEvaluation.GeneralRate); err != nil {
 			return errors.InternalServerError("agency-srv.AgencySrv.ReadEvaluations:fatal:003", err.Error())
 		}
 		// UpRate
-		if err := db.GetDB().QueryRow("select concat(round(((@ranking - rank) / @ranking)*100, 2), '%') as percentileRank " +
+		if err := db.GetAgencyDB().QueryRow("select concat(round(((@ranking - rank) / @ranking)*100, 2), '%') as percentileRank " +
 			"from (select agency_id, rating, @ranking := if ( @previous = @curr, @ranking, @ranking+1) as rank " +
 			"from agency_profile_table, (select @curr := null, @previous := null, @ranking := -1) q " +
 			"order by rating desc) T where agency_id = ?", req.AgencyID).Scan(&rsp.OverEvaluation.UpRate); err != nil {
@@ -313,7 +313,7 @@ func (agency *AgencySrv)ReadEvaluations(ctx context.Context, req *agencysrv.Read
 	} else if len(req.Uid) > 0 && len(req.EvaluationID) == 0 {
 		// only need rsp.Evaluation
 		tableName := req.Uid + "_user_evaluation_table"
-		rows, err := db.GetDB().Query("select evaluation_id, favicon, rating, username, " +
+		rows, err := db.GetAgencyDB().Query("select evaluation_id, favicon, rating, username, " +
 			"class_id, detail, pics from " + tableName)
 		if err == sql.ErrNoRows {
 			return nil
@@ -335,7 +335,7 @@ func (agency *AgencySrv)ReadEvaluations(ctx context.Context, req *agencysrv.Read
 	} else if len(req.EvaluationID) > 0 { // req.EvaluationID > 0, means search the certain evaluation by evaluationID and agencyID
 		tableName := req.AgencyID + "_agency_evaluation_table"
 		pics := ""
-		err := db.GetDB().QueryRow("select favicon, rating, username, class_id, " +
+		err := db.GetAgencyDB().QueryRow("select favicon, rating, username, class_id, " +
 			"detail, pics from " + tableName + "where evaluation_id = ?", req.EvaluationID).Scan(
 				&rsp.Evaluation[0].Favicon, &rsp.Evaluation[0].Rating, &rsp.Evaluation[0].Username,
 				&rsp.Evaluation[0].Class.ClassID, &rsp.Evaluation[0].Detail, &pics)
@@ -375,7 +375,7 @@ func (agency *AgencySrv)AddEvaluation(ctx context.Context, req *agencysrv.AddEva
 	tableName := req.Uid + "_user_evaluation_table"
 	evaluationID := "evalua_" + uuid.New().String()
 	// 1. insert into user_evaluations_table
-	if _, err := db.GetDB().Exec("insert into " + tableName + "(evaluation_id, favicon, rating, username, " +
+	if _, err := db.GetAgencyDB().Exec("insert into " + tableName + "(evaluation_id, favicon, rating, username, " +
 		"agency_id, uid, class_id, detail, pics) values (?, ?, ?, ?, ?, ?, ?, ?, ?)", evaluationID,
 		req.Evaluation.Favicon, req.Evaluation.Rating, req.Evaluation.Username, req.AgencyID, req.Uid,
 		req.Evaluation.Class.ClassID, req.Evaluation.Detail, strings.Join(req.Evaluation.Pics, ",")); err != nil {
@@ -383,14 +383,14 @@ func (agency *AgencySrv)AddEvaluation(ctx context.Context, req *agencysrv.AddEva
 	}
 	// 2. insert into agency_evaluations_table
 	tableName = req.AgencyID + "_agency_evaluation_table"
-	if _, err := db.GetDB().Exec("insert into " + tableName + "(evaluation_id, favicon, rating, username, " +
+	if _, err := db.GetAgencyDB().Exec("insert into " + tableName + "(evaluation_id, favicon, rating, username, " +
 		"agency_id, uid, class_id, detail, pics) values (?, ?, ?, ?, ?, ?, ?, ?, ?)", evaluationID,
 		req.Evaluation.Favicon, req.Evaluation.Rating, req.Evaluation.Username, req.AgencyID, req.Uid,
 		req.Evaluation.Class.ClassID, req.Evaluation.Detail, strings.Join(req.Evaluation.Pics, ",")); err != nil {
 		return errors.InternalServerError("agency-srv.AgencySrv.AddEvaluation:fatal:002", err.Error())
 	}
 	// 3. update agency_profile_table.rating
-	if _, err := db.GetDB().Exec("update agency_profile_table agency inner join (select avg(rating) as average " +
+	if _, err := db.GetAgencyDB().Exec("update agency_profile_table agency inner join (select avg(rating) as average " +
 		"from " + tableName +") rate on agency.agencyID = ? set agency.rating = rate.average", req.AgencyID); err != nil {
 		return errors.InternalServerError("agency-srv.AgencySrv.AddEvaluation:fatal:003", err.Error())
 	}
@@ -442,20 +442,20 @@ func (agency *AgencySrv)UpdateEvaluation(ctx context.Context, req *agencysrv.Upd
 	evaluationID = currEvaluation.Evaluation[0].EvaluationID
 	tableName = req.Uid + "_user_evaluation_table"
 	// 1. update user_evaluations_table
-	if _, err := db.GetDB().Exec("update " + tableName + " set rating = ?, detail = ?, pics = ? " +
+	if _, err := db.GetAgencyDB().Exec("update " + tableName + " set rating = ?, detail = ?, pics = ? " +
 		"where evaluation_id = ?", req.Evaluation.Rating, req.Evaluation.Detail,
 		strings.Join(req.Evaluation.Pics, ","), evaluationID); err != nil {
 		return errors.InternalServerError("agency-srv.AgencySrv.UpdateEvaluation:fatal:002", err.Error())
 	}
 	// 2. update agency_evaluations_table
 	tableName = req.AgencyID + "_agency_evaluation_table"
-	if _, err := db.GetDB().Exec("update " + tableName + " set rating = ?, detail = ?, pics = ? " +
+	if _, err := db.GetAgencyDB().Exec("update " + tableName + " set rating = ?, detail = ?, pics = ? " +
 		"where evaluation_id = ?", req.Evaluation.Rating, req.Evaluation.Detail,
 		strings.Join(req.Evaluation.Pics, ","), evaluationID); err != nil {
 		return errors.InternalServerError("agency-srv.AgencySrv.UpdateEvaluation:fatal:003", err.Error())
 	}
 	// 3. update agency_profile_table.rating
-	if _, err := db.GetDB().Exec("update agency_profile_table agency inner join (select avg(rating) as average " +
+	if _, err := db.GetAgencyDB().Exec("update agency_profile_table agency inner join (select avg(rating) as average " +
 		"from " + tableName +") rate on agency.agencyID = ? set agency.rating = rate.average", req.AgencyID); err != nil {
 		return errors.InternalServerError("agency-srv.AgencySrv.AddEvaluation:fatal:004", err.Error())
 	}

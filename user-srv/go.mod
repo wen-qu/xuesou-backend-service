@@ -4,8 +4,9 @@ go 1.16
 
 require (
 	github.com/golang/protobuf v1.4.3
+	github.com/jinzhu/copier v0.2.8
 	github.com/micro/micro/v3 v3.1.1
-	github.com/wen-qu/xuesou-backend-service/basic v0.0.0-20210311040543-ea030d0fdf8b
+	github.com/wen-qu/xuesou-backend-service/basic v0.0.0-20210404124158-591e4a74fbb0
 	google.golang.org/protobuf v1.25.0
 )
 

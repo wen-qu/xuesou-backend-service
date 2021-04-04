@@ -22,7 +22,7 @@ func (class *ClassSrv) ReadClassesByAgencyID(ctx context.Context, req *classsrv.
 	if matched, _ := regexp.Match("/^agency_[0-9]{13}$/", []byte(req.AgencyID)); !matched {
 		return errors.BadRequest("para:002", "invalid parameters")
 	}
-	rows, err := db.GetDB().Query("select agency_id, class_id, price, name, stu_number, age, level, sales from " +
+	rows, err := db.GetAgencyDB().Query("select agency_id, class_id, price, name, stu_number, age, level, sales from " +
 		req.AgencyID + "_agency_class_table")
 
 	if err == sql.ErrNoRows {
@@ -59,7 +59,7 @@ func (class *ClassSrv) AddClasses(ctx context.Context, req *classsrv.AddClassReq
 	lastUpdateTime := createTime
 	classID := "class_" + uuid.New().String()
 
-	_, err := db.GetDB().Exec("insert into " + tableName + "(agency_id, class_id, price, name, " +
+	_, err := db.GetAgencyDB().Exec("insert into " + tableName + "(agency_id, class_id, price, name, " +
 		"stu_number, age, level, sales, create_time, last_update_time) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 		req.Class.AgencyID, classID, req.Class.Price, req.Class.Name, req.Class.StuNumber,
 		req.Class.Age, req.Class.Level, req.Class.Sales, createTime, lastUpdateTime)
@@ -105,7 +105,7 @@ func (class *ClassSrv) UpdateClass(ctx context.Context, req *classsrv.UpdateClas
 
 	tableName := req.Class.AgencyID + "_agency_class_name"
 	lastUpdateTime := time.Now().String()[:19]
-	_, err := db.GetDB().Exec("update " + tableName + "set " +
+	_, err := db.GetAgencyDB().Exec("update " + tableName + "set " +
 		"name = ?, price = ?, stu_number = ?, age = ?, level = ?, " +
 		"sales = ?, last_update_time = ? where agency_id = ? and class_id = ?",
 		req.Class.Name, req.Class.Price, req.Class.StuNumber, req.Class.Age,
@@ -142,7 +142,7 @@ func (class *ClassSrv) DeleteClass(ctx context.Context, req *classsrv.DeleteClas
 		return errors.Forbidden("class:003", "classID does not match agencyID")
 	}
 	tableName := req.AgencyID + "_agency_class_name"
-	_, err := db.GetDB().Exec("delete from " + tableName + "where class_id = ?", currentClass.Classes[0].ClassID)
+	_, err := db.GetAgencyDB().Exec("delete from " + tableName + "where class_id = ?", currentClass.Classes[0].ClassID)
 
 	if err != nil {
 		return errors.InternalServerError("class-srv.ClassSrv.DeleteClass:fatal:002", err.Error())

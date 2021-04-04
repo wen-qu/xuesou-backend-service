@@ -35,7 +35,7 @@ func (e *UserSrv) AddUser(ctx context.Context, req *usersrv.AddRequest, rsp *use
 	}
 
 	uid := "user_" + uuid.New().String()
-	if _, err := db.GetDB().Exec("insert into user " +
+	if _, err := db.GetUserDB().Exec("insert into user " +
 		"(uid, username, password, tel, email, sex, age, address, class_num, img) " +
 		"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", uid, req.User.Username, req.User.Password,
 		req.User.Tel, req.User.Email, req.User.Sex, req.User.Age, req.User.Address,
@@ -45,7 +45,7 @@ func (e *UserSrv) AddUser(ctx context.Context, req *usersrv.AddRequest, rsp *use
 
 	// create table [uid]_user_class_table, [uid]_user_chatting_table, [uid]_user_evaluations_table
 	tableName := uid + "_user_class_table"
-	if _, err := db.GetDB().Exec("create table `" + tableName + "` (" +
+	if _, err := db.GetUserDB().Exec("create table `" + tableName + "` (" +
 		"`uid` varchar(18) not null," +
 		"`class_id` varchar(19) not null," +
 		"`bought_time` varchar(20) not null," +
@@ -54,7 +54,7 @@ func (e *UserSrv) AddUser(ctx context.Context, req *usersrv.AddRequest, rsp *use
 		return errors.InternalServerError("user-srv.UserSrv.AddUser:fatal:003", err.Error())
 	}
 	tableName = uid + "_user_chatting_table"
-	if _, err := db.GetDB().Exec("create table `" + tableName + "` (" +
+	if _, err := db.GetUserDB().Exec("create table `" + tableName + "` (" +
 		"`chat_id` varchar(18) primary key not null," +
 		"`uid` varchar(18) not null," +
 		"`msg_num` int not null," +
@@ -65,7 +65,7 @@ func (e *UserSrv) AddUser(ctx context.Context, req *usersrv.AddRequest, rsp *use
 		return errors.InternalServerError("user-srv.UserSrv.AddUser:fatal:004", err.Error())
 	}
 	tableName = uid + "_user_evaluation_table"
-	if _, err := db.GetDB().Exec("create table `" + tableName + "` (" +
+	if _, err := db.GetUserDB().Exec("create table `" + tableName + "` (" +
 		"`evaluation_id` varchar(20) primary key not null," +
 		"`favicon` varchar(60)," +
 		"`rating` float not null," +
@@ -92,10 +92,10 @@ func (e *UserSrv) InspectUser(ctx context.Context, req *usersrv.InspectRequest, 
 	var row *sql.Row
 
 	if len(req.Uid) > 0 {
-		row = db.GetDB().QueryRow("select uid, username, password, tel, age, sex, email, " +
+		row = db.GetUserDB().QueryRow("select uid, username, password, tel, age, sex, email, " +
 			"address, class_num, img from user where uid = ?", req.Uid)
 	} else if len(req.Tel) > 0 {
-		row = db.GetDB().QueryRow("select uid, username, password, tel, age, sex, email, " +
+		row = db.GetUserDB().QueryRow("select uid, username, password, tel, age, sex, email, " +
 			"address, class_num, img from user where uid = ? and password = ?", req.Uid, req.Password)
 	} else {
 		return errors.BadRequest("para:002", "missing uid or tel")
@@ -137,7 +137,7 @@ func (e *UserSrv) UpdateUser(ctx context.Context, req *usersrv.UpdateRequest, rs
 		return errors.InternalServerError("user-srv.UserSrv.UpdateUser:fatal:002", err.Error())
 	}
 
-	_, err := db.GetDB().Exec("update user set username = ?, password = ?, tel = ?, " +
+	_, err := db.GetUserDB().Exec("update user set username = ?, password = ?, tel = ?, " +
 		"age = ?, sex = ?, email = ?, address = ?, class_num = ?, img = ? where uid = ? ",
 		req.User.Username, req.User.Password,
 		req.User.Tel, req.User.Age, req.User.Sex,
@@ -177,9 +177,9 @@ func (e *UserSrv) DeleteUser(ctx context.Context, req *usersrv.DeleteRequest, rs
 	}
 
 	if len(req.Tel) > 0 {
-		_, err = db.GetDB().Exec("delete from user where tel = ?", req.Tel)
+		_, err = db.GetUserDB().Exec("delete from user where tel = ?", req.Tel)
 	} else if len(req.Uid) > 0 {
-		_, err = db.GetDB().Exec("delete from user where uid = ?", req.Uid)
+		_, err = db.GetUserDB().Exec("delete from user where uid = ?", req.Uid)
 	}
 
 	if err != nil {
