@@ -11,7 +11,8 @@ import (
 
 var (
 	inited bool
-	db     *sql.DB
+	dbUser     *sql.DB
+	dbAgency   *sql.DB
 	m      sync.RWMutex
 )
 
@@ -27,8 +28,10 @@ func Init() {
 		return
 	}
 
-	dsn := "micro:tF#262420228@tcp(127.0.0.1:3306)/user?charset=utf8"
-	db, err = sql.Open("mysql", dsn)
+	dsnUser := "micro:tF#262420228@tcp(127.0.0.1:3306)/user?charset=utf8"
+	dsnAgency := "micro:tF#262420228@tcp(127.0.0.1:3306)/agency?charset=utf8"
+	dbUser, err = sql.Open("mysql", dsnUser)
+	dbAgency, err = sql.Open("mysql", dsnAgency)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -36,9 +39,18 @@ func Init() {
 	inited = true
 }
 
-func GetDB() *sql.DB {
+func GetUserDB() *sql.DB {
 	if !inited {
 		panic("DB does not init")
 	}
-	return db
+
+	return dbUser
+}
+
+func GetAgencyDB() *sql.DB {
+	if !inited {
+		panic("DB does not init")
+	}
+
+	return dbAgency
 }
