@@ -27,14 +27,33 @@ func (agency *AgencyWeb) Login(ctx context.Context, req *agencyweb.LoginRequest,
 		return errors.BadRequest("agency:001", "missing parameters")
 	}
 
+	// TODO: check the validation code
+
+	rspLogin, err := AgencyClient.InspectAgency(ctx, &agencysrv.InspectAgencyRequest{
+		Tel:      req.Tel,
+		Password: req.Password,
+	})
+	if err != nil {
+		return err
+	}
+	if rspLogin.Agency == nil {
+		rsp.Status = 401
+		rsp.Msg = "wrong password"
+	} else {
+		rsp.Status = 200
+		rsp.Msg = "success"
+	}
 
 	return nil
 }
 
 func (agency *AgencyWeb) Register(ctx context.Context, req *agencyweb.RegisterRequest, rsp *agencyweb.RegisterResponse) error {
-	if len(req.Agency.Name) == 0 || len(req.Agency.Tel) == 0 {
+	if len(req.Agency.Name) == 0 || len(req.Agency.Tel) == 0 || len(req.ValidationCode) == 0 {
 		return errors.BadRequest("para:001", "missing parameters")
 	}
+
+	// TODO: check the validation code
+
 	var ag *agencysrv.Agency
 	if err := copier.Copy(&ag, &req.Agency); err != nil {
 		return errors.InternalServerError("agency-web.AgencyWeb.Register:fatal:001", err.Error())

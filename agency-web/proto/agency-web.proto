@@ -77,6 +77,7 @@ message LoginResponse {
 
 message RegisterRequest {
 	Agency agency = 1;
+	string validationCode = 2;
 }
 
 message RegisterResponse {

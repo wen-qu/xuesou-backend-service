@@ -20,7 +20,7 @@ require (
 	github.com/stretchr/testify v1.7.0 // indirect
 	github.com/ulikunitz/xz v0.5.10 // indirect
 	github.com/urfave/cli/v2 v2.3.0 // indirect
-	github.com/wen-qu/xuesou-backend-service/agency-srv v0.0.0-20210404043350-8a597c03b499
+	github.com/wen-qu/xuesou-backend-service/agency-srv v0.0.0-20210404091233-06e70f5cd958
 	github.com/wen-qu/xuesou-backend-service/basic v0.0.0-20210404042406-e36ea8aec1e9 // indirect
 	github.com/wen-qu/xuesou-backend-service/class-srv v0.0.0-20210325152105-ea9f2abd9285
 	golang.org/x/crypto v0.0.0-20210322153248-0c34fe9e7dc2 // indirect
