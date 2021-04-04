@@ -306,7 +306,7 @@ func (agency *AgencySrv)AddEvaluation(ctx context.Context, req *agencysrv.AddEva
 	return nil
 }
 
-func (agency *AgencySrv)UpdateEvaluation(ctx context.Context, req *agencysrv.UpdateEvaluationRequest, rsp *agencysrv.UpdateAgencyResponse) error {
+func (agency *AgencySrv)UpdateEvaluation(ctx context.Context, req *agencysrv.UpdateEvaluationRequest, rsp *agencysrv.UpdateEvaluationResponse) error {
 	if req.Evaluation.Rating == 0 || len(req.Evaluation.Username) == 0 {
 		return errors.BadRequest("para:001", "missing parameters")
 	}
