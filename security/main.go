@@ -19,11 +19,12 @@ func main() {
 
 	// Register handler
 	_ = pb.RegisterSecurityHandler(srv.Server(), new(handler.Security))
-	plugin.Register(plugin.NewPlugin(
+	_ = plugin.Register(plugin.NewPlugin(
 		plugin.WithName("auth"),
-		plugin.WithHandler(),
+		plugin.WithHandler(checkToken),
 		))
 
+	handler.Init()
 	// Run service
 	if err := srv.Run(); err != nil {
 		logger.Fatal(err)
@@ -45,7 +46,15 @@ func checkToken(h http.Handler) http.Handler {
 			token = token[7:] // delete the "Bearer " prefix
 		}
 
+		acc, err := handler.JWTClient.Inspect(token)
+		if err != nil {
+			_, _ = w.Write([]byte("unauthorized"))
+			return
+		}
 
+		if acc != nil {
+			h.ServeHTTP(w, r)
+		}
 	})
 
 }

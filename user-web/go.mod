@@ -16,6 +16,7 @@ require (
 	github.com/ulikunitz/xz v0.5.10 // indirect
 	github.com/urfave/cli/v2 v2.3.0 // indirect
 	github.com/wen-qu/xuesou-backend-service/basic v0.0.0-20210311093833-4286b09a3392 // indirect
+	github.com/wen-qu/xuesou-backend-service/security v0.0.0-20210404142013-7d684bfb2890
 	github.com/wen-qu/xuesou-backend-service/user-srv v0.0.0-20210311100442-8cc8f7b972c0
 	golang.org/x/crypto v0.0.0-20210220033148-5ea612d1eb83 // indirect
 	golang.org/x/net v0.0.0-20210226172049-e18ecbb05110 // indirect

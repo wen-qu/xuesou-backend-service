@@ -7,7 +7,6 @@ option go_package = "proto;userweb";
 service UserWeb {
 	rpc Login(UserRequest) returns (UserResponse) {}
 	rpc Register(UserRequest) returns (UserResponse) {}
-	rpc Validation(UserRequest) returns (UserResponse) {}
 	rpc UpdateProfile(UpdateProfileRequest) returns (UpdateProfileResponse) {}
 	rpc ReadProfile(ReadProfileRequest) returns (ReadProfileResponse) {}
 }

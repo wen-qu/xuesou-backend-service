@@ -3,13 +3,9 @@ package handler
 import (
 	"context"
 	"github.com/google/uuid"
-
-	"io/ioutil"
-	"os"
+	security "github.com/wen-qu/xuesou-backend-service/security/proto"
 
 	"github.com/micro/micro/v3/service"
-	"github.com/micro/micro/v3/service/auth"
-	"github.com/micro/micro/v3/service/auth/jwt"
 	"github.com/micro/micro/v3/service/errors"
 	log "github.com/micro/micro/v3/service/logger"
 
@@ -23,34 +19,13 @@ import (
 
 var (
 	UserClient usersrv.UserSrvService
-	JWTClient auth.Auth
+	SecClient security.SecurityService
 )
 
 func Init(){
 	srv := service.New()
 	UserClient = usersrv.NewUserSrvService("user-srv", srv.Client())
-	JWTClient = jwt.NewAuth()
-
-	JWTClient.Init(func(o *auth.Options) {
-		privateFile, err := os.Open("/home/micro/.ssh/id_rsa_micro")
-		if err != nil {
-			log.Error(err)
-			return
-		}
-		publicFile, err := os.Open("/home/micro/.ssh/id_rsa_micro.pub")
-		if err != nil {
-			log.Error(err)
-			return
-		}
-		defer privateFile.Close()
-		defer publicFile.Close()
-
-		privateKeyContent, _ := ioutil.ReadAll(privateFile)
-		publicKeyContent, _ := ioutil.ReadAll(publicFile)
-
-		o.PrivateKey = string(privateKeyContent)
-		o.PublicKey = string(publicKeyContent)
-	})
+	SecClient = security.NewSecurityService("security", srv.Client())
 }
 
 // UserWeb the UserWeb struct
@@ -66,6 +41,18 @@ func (e *UserWeb) Login(ctx context.Context, req *userweb.UserRequest, rsp *user
 	}
 
 	// TODO: check the validation code [service: security]
+	rspCheck, err := SecClient.CheckValidation(ctx, &security.CheckValidationRequest{
+		Code: req.ValidationCode,
+		Tel:  req.Tel,
+	})
+	if err != nil {
+		return err
+	}
+	if rspCheck.Status == 401 {
+		rsp.Status = 401
+		rsp.Msg = "invalid validation code"
+	}
+
 	loginRsp, err := UserClient.InspectUser(ctx, &usersrv.InspectRequest{
 		Tel: req.Tel,
 	})
@@ -82,11 +69,10 @@ func (e *UserWeb) Login(ctx context.Context, req *userweb.UserRequest, rsp *user
 		// }
 
 
-
-		acc, err := JWTClient.Generate(loginRsp.User.Uid, func(o *auth.GenerateOptions) {
-			o.Type = "user"
-			o.Name = loginRsp.User.Uid
-			o.Secret = uuid.New().String()
+		token, err := SecClient.GenerateToken(ctx, &security.GenerateTokenRequest{
+			Type:   "user",
+			Name:   loginRsp.User.Uid,
+			Secret: uuid.New().String(),
 		})
 
 		if err != nil {
@@ -100,7 +86,7 @@ func (e *UserWeb) Login(ctx context.Context, req *userweb.UserRequest, rsp *user
 		rsp.Status = 200
 		rsp.Uid = loginRsp.User.Uid
 		rsp.Msg = "success"
-		rsp.Token = acc.Secret
+		rsp.Token = token.Token
 
 		return nil
 	}
@@ -123,6 +109,17 @@ func (e *UserWeb) Register(ctx context.Context, req *userweb.UserRequest, rsp *u
 	log.Info("Received UserWeb.Register request")
 
 	// TODO: check the validation code.
+	rspCheck, err := SecClient.CheckValidation(ctx, &security.CheckValidationRequest{
+		Code: req.ValidationCode,
+		Tel:  req.Tel,
+	})
+	if err != nil {
+		return err
+	}
+	if rspCheck.Status == 401 {
+		rsp.Status = 401
+		rsp.Msg = "invalid validation code"
+	}
 
 	regRsp, err := UserClient.AddUser(ctx, &usersrv.AddRequest{
 		User: &usersrv.User{
@@ -142,13 +139,6 @@ func (e *UserWeb) Register(ctx context.Context, req *userweb.UserRequest, rsp *u
 		Status: 200,
 		Msg: "register success",
 	}
-	return nil
-}
-
-// Validation validation service (e.g. get a validation code, etc.)
-func (e *UserWeb) Validation(ctx context.Context, req *userweb.UserRequest, rsp *userweb.UserResponse) error {
-	log.Info("Received UserWeb.Validation request")
-	rsp.Msg = "Hello Validation, " + req.Tel
 	return nil
 }
 

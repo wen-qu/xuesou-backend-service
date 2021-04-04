@@ -6,6 +6,7 @@ import (
 	"github.com/micro/micro/v3/service/errors"
 	agencysrv "github.com/wen-qu/xuesou-backend-service/agency-srv/proto"
 	classsrv "github.com/wen-qu/xuesou-backend-service/class-srv/proto"
+	security "github.com/wen-qu/xuesou-backend-service/security/proto"
 
 	"github.com/jinzhu/copier"
 	agencyweb "github.com/wen-qu/xuesou-backend-service/agency-web/proto"
@@ -15,11 +16,13 @@ type AgencyWeb struct{}
 
 var AgencyClient agencysrv.AgencySrvService
 var ClassClient classsrv.ClassSrvService
+var SecClient security.SecurityService
 
 func Init(){
 	srv := service.New()
 	AgencyClient = agencysrv.NewAgencySrvService("agency-srv", srv.Client())
 	ClassClient = classsrv.NewClassSrvService("class-srv", srv.Client())
+	SecClient = security.NewSecurityService("security", srv.Client())
 }
 
 func (agency *AgencyWeb) Login(ctx context.Context, req *agencyweb.LoginRequest, rsp *agencyweb.LoginResponse) error {
@@ -28,6 +31,19 @@ func (agency *AgencyWeb) Login(ctx context.Context, req *agencyweb.LoginRequest,
 	}
 
 	// TODO: check the validation code
+	rspCheck, err := SecClient.CheckValidation(ctx, &security.CheckValidationRequest{
+		Code: req.ValidationCode,
+		Tel:  req.Tel,
+	})
+	if err != nil {
+		return err
+	}
+
+	if rspCheck.Status == 401 {
+		rsp.Status = 401
+		rsp.Msg = "invalid validation code"
+		return nil
+	}
 
 	rspLogin, err := AgencyClient.InspectAgency(ctx, &agencysrv.InspectAgencyRequest{
 		Tel:      req.Tel,
@@ -53,6 +69,19 @@ func (agency *AgencyWeb) Register(ctx context.Context, req *agencyweb.RegisterRe
 	}
 
 	// TODO: check the validation code
+	rspCheck, err := SecClient.CheckValidation(ctx, &security.CheckValidationRequest{
+		Code: req.ValidationCode,
+		Tel:  req.Agency.Tel,
+	})
+	if err != nil {
+		return err
+	}
+
+	if rspCheck.Status == 401 {
+		rsp.Status = 401
+		rsp.Msg = "invalid validation code"
+		return nil
+	}
 
 	var ag *agencysrv.Agency
 	if err := copier.Copy(&ag, &req.Agency); err != nil {
