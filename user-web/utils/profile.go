@@ -17,11 +17,11 @@ func ReadGeneralProfile(ctx context.Context, userClient *usersrv.UserSrvService,
 	})
 
 	if err != nil {
-		return nil, errors.InternalServerError("user-web.UserWeb.ReadProfile:fatal:001", err.Error())
+		return nil, errors.InternalServerError("user-web.UserWeb.ReadProfile.ReadGeneralProfile:fatal:001", err.Error())
 	}
 
 	if profile == nil {
-		return nil, errors.NotFound("user:002", "user not found")
+		return nil, nil
 	}
 
 	res.Username = profile.User.Username
@@ -34,6 +34,36 @@ func ReadGeneralProfile(ctx context.Context, userClient *usersrv.UserSrvService,
 	res.ClassNum = profile.User.ClassNum
 
 	return res, nil
+}
+
+func UpdateGeneralProfile(ctx context.Context, userClient *usersrv.UserSrvService, uid string, profile *userweb.Profile) (ok bool, err error) {
+	var currProfile *usersrv.InspectResponse
+	currProfile, err = (*userClient).InspectUser(ctx, &usersrv.InspectRequest{Uid: uid})
+
+	if currProfile == nil {
+		return false, nil
+	}
+
+	if err != nil {
+		return false, errors.InternalServerError("user-web.UserWeb.UpdateProfile.UpdateGeneralProfile:fatal:001", err.Error())
+	}
+
+	if _, err := (*userClient).UpdateUser(ctx, &usersrv.UpdateRequest{
+		User: &usersrv.User{
+			Uid:      uid,
+			Username: profile.Username,
+			Tel:      profile.Tel,
+			Email:    profile.Email,
+			Sex:      profile.Sex,
+			Age:      profile.Age,
+			Address:  profile.Address,
+			Img:      profile.Img,
+		},
+	}); err != nil {
+		return false, errors.InternalServerError("user-web.UserWeb.UpdateProfile.UpdateGeneralProfile:fatal:002", err.Error())
+	}
+
+	return true, err
 }
 
 func ReadOrder(ctx context.Context, userClient *usersrv.UserSrvService, uid string, tel string) *userweb.Profile {

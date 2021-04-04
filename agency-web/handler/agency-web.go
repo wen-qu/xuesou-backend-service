@@ -109,10 +109,37 @@ func (agency *AgencyWeb) GetAgencyDetail(ctx context.Context, req *agencyweb.Get
 }
 
 func (agency *AgencyWeb)UpdateAgencyProfile(ctx context.Context, req *agencyweb.UpdateAgencyRequest, rsp *agencyweb.UpdateAgencyResponse) error {
+	if len(req.General.AgencyID) == 0 {
+		return errors.BadRequest("para:001", "missing parameters: General.agencyID")
+	}
+	var updateAgency *agencysrv.Agency
+	if err := copier.Copy(&updateAgency, req.General); err != nil {
+		return errors.InternalServerError("agency-web.AgencyWeb.UpdateAgencyProfile:fatal:001", err.Error())
+	}
+	rspAgency, err := AgencyClient.UpdateAgency(ctx, &agencysrv.UpdateAgencyRequest{
+		AgencyID: req.General.AgencyID,
+		Agency:  updateAgency,
+	})
+
+	if err != nil {
+		return errors.InternalServerError("agency-web.AgencyWeb.UpdateAgencyProfile:fatal:002", err.Error())
+	}
+
+	if rspAgency.Status == 200 {
+		rsp.Msg = "success"
+		rsp.Status = 200
+		return nil
+	}
+
 	return nil
 }
 
 func (agency *AgencyWeb)GetEvaluation(ctx context.Context, req *agencyweb.GetEvaluationRequest, rsp *agencyweb.GetEvaluationResponse) error {
+	if len(req.AgencyID) == 0 {
+		return errors.BadRequest("para:001", "missing parameters: agencyID")
+	}
+
+
 	return nil
 }
 

@@ -11,7 +11,7 @@ service AgencySrv {
 	rpc DeleteAgency(DeleteAgencyRequest) returns (DeleteAgencyResponse) {}
 	rpc ReadEvaluations(ReadEvaluationsRequest) returns (ReadEvaluationsResponse) {}
 	rpc AddEvaluation(AddEvaluationRequest) returns (AddEvaluationResponse) {}
-	rpc UpdateEvaluation(UpdateEvaluationRequest) returns (AddEvaluationResponse) {}
+	rpc UpdateEvaluation(UpdateEvaluationRequest) returns (UpdateEvaluationResponse) {}
 	rpc DeleteEvaluation(DeleteEvaluationRequest) returns (DeleteEvaluationResponse) {}
 	rpc GetNearbyAgencies(GetNearbyAgenciesRequest) returns (GetNearbyAgenciesResponse) {}
 }

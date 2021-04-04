@@ -65,7 +65,6 @@ func (e *UserWeb) Login(ctx context.Context, req *userweb.UserRequest, rsp *user
 	if ok, _ := regexp.Match("^1[3-9]\\d{9}$", []byte(req.Tel)); !ok {
 		return errors.BadRequest("para:002", "invalid parameter: tel")
 	}
-	log.Info("Received UserWeb.Login request")
 
 	// TODO: check the validation code [service: security]
 	loginRsp, err := UserClient.InspectUser(ctx, &usersrv.InspectRequest{
@@ -99,7 +98,7 @@ func (e *UserWeb) Login(ctx context.Context, req *userweb.UserRequest, rsp *user
 
 		rsp.Status = 200
 		rsp.Uid = loginRsp.User.Uid
-		rsp.Msg = "login success"
+		rsp.Msg = "success"
 		rsp.Token = acc.Secret
 
 		return nil
@@ -153,14 +152,36 @@ func (e *UserWeb) Validation(ctx context.Context, req *userweb.UserRequest, rsp 
 }
 
 // UpdateProfile update user's profile
-func (e *UserWeb) UpdateProfile(ctx context.Context, req *userweb.UserProfileRequest, rsp *userweb.UserProfileResponse) error {
+func (e *UserWeb) UpdateProfile(ctx context.Context, req *userweb.UpdateProfileRequest, rsp *userweb.UpdateProfileResponse) error {
 	log.Info("Received UserWeb.Register request")
-	rsp.Msg = "Hello Register, " + req.Tel
+	if len(req.Uid) == 0 {
+		return errors.BadRequest("para:001", "missing parameters")
+	}
+
+	switch req.InformationType {
+	case 1: // general
+		ok, err := utils.UpdateGeneralProfile(ctx, &UserClient, req.Uid, req.Profile)
+		if err != nil {
+			return err
+		}
+		if !ok {
+			return errors.Forbidden("user:001", "user not existed")
+		}
+		rsp.Type = "general"
+		rsp.Status = 200
+		rsp.Msg = ""
+	case 2: // order
+	case 3: // discount
+	case 4: // likes
+	case 5: // order_review
+	case 6: // classes
+	case 7: // collections
+	}
 	return nil
 }
 
 // ReadProfile get user's profile
-func (e *UserWeb) ReadProfile(ctx context.Context, req *userweb.UserProfileRequest, rsp *userweb.UserProfileResponse) error {
+func (e *UserWeb) ReadProfile(ctx context.Context, req *userweb.ReadProfileRequest, rsp *userweb.ReadProfileResponse) error {
 	log.Info("Received UserWeb.Register request")
 
 	if len(req.Uid) == 0 && len(req.Tel) == 0 {
@@ -169,7 +190,11 @@ func (e *UserWeb) ReadProfile(ctx context.Context, req *userweb.UserProfileReque
 
 	switch req.InformationType {
 	case 1: // general
-		rsp.Profile, _ = utils.ReadGeneralProfile(ctx, &UserClient, req.Uid, req.Tel)
+		var err error
+		rsp.Profile, err = utils.ReadGeneralProfile(ctx, &UserClient, req.Uid, req.Tel)
+		if err != nil {
+			return err
+		}
 		rsp.Uid = req.Uid
 		rsp.Type = "general"
 	case 2: // order

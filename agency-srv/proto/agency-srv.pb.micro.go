@@ -48,7 +48,7 @@ type AgencySrvService interface {
 	DeleteAgency(ctx context.Context, in *DeleteAgencyRequest, opts ...client.CallOption) (*DeleteAgencyResponse, error)
 	ReadEvaluations(ctx context.Context, in *ReadEvaluationsRequest, opts ...client.CallOption) (*ReadEvaluationsResponse, error)
 	AddEvaluation(ctx context.Context, in *AddEvaluationRequest, opts ...client.CallOption) (*AddEvaluationResponse, error)
-	UpdateEvaluation(ctx context.Context, in *UpdateEvaluationRequest, opts ...client.CallOption) (*AddEvaluationResponse, error)
+	UpdateEvaluation(ctx context.Context, in *UpdateEvaluationRequest, opts ...client.CallOption) (*UpdateEvaluationResponse, error)
 	DeleteEvaluation(ctx context.Context, in *DeleteEvaluationRequest, opts ...client.CallOption) (*DeleteEvaluationResponse, error)
 	GetNearbyAgencies(ctx context.Context, in *GetNearbyAgenciesRequest, opts ...client.CallOption) (*GetNearbyAgenciesResponse, error)
 }
@@ -125,9 +125,9 @@ func (c *agencySrvService) AddEvaluation(ctx context.Context, in *AddEvaluationR
 	return out, nil
 }
 
-func (c *agencySrvService) UpdateEvaluation(ctx context.Context, in *UpdateEvaluationRequest, opts ...client.CallOption) (*AddEvaluationResponse, error) {
+func (c *agencySrvService) UpdateEvaluation(ctx context.Context, in *UpdateEvaluationRequest, opts ...client.CallOption) (*UpdateEvaluationResponse, error) {
 	req := c.c.NewRequest(c.name, "AgencySrv.UpdateEvaluation", in)
-	out := new(AddEvaluationResponse)
+	out := new(UpdateEvaluationResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -164,7 +164,7 @@ type AgencySrvHandler interface {
 	DeleteAgency(context.Context, *DeleteAgencyRequest, *DeleteAgencyResponse) error
 	ReadEvaluations(context.Context, *ReadEvaluationsRequest, *ReadEvaluationsResponse) error
 	AddEvaluation(context.Context, *AddEvaluationRequest, *AddEvaluationResponse) error
-	UpdateEvaluation(context.Context, *UpdateEvaluationRequest, *AddEvaluationResponse) error
+	UpdateEvaluation(context.Context, *UpdateEvaluationRequest, *UpdateEvaluationResponse) error
 	DeleteEvaluation(context.Context, *DeleteEvaluationRequest, *DeleteEvaluationResponse) error
 	GetNearbyAgencies(context.Context, *GetNearbyAgenciesRequest, *GetNearbyAgenciesResponse) error
 }
@@ -177,7 +177,7 @@ func RegisterAgencySrvHandler(s server.Server, hdlr AgencySrvHandler, opts ...se
 		DeleteAgency(ctx context.Context, in *DeleteAgencyRequest, out *DeleteAgencyResponse) error
 		ReadEvaluations(ctx context.Context, in *ReadEvaluationsRequest, out *ReadEvaluationsResponse) error
 		AddEvaluation(ctx context.Context, in *AddEvaluationRequest, out *AddEvaluationResponse) error
-		UpdateEvaluation(ctx context.Context, in *UpdateEvaluationRequest, out *AddEvaluationResponse) error
+		UpdateEvaluation(ctx context.Context, in *UpdateEvaluationRequest, out *UpdateEvaluationResponse) error
 		DeleteEvaluation(ctx context.Context, in *DeleteEvaluationRequest, out *DeleteEvaluationResponse) error
 		GetNearbyAgencies(ctx context.Context, in *GetNearbyAgenciesRequest, out *GetNearbyAgenciesResponse) error
 	}
@@ -216,7 +216,7 @@ func (h *agencySrvHandler) AddEvaluation(ctx context.Context, in *AddEvaluationR
 	return h.AgencySrvHandler.AddEvaluation(ctx, in, out)
 }
 
-func (h *agencySrvHandler) UpdateEvaluation(ctx context.Context, in *UpdateEvaluationRequest, out *AddEvaluationResponse) error {
+func (h *agencySrvHandler) UpdateEvaluation(ctx context.Context, in *UpdateEvaluationRequest, out *UpdateEvaluationResponse) error {
 	return h.AgencySrvHandler.UpdateEvaluation(ctx, in, out)
 }
 

@@ -137,9 +137,9 @@ func (e *UserSrv) UpdateUser(ctx context.Context, req *usersrv.UpdateRequest, rs
 		return errors.InternalServerError("user-srv.UserSrv.UpdateUser:fatal:002", err.Error())
 	}
 
-	_, err := db.GetDB().Exec("update user set uid = ?, username = ?, password = ?, tel = ?, " +
+	_, err := db.GetDB().Exec("update user set username = ?, password = ?, tel = ?, " +
 		"age = ?, sex = ?, email = ?, address = ?, class_num = ?, img = ? where uid = ? ",
-		req.User.Uid, req.User.Username, req.User.Password,
+		req.User.Username, req.User.Password,
 		req.User.Tel, req.User.Age, req.User.Sex,
 		req.User.Email, req.User.Address, req.User.ClassNum,
 		req.User.Img, req.User.Uid)

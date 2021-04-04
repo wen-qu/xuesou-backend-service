@@ -45,8 +45,8 @@ type UserWebService interface {
 	Login(ctx context.Context, in *UserRequest, opts ...client.CallOption) (*UserResponse, error)
 	Register(ctx context.Context, in *UserRequest, opts ...client.CallOption) (*UserResponse, error)
 	Validation(ctx context.Context, in *UserRequest, opts ...client.CallOption) (*UserResponse, error)
-	UpdateProfile(ctx context.Context, in *UserProfileRequest, opts ...client.CallOption) (*UserProfileResponse, error)
-	ReadProfile(ctx context.Context, in *UserProfileRequest, opts ...client.CallOption) (*UserProfileResponse, error)
+	UpdateProfile(ctx context.Context, in *UpdateProfileRequest, opts ...client.CallOption) (*UpdateProfileResponse, error)
+	ReadProfile(ctx context.Context, in *ReadProfileRequest, opts ...client.CallOption) (*ReadProfileResponse, error)
 }
 
 type userWebService struct {
@@ -91,9 +91,9 @@ func (c *userWebService) Validation(ctx context.Context, in *UserRequest, opts .
 	return out, nil
 }
 
-func (c *userWebService) UpdateProfile(ctx context.Context, in *UserProfileRequest, opts ...client.CallOption) (*UserProfileResponse, error) {
+func (c *userWebService) UpdateProfile(ctx context.Context, in *UpdateProfileRequest, opts ...client.CallOption) (*UpdateProfileResponse, error) {
 	req := c.c.NewRequest(c.name, "UserWeb.UpdateProfile", in)
-	out := new(UserProfileResponse)
+	out := new(UpdateProfileResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -101,9 +101,9 @@ func (c *userWebService) UpdateProfile(ctx context.Context, in *UserProfileReque
 	return out, nil
 }
 
-func (c *userWebService) ReadProfile(ctx context.Context, in *UserProfileRequest, opts ...client.CallOption) (*UserProfileResponse, error) {
+func (c *userWebService) ReadProfile(ctx context.Context, in *ReadProfileRequest, opts ...client.CallOption) (*ReadProfileResponse, error) {
 	req := c.c.NewRequest(c.name, "UserWeb.ReadProfile", in)
-	out := new(UserProfileResponse)
+	out := new(ReadProfileResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -117,8 +117,8 @@ type UserWebHandler interface {
 	Login(context.Context, *UserRequest, *UserResponse) error
 	Register(context.Context, *UserRequest, *UserResponse) error
 	Validation(context.Context, *UserRequest, *UserResponse) error
-	UpdateProfile(context.Context, *UserProfileRequest, *UserProfileResponse) error
-	ReadProfile(context.Context, *UserProfileRequest, *UserProfileResponse) error
+	UpdateProfile(context.Context, *UpdateProfileRequest, *UpdateProfileResponse) error
+	ReadProfile(context.Context, *ReadProfileRequest, *ReadProfileResponse) error
 }
 
 func RegisterUserWebHandler(s server.Server, hdlr UserWebHandler, opts ...server.HandlerOption) error {
@@ -126,8 +126,8 @@ func RegisterUserWebHandler(s server.Server, hdlr UserWebHandler, opts ...server
 		Login(ctx context.Context, in *UserRequest, out *UserResponse) error
 		Register(ctx context.Context, in *UserRequest, out *UserResponse) error
 		Validation(ctx context.Context, in *UserRequest, out *UserResponse) error
-		UpdateProfile(ctx context.Context, in *UserProfileRequest, out *UserProfileResponse) error
-		ReadProfile(ctx context.Context, in *UserProfileRequest, out *UserProfileResponse) error
+		UpdateProfile(ctx context.Context, in *UpdateProfileRequest, out *UpdateProfileResponse) error
+		ReadProfile(ctx context.Context, in *ReadProfileRequest, out *ReadProfileResponse) error
 	}
 	type UserWeb struct {
 		userWeb
@@ -152,10 +152,10 @@ func (h *userWebHandler) Validation(ctx context.Context, in *UserRequest, out *U
 	return h.UserWebHandler.Validation(ctx, in, out)
 }
 
-func (h *userWebHandler) UpdateProfile(ctx context.Context, in *UserProfileRequest, out *UserProfileResponse) error {
+func (h *userWebHandler) UpdateProfile(ctx context.Context, in *UpdateProfileRequest, out *UpdateProfileResponse) error {
 	return h.UserWebHandler.UpdateProfile(ctx, in, out)
 }
 
-func (h *userWebHandler) ReadProfile(ctx context.Context, in *UserProfileRequest, out *UserProfileResponse) error {
+func (h *userWebHandler) ReadProfile(ctx context.Context, in *ReadProfileRequest, out *ReadProfileResponse) error {
 	return h.UserWebHandler.ReadProfile(ctx, in, out)
 }

@@ -58,5 +58,5 @@ message UpdateProfileRequest {
 message UpdateProfileResponse {
 	string msg = 1;
 	int32 status = 2;
-	int32 type = 3;
+	string type = 3;
 }
