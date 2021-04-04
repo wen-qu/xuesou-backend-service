@@ -42,9 +42,10 @@ func NewSecurityEndpoints() []*api.Endpoint {
 // Client API for Security service
 
 type SecurityService interface {
-	Call(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error)
-	Stream(ctx context.Context, in *StreamingRequest, opts ...client.CallOption) (Security_StreamService, error)
-	PingPong(ctx context.Context, opts ...client.CallOption) (Security_PingPongService, error)
+	GenerateValidation(ctx context.Context, in *GenerateValidationRequest, opts ...client.CallOption) (*GenerateValidationResponse, error)
+	CheckValidation(ctx context.Context, in *CheckValidationRequest, opts ...client.CallOption) (*CheckValidationResponse, error)
+	CheckToken(ctx context.Context, in *CheckTokenRequest, opts ...client.CallOption) (*CheckTokenResponse, error)
+	GenerateToken(ctx context.Context, in *GenerateTokenRequest, opts ...client.CallOption) (*GenerateTokenResponse, error)
 }
 
 type securityService struct {
@@ -59,9 +60,9 @@ func NewSecurityService(name string, c client.Client) SecurityService {
 	}
 }
 
-func (c *securityService) Call(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error) {
-	req := c.c.NewRequest(c.name, "Security.Call", in)
-	out := new(Response)
+func (c *securityService) GenerateValidation(ctx context.Context, in *GenerateValidationRequest, opts ...client.CallOption) (*GenerateValidationResponse, error) {
+	req := c.c.NewRequest(c.name, "Security.GenerateValidation", in)
+	out := new(GenerateValidationResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -69,119 +70,51 @@ func (c *securityService) Call(ctx context.Context, in *Request, opts ...client.
 	return out, nil
 }
 
-func (c *securityService) Stream(ctx context.Context, in *StreamingRequest, opts ...client.CallOption) (Security_StreamService, error) {
-	req := c.c.NewRequest(c.name, "Security.Stream", &StreamingRequest{})
-	stream, err := c.c.Stream(ctx, req, opts...)
+func (c *securityService) CheckValidation(ctx context.Context, in *CheckValidationRequest, opts ...client.CallOption) (*CheckValidationResponse, error) {
+	req := c.c.NewRequest(c.name, "Security.CheckValidation", in)
+	out := new(CheckValidationResponse)
+	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
 	}
-	if err := stream.Send(in); err != nil {
-		return nil, err
-	}
-	return &securityServiceStream{stream}, nil
+	return out, nil
 }
 
-type Security_StreamService interface {
-	Context() context.Context
-	SendMsg(interface{}) error
-	RecvMsg(interface{}) error
-	Close() error
-	Recv() (*StreamingResponse, error)
-}
-
-type securityServiceStream struct {
-	stream client.Stream
-}
-
-func (x *securityServiceStream) Close() error {
-	return x.stream.Close()
-}
-
-func (x *securityServiceStream) Context() context.Context {
-	return x.stream.Context()
-}
-
-func (x *securityServiceStream) SendMsg(m interface{}) error {
-	return x.stream.Send(m)
-}
-
-func (x *securityServiceStream) RecvMsg(m interface{}) error {
-	return x.stream.Recv(m)
-}
-
-func (x *securityServiceStream) Recv() (*StreamingResponse, error) {
-	m := new(StreamingResponse)
-	err := x.stream.Recv(m)
+func (c *securityService) CheckToken(ctx context.Context, in *CheckTokenRequest, opts ...client.CallOption) (*CheckTokenResponse, error) {
+	req := c.c.NewRequest(c.name, "Security.CheckToken", in)
+	out := new(CheckTokenResponse)
+	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return m, nil
+	return out, nil
 }
 
-func (c *securityService) PingPong(ctx context.Context, opts ...client.CallOption) (Security_PingPongService, error) {
-	req := c.c.NewRequest(c.name, "Security.PingPong", &Ping{})
-	stream, err := c.c.Stream(ctx, req, opts...)
+func (c *securityService) GenerateToken(ctx context.Context, in *GenerateTokenRequest, opts ...client.CallOption) (*GenerateTokenResponse, error) {
+	req := c.c.NewRequest(c.name, "Security.GenerateToken", in)
+	out := new(GenerateTokenResponse)
+	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return &securityServicePingPong{stream}, nil
-}
-
-type Security_PingPongService interface {
-	Context() context.Context
-	SendMsg(interface{}) error
-	RecvMsg(interface{}) error
-	Close() error
-	Send(*Ping) error
-	Recv() (*Pong, error)
-}
-
-type securityServicePingPong struct {
-	stream client.Stream
-}
-
-func (x *securityServicePingPong) Close() error {
-	return x.stream.Close()
-}
-
-func (x *securityServicePingPong) Context() context.Context {
-	return x.stream.Context()
-}
-
-func (x *securityServicePingPong) SendMsg(m interface{}) error {
-	return x.stream.Send(m)
-}
-
-func (x *securityServicePingPong) RecvMsg(m interface{}) error {
-	return x.stream.Recv(m)
-}
-
-func (x *securityServicePingPong) Send(m *Ping) error {
-	return x.stream.Send(m)
-}
-
-func (x *securityServicePingPong) Recv() (*Pong, error) {
-	m := new(Pong)
-	err := x.stream.Recv(m)
-	if err != nil {
-		return nil, err
-	}
-	return m, nil
+	return out, nil
 }
 
 // Server API for Security service
 
 type SecurityHandler interface {
-	Call(context.Context, *Request, *Response) error
-	Stream(context.Context, *StreamingRequest, Security_StreamStream) error
-	PingPong(context.Context, Security_PingPongStream) error
+	GenerateValidation(context.Context, *GenerateValidationRequest, *GenerateValidationResponse) error
+	CheckValidation(context.Context, *CheckValidationRequest, *CheckValidationResponse) error
+	CheckToken(context.Context, *CheckTokenRequest, *CheckTokenResponse) error
+	GenerateToken(context.Context, *GenerateTokenRequest, *GenerateTokenResponse) error
 }
 
 func RegisterSecurityHandler(s server.Server, hdlr SecurityHandler, opts ...server.HandlerOption) error {
 	type security interface {
-		Call(ctx context.Context, in *Request, out *Response) error
-		Stream(ctx context.Context, stream server.Stream) error
-		PingPong(ctx context.Context, stream server.Stream) error
+		GenerateValidation(ctx context.Context, in *GenerateValidationRequest, out *GenerateValidationResponse) error
+		CheckValidation(ctx context.Context, in *CheckValidationRequest, out *CheckValidationResponse) error
+		CheckToken(ctx context.Context, in *CheckTokenRequest, out *CheckTokenResponse) error
+		GenerateToken(ctx context.Context, in *GenerateTokenRequest, out *GenerateTokenResponse) error
 	}
 	type Security struct {
 		security
@@ -194,91 +127,18 @@ type securityHandler struct {
 	SecurityHandler
 }
 
-func (h *securityHandler) Call(ctx context.Context, in *Request, out *Response) error {
-	return h.SecurityHandler.Call(ctx, in, out)
+func (h *securityHandler) GenerateValidation(ctx context.Context, in *GenerateValidationRequest, out *GenerateValidationResponse) error {
+	return h.SecurityHandler.GenerateValidation(ctx, in, out)
 }
 
-func (h *securityHandler) Stream(ctx context.Context, stream server.Stream) error {
-	m := new(StreamingRequest)
-	if err := stream.Recv(m); err != nil {
-		return err
-	}
-	return h.SecurityHandler.Stream(ctx, m, &securityStreamStream{stream})
+func (h *securityHandler) CheckValidation(ctx context.Context, in *CheckValidationRequest, out *CheckValidationResponse) error {
+	return h.SecurityHandler.CheckValidation(ctx, in, out)
 }
 
-type Security_StreamStream interface {
-	Context() context.Context
-	SendMsg(interface{}) error
-	RecvMsg(interface{}) error
-	Close() error
-	Send(*StreamingResponse) error
+func (h *securityHandler) CheckToken(ctx context.Context, in *CheckTokenRequest, out *CheckTokenResponse) error {
+	return h.SecurityHandler.CheckToken(ctx, in, out)
 }
 
-type securityStreamStream struct {
-	stream server.Stream
-}
-
-func (x *securityStreamStream) Close() error {
-	return x.stream.Close()
-}
-
-func (x *securityStreamStream) Context() context.Context {
-	return x.stream.Context()
-}
-
-func (x *securityStreamStream) SendMsg(m interface{}) error {
-	return x.stream.Send(m)
-}
-
-func (x *securityStreamStream) RecvMsg(m interface{}) error {
-	return x.stream.Recv(m)
-}
-
-func (x *securityStreamStream) Send(m *StreamingResponse) error {
-	return x.stream.Send(m)
-}
-
-func (h *securityHandler) PingPong(ctx context.Context, stream server.Stream) error {
-	return h.SecurityHandler.PingPong(ctx, &securityPingPongStream{stream})
-}
-
-type Security_PingPongStream interface {
-	Context() context.Context
-	SendMsg(interface{}) error
-	RecvMsg(interface{}) error
-	Close() error
-	Send(*Pong) error
-	Recv() (*Ping, error)
-}
-
-type securityPingPongStream struct {
-	stream server.Stream
-}
-
-func (x *securityPingPongStream) Close() error {
-	return x.stream.Close()
-}
-
-func (x *securityPingPongStream) Context() context.Context {
-	return x.stream.Context()
-}
-
-func (x *securityPingPongStream) SendMsg(m interface{}) error {
-	return x.stream.Send(m)
-}
-
-func (x *securityPingPongStream) RecvMsg(m interface{}) error {
-	return x.stream.Recv(m)
-}
-
-func (x *securityPingPongStream) Send(m *Pong) error {
-	return x.stream.Send(m)
-}
-
-func (x *securityPingPongStream) Recv() (*Ping, error) {
-	m := new(Ping)
-	if err := x.stream.Recv(m); err != nil {
-		return nil, err
-	}
-	return m, nil
+func (h *securityHandler) GenerateToken(ctx context.Context, in *GenerateTokenRequest, out *GenerateTokenResponse) error {
+	return h.SecurityHandler.GenerateToken(ctx, in, out)
 }

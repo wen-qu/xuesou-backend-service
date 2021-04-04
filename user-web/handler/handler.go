@@ -50,7 +50,6 @@ func Init(){
 
 		o.PrivateKey = string(privateKeyContent)
 		o.PublicKey = string(publicKeyContent)
-		o.LoginURL = "/login"
 	})
 }
 
@@ -81,6 +80,8 @@ func (e *UserWeb) Login(ctx context.Context, req *userweb.UserRequest, rsp *user
 		// if err := security.CheckLoginDevice(loginRsp.User.Uid); err != nil {
 		//     return errors.Forbidden("auth:003", "unknown device")
 		// }
+
+
 
 		acc, err := JWTClient.Generate(loginRsp.User.Uid, func(o *auth.GenerateOptions) {
 			o.Type = "user"

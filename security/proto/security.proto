@@ -5,35 +5,48 @@ package security;
 option go_package = "proto;security";
 
 service Security {
-	rpc Call(Request) returns (Response) {}
-	rpc Stream(StreamingRequest) returns (stream StreamingResponse) {}
-	rpc PingPong(stream Ping) returns (stream Pong) {}
+	rpc GenerateValidation(GenerateValidationRequest) returns (GenerateValidationResponse) {}
+	rpc CheckValidation(CheckValidationRequest) returns (CheckValidationResponse) {}
+	rpc CheckToken(CheckTokenRequest) returns (CheckTokenResponse) {}
+	rpc GenerateToken(GenerateTokenRequest) returns (GenerateTokenResponse) {}
 }
 
-message Message {
-	string say = 1;
+message GenerateValidationRequest {
+	string tel = 1;
 }
 
-message Request {
-	string name = 1;
+message GenerateValidationResponse {
+	int32 status = 1;
+	string msg = 2;
 }
 
-message Response {
+message CheckValidationRequest {
+	string code = 1;
+	string tel = 2;
+}
+
+message CheckValidationResponse {
+	int32 status = 1;
+	string msg = 2;
+}
+
+message CheckTokenRequest {
+	string token = 1;
+}
+
+message CheckTokenResponse {
 	string msg = 1;
+	int32 status = 2;
 }
 
-message StreamingRequest {
-	int64 count = 1;
+message GenerateTokenRequest {
+	string type = 1;
+	string name = 2;
+	string secret = 3;
 }
 
-message StreamingResponse {
-	int64 count = 1;
-}
-
-message Ping {
-	int64 stroke = 1;
-}
-
-message Pong {
-	int64 stroke = 1;
+message GenerateTokenResponse {
+	string token = 1;
+	string msg = 2;
+	int32 status = 3;
 }
