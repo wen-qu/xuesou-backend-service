@@ -23,11 +23,31 @@ func Init(){
 }
 
 func (agency *AgencyWeb) Login(ctx context.Context, req *agencyweb.LoginRequest, rsp *agencyweb.LoginResponse) error {
+	if len(req.ValidationCode) == 0 {
+		return errors.BadRequest("agency:001", "missing parameters")
+	}
+
 
 	return nil
 }
 
-func (agency *AgencyWeb) Register(ctx context.Context, req *agencyweb.RegisterRequest, rsp *agencyweb.LoginResponse) error {
+func (agency *AgencyWeb) Register(ctx context.Context, req *agencyweb.RegisterRequest, rsp *agencyweb.RegisterResponse) error {
+	if len(req.Agency.Name) == 0 || len(req.Agency.Tel) == 0 {
+		return errors.BadRequest("para:001", "missing parameters")
+	}
+	var ag *agencysrv.Agency
+	if err := copier.Copy(&ag, &req.Agency); err != nil {
+		return errors.InternalServerError("agency-web.AgencyWeb.Register:fatal:001", err.Error())
+	}
+	rspRegister, err := AgencyClient.AddAgency(ctx, &agencysrv.AddAgencyRequest{
+		Agency:          ag,
+	})
+	if err != nil {
+		return err
+	}
+	rsp.AgencyID = rspRegister.AgencyID
+	rsp.Msg = ""
+	rsp.Status = 200
 
 	return nil
 }
@@ -41,7 +61,7 @@ func (agency *AgencyWeb) GetAgencies(ctx context.Context, req *agencyweb.GetAgen
 		S: req.S,
 	})
 	if err != nil {
-		return errors.InternalServerError("agency-web.AgencyWeb.GetAgencies:fatal:001", err.Error())
+		return err
 	}
 
 	if len(rspAgencies.Agencies) == 0 {
@@ -51,7 +71,7 @@ func (agency *AgencyWeb) GetAgencies(ctx context.Context, req *agencyweb.GetAgen
 	for i := 0; i < len(rspAgencies.Agencies); i++ {
 		rsp.Agencies = append(rsp.Agencies, new(agencyweb.Agency))
 		if err := copier.Copy(rsp.Agencies[i], rspAgencies.Agencies[i]); err != nil {
-			return errors.InternalServerError("agency-web.AgencyWeb.GetAgencies:fatal:002", err.Error())
+			return errors.InternalServerError("agency-web.AgencyWeb.GetAgencies:fatal:001", err.Error())
 		}
 	}
 
@@ -76,7 +96,7 @@ func (agency *AgencyWeb) GetAgencyDetail(ctx context.Context, req *agencyweb.Get
 	})
 
 	if err != nil {
-		return errors.InternalServerError("agency-web.AgencyWeb.GetAgencyDetail:fatal:001", err.Error())
+		return err
 	}
 
 	if len(rspAgency.Agencies) == 0 {
@@ -86,7 +106,7 @@ func (agency *AgencyWeb) GetAgencyDetail(ctx context.Context, req *agencyweb.Get
 	rsp.General = new(agencyweb.Agency)
 
 	if err := copier.Copy(rsp.General, rspAgency.Agencies[0]); err != nil {
-		return errors.InternalServerError("agency-web.AgencyWeb.GetAgencyDetail:fatal:002", err.Error())
+		return errors.InternalServerError("agency-web.AgencyWeb.GetAgencyDetail:fatal:001", err.Error())
 	}
 
 	rsp.BrandStory = rspAgency.BrandHistory
@@ -97,11 +117,11 @@ func (agency *AgencyWeb) GetAgencyDetail(ctx context.Context, req *agencyweb.Get
 		AgencyID: rsp.General.AgencyID,
 	})
 	if err != nil {
-		return errors.InternalServerError("agency-web.AgencyWeb.GetAgencyDetail:fatal:003", err.Error())
+		return err
 	}
 
 	if err := copier.Copy(rsp.General.Classes, rspClass.Classes); err != nil {
-		return errors.InternalServerError("agency-web.AgencyWeb.GetAgencyDetail:fatal:004", err.Error())
+		return errors.InternalServerError("agency-web.AgencyWeb.GetAgencyDetail:fatal:002", err.Error())
 	}
 
 	// TODO: read teachers, evaluations and nearby agencies information.
@@ -117,12 +137,11 @@ func (agency *AgencyWeb)UpdateAgencyProfile(ctx context.Context, req *agencyweb.
 		return errors.InternalServerError("agency-web.AgencyWeb.UpdateAgencyProfile:fatal:001", err.Error())
 	}
 	rspAgency, err := AgencyClient.UpdateAgency(ctx, &agencysrv.UpdateAgencyRequest{
-		AgencyID: req.General.AgencyID,
 		Agency:  updateAgency,
 	})
 
 	if err != nil {
-		return errors.InternalServerError("agency-web.AgencyWeb.UpdateAgencyProfile:fatal:002", err.Error())
+		return err
 	}
 
 	if rspAgency.Status == 200 {
@@ -139,6 +158,25 @@ func (agency *AgencyWeb)GetEvaluation(ctx context.Context, req *agencyweb.GetEva
 		return errors.BadRequest("para:001", "missing parameters: agencyID")
 	}
 
+	evaluations, err := AgencyClient.ReadEvaluations(ctx, &agencysrv.ReadEvaluationsRequest{
+		AgencyID:     req.AgencyID,
+	})
+	if err != nil {
+		return err
+	}
+	if len(evaluations.Evaluation) == 0 {
+		return nil
+	}
+
+	if err := copier.Copy(&rsp.OverEvaluation, &evaluations.OverEvaluation); err != nil {
+		return errors.InternalServerError("agency-web.AgencyWeb.GetEvaluation:fatal:001", err.Error())
+	}
+	if err := copier.Copy(&rsp.Evaluations, &evaluations.Evaluation); err != nil {
+		return errors.InternalServerError("agency-web.AgencyWeb.GetEvaluation:fatal:002", err.Error())
+	}
+
+	rsp.Msg = ""
+	rsp.Status = 200
 
 	return nil
 }

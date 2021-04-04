@@ -43,6 +43,7 @@ func NewAgencySrvEndpoints() []*api.Endpoint {
 
 type AgencySrvService interface {
 	ReadAgencyDetails(ctx context.Context, in *ReadAgencyRequest, opts ...client.CallOption) (*ReadAgencyResponse, error)
+	InspectAgency(ctx context.Context, in *InspectAgencyRequest, opts ...client.CallOption) (*InspectAgencyResponse, error)
 	AddAgency(ctx context.Context, in *AddAgencyRequest, opts ...client.CallOption) (*AddAgencyResponse, error)
 	UpdateAgency(ctx context.Context, in *UpdateAgencyRequest, opts ...client.CallOption) (*UpdateAgencyResponse, error)
 	DeleteAgency(ctx context.Context, in *DeleteAgencyRequest, opts ...client.CallOption) (*DeleteAgencyResponse, error)
@@ -68,6 +69,16 @@ func NewAgencySrvService(name string, c client.Client) AgencySrvService {
 func (c *agencySrvService) ReadAgencyDetails(ctx context.Context, in *ReadAgencyRequest, opts ...client.CallOption) (*ReadAgencyResponse, error) {
 	req := c.c.NewRequest(c.name, "AgencySrv.ReadAgencyDetails", in)
 	out := new(ReadAgencyResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *agencySrvService) InspectAgency(ctx context.Context, in *InspectAgencyRequest, opts ...client.CallOption) (*InspectAgencyResponse, error) {
+	req := c.c.NewRequest(c.name, "AgencySrv.InspectAgency", in)
+	out := new(InspectAgencyResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -159,6 +170,7 @@ func (c *agencySrvService) GetNearbyAgencies(ctx context.Context, in *GetNearbyA
 
 type AgencySrvHandler interface {
 	ReadAgencyDetails(context.Context, *ReadAgencyRequest, *ReadAgencyResponse) error
+	InspectAgency(context.Context, *InspectAgencyRequest, *InspectAgencyResponse) error
 	AddAgency(context.Context, *AddAgencyRequest, *AddAgencyResponse) error
 	UpdateAgency(context.Context, *UpdateAgencyRequest, *UpdateAgencyResponse) error
 	DeleteAgency(context.Context, *DeleteAgencyRequest, *DeleteAgencyResponse) error
@@ -172,6 +184,7 @@ type AgencySrvHandler interface {
 func RegisterAgencySrvHandler(s server.Server, hdlr AgencySrvHandler, opts ...server.HandlerOption) error {
 	type agencySrv interface {
 		ReadAgencyDetails(ctx context.Context, in *ReadAgencyRequest, out *ReadAgencyResponse) error
+		InspectAgency(ctx context.Context, in *InspectAgencyRequest, out *InspectAgencyResponse) error
 		AddAgency(ctx context.Context, in *AddAgencyRequest, out *AddAgencyResponse) error
 		UpdateAgency(ctx context.Context, in *UpdateAgencyRequest, out *UpdateAgencyResponse) error
 		DeleteAgency(ctx context.Context, in *DeleteAgencyRequest, out *DeleteAgencyResponse) error
@@ -194,6 +207,10 @@ type agencySrvHandler struct {
 
 func (h *agencySrvHandler) ReadAgencyDetails(ctx context.Context, in *ReadAgencyRequest, out *ReadAgencyResponse) error {
 	return h.AgencySrvHandler.ReadAgencyDetails(ctx, in, out)
+}
+
+func (h *agencySrvHandler) InspectAgency(ctx context.Context, in *InspectAgencyRequest, out *InspectAgencyResponse) error {
+	return h.AgencySrvHandler.InspectAgency(ctx, in, out)
 }
 
 func (h *agencySrvHandler) AddAgency(ctx context.Context, in *AddAgencyRequest, out *AddAgencyResponse) error {

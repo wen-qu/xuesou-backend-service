@@ -64,7 +64,7 @@ func (e *UserSrv) AddUser(ctx context.Context, req *usersrv.AddRequest, rsp *use
 		") engine=innodb default charset=utf8"); err != nil {
 		return errors.InternalServerError("user-srv.UserSrv.AddUser:fatal:004", err.Error())
 	}
-	tableName = uid + "_user_evaluations_table"
+	tableName = uid + "_user_evaluation_table"
 	if _, err := db.GetDB().Exec("create table `" + tableName + "` (" +
 		"`evaluation_id` varchar(20) primary key not null," +
 		"`favicon` varchar(60)," +
@@ -96,7 +96,7 @@ func (e *UserSrv) InspectUser(ctx context.Context, req *usersrv.InspectRequest, 
 			"address, class_num, img from user where uid = ?", req.Uid)
 	} else if len(req.Tel) > 0 {
 		row = db.GetDB().QueryRow("select uid, username, password, tel, age, sex, email, " +
-			"address, class_num, img from user where uid = ?", req.Uid)
+			"address, class_num, img from user where uid = ? and password = ?", req.Uid, req.Password)
 	} else {
 		return errors.BadRequest("para:002", "missing uid or tel")
 	}

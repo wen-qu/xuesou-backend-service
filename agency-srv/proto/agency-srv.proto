@@ -6,6 +6,7 @@ option go_package = "proto;agencysrv";
 
 service AgencySrv {
 	rpc ReadAgencyDetails(ReadAgencyRequest) returns (ReadAgencyResponse) {}
+	rpc InspectAgency(InspectAgencyRequest) returns (InspectAgencyResponse) {}
 	rpc AddAgency(AddAgencyRequest) returns (AddAgencyResponse) {}
 	rpc UpdateAgency(UpdateAgencyRequest) returns (UpdateAgencyResponse) {}
 	rpc DeleteAgency(DeleteAgencyRequest) returns (DeleteAgencyResponse) {}
@@ -28,17 +29,18 @@ message Class {
 message Agency {
 	string agencyID = 1;
 	string name = 2;
-	string tel = 3;
-	float rating = 4;
-	int32 comments = 5;
-	string order = 6;
-	repeated string tags = 7;
-	string address = 8;
-	string addressDetail = 9;
-	float distance = 10;
-	string icon = 11;
-	repeated string photos = 12;
-	repeated Class classes = 13;
+	string password = 3;
+	string tel = 4;
+	float rating = 5;
+	int32 comments = 6;
+	string order = 7;
+	repeated string tags = 8;
+	string address = 9;
+	string addressDetail = 10;
+	float distance = 11;
+	string icon = 12;
+	repeated string photos = 13;
+	repeated Class classes = 14;
 }
 
 message Teacher {
@@ -79,6 +81,18 @@ message ReadAgencyResponse {
 	string brandHistory = 3;
 	repeated string characteristics = 4;
 	string msg = 5;
+}
+
+message InspectAgencyRequest {
+	string tel = 1;
+	string agencyID = 2;
+	string password = 3;
+}
+
+message InspectAgencyResponse {
+	Agency agency = 1;
+	string msg = 2;
+	int32 status = 3;
 }
 
 message AddAgencyRequest {
@@ -166,5 +180,7 @@ message GetNearbyAgenciesRequest {
 }
 
 message GetNearbyAgenciesResponse {
-
+	repeated Agency agencies = 1;
+	string msg = 2;
+	int32 status = 3;
 }

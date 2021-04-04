@@ -27,6 +27,7 @@ message User {
 message InspectRequest {
 	string uid = 1;
 	string tel = 2;
+	string password = 3;
 }
 
 message InspectResponse {
